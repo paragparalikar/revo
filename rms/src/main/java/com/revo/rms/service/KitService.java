@@ -1,9 +1,9 @@
-package com.revo.oms.service;
+package com.revo.rms.service;
 
 import org.springframework.stereotype.Service;
 
-import com.revo.oms.model.Kit;
-import com.revo.oms.repository.KitRepository;
+import com.revo.rms.model.Kit;
+import com.revo.rms.repository.KitRepository;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;

@@ -1,5 +1,8 @@
-package com.revo.oms.model;
+package com.revo.rms.model;
 
+import java.io.Serializable;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -11,27 +14,24 @@ import lombok.Data;
 
 @Data
 @Entity
-public class Requisition {
-	
+public class Requisition implements Serializable {
+	private static final long serialVersionUID = -483546356390627075L;
+
 	@Id
 	@GeneratedValue
 	private Long id;
 	
-	@ManyToOne
-	private Kit kit;
+	@ManyToOne(optional = false)
+	private Station station;
 
-	@ManyToOne
+	@ManyToOne(optional = false)
 	private Part part;
 	
+	@Column(nullable = false)
 	private Long quantity;
 	
+	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
 	private RequisitionStatus status = RequisitionStatus.OPEN;
-
-	@Override
-	public String toString() {
-		return "Requisition [id=" + id + ", kit=" + kit + ", part=" + part + ", quantity=" + quantity + ", status="
-				+ status + "]";
-	}
 	
 }

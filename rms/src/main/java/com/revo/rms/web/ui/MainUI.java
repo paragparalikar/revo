@@ -1,4 +1,4 @@
-package com.revo.oms.ui;
+package com.revo.rms.web.ui;
 
 import com.vaadin.annotations.Push;
 import com.vaadin.server.VaadinRequest;

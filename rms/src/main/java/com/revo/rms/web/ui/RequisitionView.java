@@ -1,4 +1,4 @@
-package com.revo.oms.ui;
+package com.revo.rms.web.ui;
 
 import java.util.Collections;
 import java.util.Set;
@@ -6,9 +6,9 @@ import java.util.WeakHashMap;
 
 import javax.annotation.PostConstruct;
 
-import com.revo.oms.model.Requisition;
-import com.revo.oms.model.RequisitionStatus;
-import com.revo.oms.service.RequisitionService;
+import com.revo.rms.model.Requisition;
+import com.revo.rms.model.RequisitionStatus;
+import com.revo.rms.service.RequisitionService;
 import com.vaadin.navigator.View;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.Grid;
@@ -35,7 +35,8 @@ public class RequisitionView extends VerticalLayout implements View {
     public void init() {
     	setSizeFull();
     	grid.setSizeFull();
-    	grid.addColumn(requisition -> requisition.getKit().getName()).setCaption("Kit");
+    	grid.addColumn(requisition -> requisition.getStation().getName()).setCaption("Station");
+    	grid.addColumn(requisition -> requisition.getPart().getKit().getName()).setCaption("Kit");
     	grid.addColumn(requisition -> requisition.getPart().getName()).setCaption("Part");
     	grid.addColumn(requisition -> requisition.getQuantity()).setCaption("Quantity");
         grid.setDataProvider(

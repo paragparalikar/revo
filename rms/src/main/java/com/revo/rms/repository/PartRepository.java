@@ -1,13 +1,11 @@
-package com.revo.oms.repository;
+package com.revo.rms.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.rest.core.annotation.RestResource;
 import org.springframework.stereotype.Repository;
 
-import com.revo.oms.model.Part;
+import com.revo.rms.model.Part;
 
 @Repository
-@RestResource
 public interface PartRepository extends JpaRepository<Part, Long> {
 
 }

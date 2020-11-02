@@ -1,4 +1,4 @@
-package com.revo.oms.model;
+package com.revo.rms.model;
 
 public enum RequisitionStatus {
 
