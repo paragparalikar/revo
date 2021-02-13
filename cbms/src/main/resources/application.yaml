@@ -1,0 +1,40 @@
+logging:
+  level:
+    org:
+      hibernate:
+        tool:
+          schema:
+            internal:
+              ExceptionHandlerLoggedImpl: ERROR
+spring:
+  h2:
+    console:
+      enabled: true
+      path: /h2
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1
+    password: ''
+    username: sa
+  jpa:
+    properties:
+      hibernate:
+        cache:
+          region:
+            factory_class: 'com.hazelcast.hibernate.HazelcastCacheRegionFactory'
+          use_query_cache: false
+          use_second_level_cache: false
+          hazelcast:
+            instance_name: thyng
+        ddl-auto: create
+        format_sql: true
+        generate_statistics: false
+      javax:
+        cache:
+          missing_cache_strategy: create
+        persistence:
+          sharedCache:
+            mode: ENABLE_SELECTIVE
+    show-sql: false
+    database: H2
+    database-platform: org.hibernate.dialect.H2Dialect
