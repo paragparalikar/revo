@@ -1,11 +1,10 @@
 package com.revosystems.cbms.repository;
 
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
 
+import com.revosystems.cbms.domain.enumeration.Channel;
 import com.revosystems.cbms.domain.model.ChannelConfiguration;
+import com.revosystems.cbms.repository.file.Repository;
 
-@Repository
-public interface ChannelConfigurationRepository extends CrudRepository<ChannelConfiguration, Long> {
+public interface ChannelConfigurationRepository extends Repository<ChannelConfiguration, Channel> {
 
 }

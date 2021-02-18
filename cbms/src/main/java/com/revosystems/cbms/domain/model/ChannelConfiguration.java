@@ -1,31 +1,31 @@
 package com.revosystems.cbms.domain.model;
 
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-
 import com.revosystems.cbms.domain.enumeration.Channel;
+import com.revosystems.cbms.domain.intf.Identifiable;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChannelConfiguration {
+public class ChannelConfiguration implements Identifiable<Channel> {
 
-	@Id
-	@Enumerated(EnumType.STRING)
 	private Channel channel;
 	
-	@ManyToOne(optional = false)
 	private Thing thing;
 	
-	@ManyToOne(optional = false)
 	private Sensor sensor;
+
+	@Override
+	public Channel getId() {
+		return getChannel();
+	}
+
+	@Override
+	public void setId(Channel id) {
+		setChannel(id);
+	}
 
 }

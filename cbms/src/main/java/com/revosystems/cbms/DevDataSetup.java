@@ -35,14 +35,16 @@ public class DevDataSetup implements CommandLineRunner {
 	
 	@Override
 	public void run(String... args) throws Exception {
-		things().forEach(thingRepository::save);
-		sensors().forEach(sensorRepository::save);
-		
-		final Iterable<Thing> things = thingRepository.findAll();
-		final Iterable<Sensor> sensors = sensorRepository.findAll();
-		
-		createMetrics(things, sensors);
-		createChannelConfigurations(things, sensors);
+		if(0 == thingRepository.count()) {
+			things().forEach(thingRepository::save);
+			sensors().forEach(sensorRepository::save);
+			
+			final Iterable<Thing> things = thingRepository.findAll();
+			final Iterable<Sensor> sensors = sensorRepository.findAll();
+			
+			createMetrics(things, sensors);
+			createChannelConfigurations(things, sensors);
+		}
 	}
 	
 	private void createChannelConfigurations(Iterable<Thing> things, Iterable<Sensor> sensors) {
@@ -80,7 +82,7 @@ public class DevDataSetup implements CommandLineRunner {
 		final List<Metric> metrics = new LinkedList<>();
 		for(long timestamp = from; timestamp < to; timestamp += increment) {
 			final double value = sensor.getMin() + (random.nextDouble() * range);
-			metrics.add(new Metric(null, thing.getId(), sensor.getId(), value, timestamp));
+			metrics.add(new Metric(thing.getId(), sensor.getId(), value, timestamp));
 		}
 		return metrics;
 	}

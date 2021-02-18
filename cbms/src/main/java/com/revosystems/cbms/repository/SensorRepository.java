@@ -1,11 +1,8 @@
 package com.revosystems.cbms.repository;
 
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
-
 import com.revosystems.cbms.domain.model.Sensor;
+import com.revosystems.cbms.repository.file.Repository;
 
-@Repository
-public interface SensorRepository extends CrudRepository<Sensor, Long> {
+public interface SensorRepository extends Repository<Sensor, Long> {
 
 }
