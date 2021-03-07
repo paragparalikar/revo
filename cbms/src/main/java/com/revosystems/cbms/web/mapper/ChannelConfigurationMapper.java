@@ -20,16 +20,16 @@ public class ChannelConfigurationMapper {
 	public ChannelConfiguration map(@NonNull final ChannelConfigurationDto dto) {
 		final ChannelConfiguration channelConfiguration = new ChannelConfiguration();
 		channelConfiguration.setChannel(dto.getChannel());
-		channelConfiguration.setThing(thingService.findById(dto.getThingId()).get());
-		channelConfiguration.setSensor(sensorService.findById(dto.getSensorId()).get());
+		channelConfiguration.setThing(null == dto.getThingId() ? null : thingService.findById(dto.getThingId()).get());
+		channelConfiguration.setSensor(null == dto.getSensorId() ? null : sensorService.findById(dto.getSensorId()).get());
 		return channelConfiguration;
 	}
 	
 	public ChannelConfigurationDto map(@NonNull final ChannelConfiguration entity) {
 		final ChannelConfigurationDto dto = new ChannelConfigurationDto();
 		dto.setChannel(entity.getChannel());
-		dto.setThingId(entity.getThing().getId());
-		dto.setSensorId(entity.getSensor().getId());
+		dto.setThingId(null == entity.getThing() ? null : entity.getThing().getId());
+		dto.setSensorId(null == entity.getSensor() ? null : entity.getSensor().getId());
 		return dto;
 	}
 	

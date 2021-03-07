@@ -1,5 +1,7 @@
 package com.revosystems.cbms.service;
 
+import java.util.Arrays;
+
 import org.springframework.context.Lifecycle;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +37,10 @@ public class MetricService implements Lifecycle {
 	
 	
 	public static void main(String[] args) {
+		final SerialPort[] ports = SerialPort.getCommPorts();
+		Arrays.asList(ports).forEach(System.out::println);
+		
+		
 		SerialPort comPort = SerialPort.getCommPorts()[0];
 		comPort.openPort();
 		comPort.addDataListener(new SerialPortDataListener() {
