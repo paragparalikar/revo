@@ -62,9 +62,10 @@ public class DevDataSetup implements CommandLineRunner {
 	private void createMetrics(Iterable<Thing> things, Iterable<Sensor> sensors) {
 		for(Thing thing : things) {
 			for(Sensor sensor : sensors) {
-				final Calendar calendar = Calendar.getInstance();
-				for(int index = -1; index > -4; index--) {
+				for(int index = -4; index < -1; index++) {
+					final Calendar calendar = Calendar.getInstance();
 					calendar.add(Calendar.MONTH, index);
+					calendar.set(Calendar.DATE, 1);
 					final long from = calendar.getTimeInMillis();
 					calendar.add(Calendar.DATE, 4);
 					final long to = calendar.getTimeInMillis();

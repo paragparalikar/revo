@@ -20,7 +20,7 @@ public class SeriesMapper {
 		long lastTimestamp = 0;
 		PlotDto plot = null;
 		
-		for(int index = metrics.size() - 1; index >= 0; index--) {
+		for(int index = 0; index < metrics.size(); index++) {
 			final Metric metric = metrics.get(index);
 			if(null == plot || gap < Math.abs(metric.getTimestamp() - lastTimestamp)) {
 				plot = new PlotDto();

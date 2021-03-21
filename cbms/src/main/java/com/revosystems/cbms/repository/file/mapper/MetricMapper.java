@@ -26,7 +26,7 @@ public class MetricMapper {
 	
 	@SneakyThrows
 	public boolean canRead(RandomAccessFile file) {
-		return file.length() >= BYTES;
+		return file.length() >= BYTES && file.getFilePointer() >= 0 && file.getFilePointer() < file.length();
 	}
 
 	public byte[] map(Metric metric) {
