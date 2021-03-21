@@ -1,12 +1,16 @@
 package com.revosystems.cbms.web.dto;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-import lombok.Data;
+import lombok.Getter;
 
-@Data
+@Getter
 public class SeriesResponseDto {
 
-	private List<PlotDto> plots;
+	private final List<Double> values = new ArrayList<>();
+	private final List<Date> timestamps = new ArrayList<>();
+	private final List<PlotDto> plots = new ArrayList<>();
 	
 }

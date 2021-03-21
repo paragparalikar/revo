@@ -5,8 +5,8 @@ import java.io.RandomAccessFile;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -48,7 +48,7 @@ public class MetricFileRepository implements MetricRepository {
 		try(final RandomAccessFile file = new RandomAccessFile(resolve(thingId, sensorId).toFile(), "r")){
 			if(from > mapper.lastTimestamp(file)) return Collections.emptyList();
 			if(to < mapper.firstTimestamp(file)) return Collections.emptyList();
-			final List<Metric> metrics = new LinkedList<>();
+			final List<Metric> metrics = new ArrayList<>();
 			file.seek(0);
 			while(mapper.canRead(file)) {
 				final Metric metric = mapper.map(file);

@@ -23,8 +23,8 @@ public class ChannelConfigurationCsvMapper implements StringMapper<ChannelConfig
 		if(Strings.isBlank(text)) return null;
 		final String[] tokens = text.split(",");
 		final Channel channel = Channel.valueOf(tokens[0]);
-		final Thing thing = 1 >= tokens.length || Strings.isBlank(tokens[1]) ? null : thingRepository.findById(Long.parseLong(tokens[1])).get();
-		final Sensor sensor = 2 >= tokens.length || Strings.isBlank(tokens[2]) ? null : sensorRepository.findById(Long.parseLong(tokens[2])).get();
+		final Thing thing = 1 >= tokens.length || Strings.isBlank(tokens[1]) ? null : thingRepository.findById(Long.parseLong(tokens[1])).orElse(null);
+		final Sensor sensor = 2 >= tokens.length || Strings.isBlank(tokens[2]) ? null : sensorRepository.findById(Long.parseLong(tokens[2])).orElse(null);
 		return new ChannelConfiguration(channel, thing, sensor);
 	}
 
