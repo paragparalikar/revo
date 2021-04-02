@@ -39,6 +39,7 @@ public class MetricFileRepository implements MetricRepository {
 	public Metric save(Metric metric) {
 		final Path path = resolve(metric.getThingId(), metric.getSensorId());
 		Files.write(path, mapper.map(metric), StandardOpenOption.CREATE, StandardOpenOption.APPEND, StandardOpenOption.WRITE);
+		System.out.println(metric);
 		return metric;
 	}
 
