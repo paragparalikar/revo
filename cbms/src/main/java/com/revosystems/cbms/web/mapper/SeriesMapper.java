@@ -24,10 +24,12 @@ public class SeriesMapper {
 			final Metric metric = metrics.get(index);
 			if(null == plot || gap < Math.abs(metric.getTimestamp() - lastTimestamp)) {
 				plot = new PlotDto();
+				plot.setFrom(new Date(metric.getTimestamp()));
 				response.getPlots().add(plot);
 			}
 			
 			final Double value = metric.getValue();
+			plot.setTo(new Date(metric.getTimestamp()));
 			plot.setMin(Math.min(plot.getMin(), value));
 			plot.setMax(Math.max(plot.getMax(), value));
 			plot.setAverage((plot.getAverage() * plot.getCount() + value)/(plot.getCount() + 1));
