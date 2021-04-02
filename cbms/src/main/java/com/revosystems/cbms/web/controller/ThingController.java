@@ -1,4 +1,4 @@
-package com.revosystems.cbms.web;
+package com.revosystems.cbms.web.controller;
 
 import java.util.List;
 import java.util.stream.Collectors;
