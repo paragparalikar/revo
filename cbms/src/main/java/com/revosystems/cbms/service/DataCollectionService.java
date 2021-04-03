@@ -108,12 +108,12 @@ public class DataCollectionService implements Runnable, SerialPortMessageListene
 	
 	private double rationalize(final double value, final Sensor sensor) {
 		if(sensor.getMax() == sensor.getMin()) return value;
-		return (value - sensor.getMin()) / (sensor.getMax() - sensor.getMin());
+		return (value - 4) * (sensor.getMax() - sensor.getMin()) / 16;
 	}
 	
 	@Override
 	public void catchException(Exception e) {
-		e.printStackTrace();
+		log.error(e.getMessage(),e);
 	}
 	
 	@Override
