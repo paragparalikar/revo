@@ -28,7 +28,7 @@ public class RepositoryConfig {
 	private Path home;
 	
 	private Path path(String fileName) {
-		return home.resolve(Paths.get(".cbms", fileName));
+		return home.resolve(Paths.get("cbms", fileName));
 	}
 	
 	@Bean
