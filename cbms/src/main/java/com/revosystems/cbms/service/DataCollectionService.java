@@ -50,8 +50,8 @@ public class DataCollectionService implements Runnable, SerialPortMessageListene
 	public void run() {
 		if(enabled && (null == port || !port.isOpen() || !Ports.hasName(portName, port))) {
 			if(null == port) log.info("Looking up and opening port for first time");
-			if(!port.isOpen()) log.info("Port is not open, looking up and opening it again");
-			if(!Ports.hasName(portName, port)) log.info("Port name has changed, looking up and opening appropriate port");
+			else if(!port.isOpen()) log.info("Port is not open, looking up and opening it again");
+			else if(!Ports.hasName(portName, port)) log.info("Port name has changed, looking up and opening appropriate port");
 			
 			if(null != port) port.removeDataListener();
 			port = Ports.findByName(portName);
