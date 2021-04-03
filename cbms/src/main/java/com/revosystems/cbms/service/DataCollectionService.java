@@ -16,6 +16,7 @@ import com.fazecast.jSerialComm.SerialPortEvent;
 import com.fazecast.jSerialComm.SerialPortMessageListenerWithExceptions;
 import com.revosystems.cbms.domain.enumeration.Channel;
 import com.revosystems.cbms.domain.model.Metric;
+import com.revosystems.cbms.domain.model.Sensor;
 import com.revosystems.cbms.util.Ports;
 import com.revosystems.cbms.util.Strings;
 
@@ -89,13 +90,19 @@ public class DataCollectionService implements Runnable, SerialPortMessageListene
 		if(null == channel || Strings.isBlank(value)) return null;
 		final long timestamp = System.currentTimeMillis();
 		final double doubleValue = Double.parseDouble(value);
+		
 		return Optional.ofNullable(value)
 				.filter(Strings::isNotBlank)
 				.map(l -> Optional.ofNullable(channel)
 						.flatMap(channelConfigurationService::findById)
-						.map(channelConfiguration -> Metric.build(channelConfiguration, timestamp, doubleValue))
+						.map(channelConfiguration -> Metric.build(channelConfiguration, timestamp, rationalize(doubleValue, channelConfiguration.getSensor())))
 						.orElse(null))
 				.orElse(null);
+	}
+	
+	private double rationalize(final double value, final Sensor sensor) {
+		if(sensor.getMax() == sensor.getMin()) return value;
+		return (value - sensor.getMin()) / (sensor.getMax() - sensor.getMin());
 	}
 	
 	@Override
