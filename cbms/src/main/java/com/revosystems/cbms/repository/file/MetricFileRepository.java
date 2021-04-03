@@ -18,7 +18,9 @@ import com.revosystems.cbms.repository.file.mapper.MetricMapper;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RequiredArgsConstructor
 public class MetricFileRepository implements MetricRepository {
 
@@ -39,7 +41,7 @@ public class MetricFileRepository implements MetricRepository {
 	public Metric save(Metric metric) {
 		final Path path = resolve(metric.getThingId(), metric.getSensorId());
 		Files.write(path, mapper.map(metric), StandardOpenOption.CREATE, StandardOpenOption.APPEND, StandardOpenOption.WRITE);
-		System.out.println(metric);
+		log.debug(metric.toString());
 		return metric;
 	}
 

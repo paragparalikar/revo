@@ -24,7 +24,9 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class DataCollectionService implements Runnable, SerialPortMessageListenerWithExceptions {
@@ -47,12 +49,16 @@ public class DataCollectionService implements Runnable, SerialPortMessageListene
 	@Scheduled(fixedDelay = 1000)
 	public void run() {
 		if(enabled && (null == port || !port.isOpen() || !Ports.hasName(portName, port))) {
+			if(null == port) log.info("Looking up and opening port for first time");
+			if(!port.isOpen()) log.info("Port is not open, looking up and opening it again");
+			if(!Ports.hasName(portName, port)) log.info("Port name has changed, looking up and opening appropriate port");
+			
 			if(null != port) port.removeDataListener();
 			port = Ports.findByName(portName);
 			if(null != port) {
 				port.openPort();
 				port.addDataListener(this);
-				System.out.println("Started listening on port " + Ports.toString(port));
+				log.info("Started listening on port {}", Ports.toString(port));
 			}
 		}
 		
