@@ -1,10 +1,6 @@
 package com.revosystems.cbms.service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.time.Duration;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -30,9 +26,15 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 public class DataCollectionService implements Runnable, SerialPortMessageListenerWithExceptions {
-	
+	private static final byte[] REQUEST = "010300000008440C".getBytes(); 
+			
 	@Getter @Setter
 	private boolean enabled = false;
+	
+	@Getter @Setter
+	private long delayMillis = Duration.ofMinutes(5).toMillis();
+	
+	private long lastRequestTimestamp = 0;
 	
 	private SerialPort port;
 	
@@ -67,29 +69,26 @@ public class DataCollectionService implements Runnable, SerialPortMessageListene
 			port.closePort();
 			port = null;
 		}
+		
+		final long now = System.currentTimeMillis();
+		if(enabled && null != port && port.isOpen() && lastRequestTimestamp + now > delayMillis) {
+			port.writeBytes(REQUEST, REQUEST.length);
+			log.debug("Sending request to port {}", port.getDescriptivePortName());
+			lastRequestTimestamp = now;
+		}
 	}
 	
 	@Override
 	public void serialEvent(SerialPortEvent event) {
-		final List<String> lines = Strings.toLines(event.getReceivedData());
-		if(null == lines) throw new IllegalArgumentException("Values can not be null");
-		if(lines.isEmpty()) throw new IllegalArgumentException("Values can not be empty");
-		lines.stream()
-			.map(this::toMetrics)
-			.flatMap(Collection::stream)
-			.filter(Objects::nonNull)
-			.forEach(metricService::save);
-	}
-	
-	private List<Metric> toMetrics(final String line){
-		final List<Metric> metrics = new ArrayList<>();
-		final String[] values = Arrays.copyOf(line.split(","), Channel.values().length);
-		for(int index = 0; index < Channel.values().length; index++) {
-			final String value = values[index];
-			final Channel channel = Channel.values()[index];
-			metrics.add(toMetric(channel, value));
+		final String response = new String(event.getReceivedData());
+		for(int valueIndex = 6, channelIndex = 0; valueIndex < 38; valueIndex += 4, channelIndex ++) {
+			final String line = response.substring(valueIndex, valueIndex + 4);
+			final Channel channel = Channel.values()[channelIndex];
+			final Metric metric = toMetric(channel, line);
+			if(null != metric) {
+				metricService.save(metric);
+			}
 		}
-		return metrics;
 	}
 	
 	private Metric toMetric(final Channel channel, final String value) {

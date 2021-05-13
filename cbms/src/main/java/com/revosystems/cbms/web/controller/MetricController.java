@@ -1,5 +1,6 @@
 package com.revosystems.cbms.web.controller;
 
+import java.time.Duration;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -46,5 +47,11 @@ public class MetricController {
 		dataCollectionService.setEnabled(enable);
 		return dataCollectionService.isEnabled();
 	}
-
+	
+	@PostMapping("/delay")
+	public long setRequestDelayMinutes(@RequestParam final long delay) {
+		dataCollectionService.setDelayMillis(Duration.ofMinutes(delay).toMillis());
+		return Duration.ofMillis(dataCollectionService.getDelayMillis()).toMinutes();
+	}
+	
 }
