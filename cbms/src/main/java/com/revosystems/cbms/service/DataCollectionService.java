@@ -91,8 +91,7 @@ public class DataCollectionService implements Runnable, SerialPortMessageListene
 	private Metric toMetric(final Channel channel, final String value) {
 		if(null == channel || Strings.isBlank(value)) return null;
 		final long timestamp = System.currentTimeMillis();
-		final double doubleValue = Double.parseDouble(value);
-		
+		final double doubleValue = Integer.parseInt(value, 16);
 		return Optional.ofNullable(value)
 				.filter(Strings::isNotBlank)
 				.map(l -> Optional.ofNullable(channel)
