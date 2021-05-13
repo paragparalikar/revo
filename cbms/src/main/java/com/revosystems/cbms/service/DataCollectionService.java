@@ -1,6 +1,5 @@
 package com.revosystems.cbms.service;
 
-import java.time.Duration;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -29,7 +28,7 @@ public class DataCollectionService implements Runnable, SerialPortMessageListene
 	private static final byte[] REQUEST = "010300000008440C".getBytes(); 
 	
 	@Getter @Setter
-	private long delayMillis = Duration.ofMinutes(5).toMillis();
+	private long delayMillis;
 	
 	private long lastRequestTimestamp = 0;
 	

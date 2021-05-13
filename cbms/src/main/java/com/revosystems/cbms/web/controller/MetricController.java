@@ -6,8 +6,8 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -42,7 +42,7 @@ public class MetricController {
 		return seriesMapper.map(metrics);
 	}
 	
-	@PostMapping("/delay")
+	@PutMapping
 	public long setRequestDelayMinutes(@RequestParam final long delay) {
 		dataCollectionService.setDelayMillis(Duration.ofMinutes(delay).toMillis());
 		return Duration.ofMillis(dataCollectionService.getDelayMillis()).toMinutes();
