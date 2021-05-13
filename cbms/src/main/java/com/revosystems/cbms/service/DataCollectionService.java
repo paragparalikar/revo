@@ -27,9 +27,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class DataCollectionService implements Runnable, SerialPortMessageListenerWithExceptions {
 	private static final byte[] REQUEST = "010300000008440C".getBytes(); 
-			
-	@Getter @Setter
-	private boolean enabled = false;
 	
 	@Getter @Setter
 	private long delayMillis = Duration.ofMinutes(5).toMillis();
@@ -50,6 +47,7 @@ public class DataCollectionService implements Runnable, SerialPortMessageListene
 	@Override
 	@Scheduled(fixedDelay = 1000)
 	public void run() {
+		final boolean enabled = 0 < delayMillis;
 		if(enabled && (null == port || !port.isOpen() || !Ports.hasName(portName, port))) {
 			if(null == port) log.info("Looking up and opening port for first time");
 			else if(!port.isOpen()) log.info("Port is not open, looking up and opening it again");

@@ -42,12 +42,6 @@ public class MetricController {
 		return seriesMapper.map(metrics);
 	}
 	
-	@GetMapping
-	public boolean enable(@RequestParam final boolean enable) {
-		dataCollectionService.setEnabled(enable);
-		return dataCollectionService.isEnabled();
-	}
-	
 	@PostMapping("/delay")
 	public long setRequestDelayMinutes(@RequestParam final long delay) {
 		dataCollectionService.setDelayMillis(Duration.ofMinutes(delay).toMillis());
