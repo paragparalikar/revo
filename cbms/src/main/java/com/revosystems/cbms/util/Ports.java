@@ -6,7 +6,9 @@ import com.fazecast.jSerialComm.SerialPort;
 
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @UtilityClass
 public class Ports {
 
@@ -20,6 +22,10 @@ public class Ports {
 	
 	public SerialPort findByName(@NonNull final String name) {
 		return Stream.of(SerialPort.getCommPorts())
+			.map(port -> {
+				log.info("Found port {} with desc {}", port.getSystemPortName(), port.getDescriptivePortName());
+				return port;
+			})
 			.filter(port -> hasName(name, port))
 			.findAny()
 			.orElse(null);
