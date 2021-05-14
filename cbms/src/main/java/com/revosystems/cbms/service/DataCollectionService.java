@@ -7,8 +7,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.fazecast.jSerialComm.SerialPort;
+import com.fazecast.jSerialComm.SerialPortDataListener;
 import com.fazecast.jSerialComm.SerialPortEvent;
-import com.fazecast.jSerialComm.SerialPortMessageListenerWithExceptions;
 import com.revosystems.cbms.domain.enumeration.Channel;
 import com.revosystems.cbms.domain.model.Metric;
 import com.revosystems.cbms.domain.model.Sensor;
@@ -23,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class DataCollectionService implements Runnable, SerialPortMessageListenerWithExceptions {
+public class DataCollectionService implements Runnable, SerialPortDataListener {
 	private static final byte[] REQUEST = new byte[]{1,3,0,0,0,8,68,12};
 	
 	@Getter @Setter
@@ -61,6 +61,7 @@ public class DataCollectionService implements Runnable, SerialPortMessageListene
 		}
 		
 		if(!enabled && null != port && port.isOpen()) {
+			log.info("Stopping listenint on port {}", port.getDescriptivePortName());
 			port.removeDataListener();
 			port.closePort();
 			port = null;
@@ -68,15 +69,17 @@ public class DataCollectionService implements Runnable, SerialPortMessageListene
 		
 		final long now = System.currentTimeMillis();
 		if(enabled && null != port && port.isOpen() && lastRequestTimestamp + now > delayMillis) {
-			log.debug("Sending request to port {}", port.getDescriptivePortName());
+			log.info("Sending request to port {}", port.getDescriptivePortName());
 			port.writeBytes(REQUEST, REQUEST.length);
 			while(port.bytesAwaitingWrite() > 0) {}
 			lastRequestTimestamp = now;
+			log.info("Request sent successfully to port {}", port.getDescriptivePortName());
 		}
 	}
 	
 	@Override
 	public void serialEvent(SerialPortEvent event) {
+		log.info("Received data from port");
 		final byte[] response = event.getReceivedData();
 		for(int valueIndex = 3, channelIndex = 0; valueIndex < 19; valueIndex += 2, channelIndex ++) {
 			final int value = response[valueIndex] << 8 & 0xFF00 | response[valueIndex + 1] & 0xFF;
@@ -102,21 +105,6 @@ public class DataCollectionService implements Runnable, SerialPortMessageListene
 	private double rationalize(final double value, final Sensor sensor) {
 		if(sensor.getMax() == sensor.getMin()) return value;
 		return (value - 4) * (sensor.getMax() - sensor.getMin()) / 16;
-	}
-	
-	@Override
-	public void catchException(Exception e) {
-		log.error(e.getMessage(),e);
-	}
-	
-	@Override
-	public boolean delimiterIndicatesEndOfMessage() {
-		return true;
-	}
-	
-	@Override
-	public byte[] getMessageDelimiter() {
-		return "\r\n".getBytes();
 	}
 
 	@Override
