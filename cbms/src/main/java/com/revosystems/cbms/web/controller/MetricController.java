@@ -2,6 +2,7 @@ package com.revosystems.cbms.web.controller;
 
 import java.io.IOException;
 import java.time.Duration;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -42,8 +43,11 @@ public class MetricController {
 	@PostMapping
 	@ResponseBody
 	public SeriesResponseDto query(@RequestBody @Valid final SeriesRequestDto request){
+		final Calendar calendar = Calendar.getInstance();
+		calendar.setTime(request.getTo());
+		calendar.add(Calendar.DATE, 1);
 		final List<Metric> metrics = metricService.query(request.getThingId(), request.getSensorId(), 
-				request.getFrom().getTime(), request.getTo().getTime());
+				request.getFrom().getTime(), calendar.getTimeInMillis());
 		return seriesMapper.map(metrics);
 	}
 	
