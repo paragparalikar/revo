@@ -52,6 +52,7 @@ public class MetricFileRepository implements MetricRepository {
 	
 	@Override
 	public synchronized void exportAll(OutputStream outputStream) throws IOException {
+		final Path path = this.path.getParent();
 		final ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream);
 		Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
 			
@@ -74,7 +75,7 @@ public class MetricFileRepository implements MetricRepository {
 				return FileVisitResult.CONTINUE;
 			}
 		});
-		
+		zipOutputStream.close();
 	}
 	
 	@Override

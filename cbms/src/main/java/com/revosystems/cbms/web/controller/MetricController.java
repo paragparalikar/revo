@@ -56,7 +56,6 @@ public class MetricController {
 	@GetMapping
 	public void download(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		metricService.exportAll(response.getOutputStream());
-		response.flushBuffer();
 	}
 	
 	@DeleteMapping
