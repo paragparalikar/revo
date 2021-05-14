@@ -54,6 +54,10 @@ public class DataCollectionService implements Runnable, SerialPortDataListener {
 			if(null != port) port.removeDataListener();
 			port = Ports.findByName(portName);
 			if(null != port) {
+				port.setBaudRate(19200);
+				port.setNumDataBits(8);
+				port.setNumStopBits(1);
+				port.setParity(SerialPort.NO_PARITY);
 				port.openPort();
 				port.addDataListener(this);
 				log.info("Started listening on port {}", Ports.toString(port));
