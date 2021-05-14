@@ -57,6 +57,11 @@ public class MetricController {
 		return Duration.ofMillis(dataCollectionService.getDelayMillis()).toMinutes();
 	}
 	
+	@GetMapping("/delay")
+	public long getRequestDelayMinutes() {
+		return Duration.ofMillis(dataCollectionService.getDelayMillis()).toMinutes();
+	}
+	
 	@GetMapping
 	public void download(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		metricService.exportAll(response.getOutputStream());
