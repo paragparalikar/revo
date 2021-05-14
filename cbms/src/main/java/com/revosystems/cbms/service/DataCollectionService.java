@@ -10,6 +10,7 @@ import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortDataListener;
 import com.fazecast.jSerialComm.SerialPortEvent;
 import com.revosystems.cbms.domain.enumeration.Channel;
+import com.revosystems.cbms.domain.model.ChannelConfiguration;
 import com.revosystems.cbms.domain.model.Metric;
 import com.revosystems.cbms.domain.model.Sensor;
 import com.revosystems.cbms.util.Ports;
@@ -59,6 +60,7 @@ public class DataCollectionService implements Runnable, SerialPortDataListener {
 				port.setNumStopBits(1);
 				port.setParity(SerialPort.NO_PARITY);
 				port.openPort();
+				port.setComPortTimeouts(SerialPort.TIMEOUT_READ_BLOCKING, 1000, 1000);
 				port.addDataListener(this);
 				log.info("Started listening on port {}", Ports.toString(port));
 			}
@@ -74,6 +76,8 @@ public class DataCollectionService implements Runnable, SerialPortDataListener {
 		final long now = System.currentTimeMillis();
 		if(enabled && null != port && port.isOpen() && lastRequestTimestamp + delayMillis <= now) {
 			log.info("Sending request to port {}", port.getDescriptivePortName());
+			port.removeDataListener();
+			port.addDataListener(this);
 			port.writeBytes(REQUEST, 8);
 			while(port.bytesAwaitingWrite() > 0) {}
 			lastRequestTimestamp = now;
@@ -98,22 +102,18 @@ public class DataCollectionService implements Runnable, SerialPortDataListener {
 	private Metric toMetric(final Channel channel, final double value) {
 		if(null == channel) return null;
 		final long timestamp = System.currentTimeMillis();
-		return Optional.ofNullable(value)
-				.map(l -> Optional.ofNullable(channel)
-						.flatMap(channelConfigurationService::findById)
-						.map(channelConfiguration -> Metric.build(channelConfiguration, timestamp, rationalize(value, channelConfiguration.getSensor())))
-						.orElse(null))
-				.orElse(null);
+		final ChannelConfiguration config = channelConfigurationService.findById(channel).orElse(null);
+		return null == config || null == config.getSensor() ? null : Metric.build(config, timestamp, rationalize(value, config.getSensor()));
 	}
 	
 	private double rationalize(final double value, final Sensor sensor) {
 		if(sensor.getMax() == sensor.getMin()) return value;
-		return (value - 4) * (sensor.getMax() - sensor.getMin()) / 16;
+		return (value - 715) * (sensor.getMax() - sensor.getMin()) / 2965;
 	}
 
 	@Override
 	public int getListeningEvents() {
-		return SerialPort.LISTENING_EVENT_DATA_RECEIVED;
+		return SerialPort.LISTENING_EVENT_DATA_RECEIVED | SerialPort.LISTENING_EVENT_DATA_AVAILABLE;
 	}
 
 }
