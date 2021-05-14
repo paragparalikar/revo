@@ -1,15 +1,23 @@
 package com.revosystems.cbms.repository.file;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.RandomAccessFile;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardOpenOption;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.annotation.PostConstruct;
+
+import org.springframework.util.FileSystemUtils;
 
 import com.revosystems.cbms.domain.model.Metric;
 import com.revosystems.cbms.repository.MetricRepository;
@@ -37,8 +45,41 @@ public class MetricFileRepository implements MetricRepository {
 	}
 	
 	@Override
+	public synchronized void purgeAll() throws IOException {
+		FileSystemUtils.deleteRecursively(path);
+		init();
+	}
+	
+	@Override
+	public synchronized void exportAll(OutputStream outputStream) throws IOException {
+		final ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream);
+		Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
+			
+			@Override
+			public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+				final String name = path.relativize(dir).toString() + "/";
+				final ZipEntry zipEntry = new ZipEntry(name);
+				zipOutputStream.putNextEntry(zipEntry);
+				zipOutputStream.closeEntry();
+				return FileVisitResult.CONTINUE;
+			}
+			
+			@Override
+			public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+				final String name = path.relativize(file).toString();
+				final ZipEntry zipEntry = new ZipEntry(name);
+				zipOutputStream.putNextEntry(zipEntry);
+				Files.copy(file, zipOutputStream);
+				zipOutputStream.closeEntry();
+				return FileVisitResult.CONTINUE;
+			}
+		});
+		
+	}
+	
+	@Override
 	@SneakyThrows
-	public Metric save(Metric metric) {
+	public synchronized Metric save(Metric metric) {
 		final Path path = resolve(metric.getThingId(), metric.getSensorId());
 		Files.write(path, mapper.map(metric), StandardOpenOption.CREATE, StandardOpenOption.APPEND, StandardOpenOption.WRITE);
 		log.info(metric.toString());
@@ -47,7 +88,7 @@ public class MetricFileRepository implements MetricRepository {
 
 	@Override
 	@SneakyThrows
-	public List<Metric> query(Long thingId, Long sensorId, Long from, Long to) {
+	public synchronized List<Metric> query(Long thingId, Long sensorId, Long from, Long to) {
 		try(final RandomAccessFile file = new RandomAccessFile(resolve(thingId, sensorId).toFile(), "r")){
 			if(from > mapper.lastTimestamp(file)) return Collections.emptyList();
 			if(to < mapper.firstTimestamp(file)) return Collections.emptyList();

@@ -1,11 +1,16 @@
 package com.revosystems.cbms.web.controller;
 
+import java.io.IOException;
 import java.time.Duration;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -46,6 +51,17 @@ public class MetricController {
 	public long setRequestDelayMinutes(@RequestParam final long delay) {
 		dataCollectionService.setDelayMillis(Duration.ofMinutes(delay).toMillis());
 		return Duration.ofMillis(dataCollectionService.getDelayMillis()).toMinutes();
+	}
+	
+	@GetMapping
+	public void download(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		metricService.exportAll(response.getOutputStream());
+		response.flushBuffer();
+	}
+	
+	@DeleteMapping
+	public void purge() throws IOException {
+		metricService.purgeAll();
 	}
 	
 }

@@ -14,6 +14,6 @@ public class MetricService {
 
 	@NonNull
 	@Delegate
-	private final MetricRepository metricRepository;
+	private final MetricRepository metricRepository; 
 
 }

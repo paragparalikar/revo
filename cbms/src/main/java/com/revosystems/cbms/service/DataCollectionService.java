@@ -13,7 +13,6 @@ import com.revosystems.cbms.domain.enumeration.Channel;
 import com.revosystems.cbms.domain.model.Metric;
 import com.revosystems.cbms.domain.model.Sensor;
 import com.revosystems.cbms.util.Ports;
-import com.revosystems.cbms.util.Strings;
 
 import lombok.Getter;
 import lombok.NonNull;
@@ -25,7 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 public class DataCollectionService implements Runnable, SerialPortMessageListenerWithExceptions {
-	private static final byte[] REQUEST = "010300000008440C".getBytes(); 
+	private static final byte[] REQUEST = new byte[]{1,3,0,0,0,8,68,12};
 	
 	@Getter @Setter
 	private long delayMillis;
@@ -69,34 +68,33 @@ public class DataCollectionService implements Runnable, SerialPortMessageListene
 		
 		final long now = System.currentTimeMillis();
 		if(enabled && null != port && port.isOpen() && lastRequestTimestamp + now > delayMillis) {
-			port.writeBytes(REQUEST, REQUEST.length);
 			log.debug("Sending request to port {}", port.getDescriptivePortName());
+			port.writeBytes(REQUEST, REQUEST.length);
+			while(port.bytesAwaitingWrite() > 0) {}
 			lastRequestTimestamp = now;
 		}
 	}
 	
 	@Override
 	public void serialEvent(SerialPortEvent event) {
-		final String response = new String(event.getReceivedData());
-		for(int valueIndex = 6, channelIndex = 0; valueIndex < 38; valueIndex += 4, channelIndex ++) {
-			final String line = response.substring(valueIndex, valueIndex + 4);
+		final byte[] response = event.getReceivedData();
+		for(int valueIndex = 3, channelIndex = 0; valueIndex < 19; valueIndex += 2, channelIndex ++) {
+			final int value = response[valueIndex] << 8 & 0xFF00 | response[valueIndex + 1] & 0xFF;
 			final Channel channel = Channel.values()[channelIndex];
-			final Metric metric = toMetric(channel, line);
+			final Metric metric = toMetric(channel, value);
 			if(null != metric) {
 				metricService.save(metric);
 			}
 		}
 	}
 	
-	private Metric toMetric(final Channel channel, final String value) {
-		if(null == channel || Strings.isBlank(value)) return null;
+	private Metric toMetric(final Channel channel, final double value) {
+		if(null == channel) return null;
 		final long timestamp = System.currentTimeMillis();
-		final double doubleValue = Integer.parseInt(value, 16);
 		return Optional.ofNullable(value)
-				.filter(Strings::isNotBlank)
 				.map(l -> Optional.ofNullable(channel)
 						.flatMap(channelConfigurationService::findById)
-						.map(channelConfiguration -> Metric.build(channelConfiguration, timestamp, rationalize(doubleValue, channelConfiguration.getSensor())))
+						.map(channelConfiguration -> Metric.build(channelConfiguration, timestamp, rationalize(value, channelConfiguration.getSensor())))
 						.orElse(null))
 				.orElse(null);
 	}
