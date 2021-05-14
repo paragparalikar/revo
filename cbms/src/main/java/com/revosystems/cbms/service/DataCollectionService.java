@@ -29,7 +29,7 @@ public class DataCollectionService implements Runnable, SerialPortDataListener {
 	@Getter @Setter
 	private long delayMillis;
 	
-	private long lastRequestTimestamp = 0;
+	private volatile long lastRequestTimestamp = 0;
 	
 	private SerialPort port;
 	
@@ -68,9 +68,9 @@ public class DataCollectionService implements Runnable, SerialPortDataListener {
 		}
 		
 		final long now = System.currentTimeMillis();
-		if(enabled && null != port && port.isOpen() && lastRequestTimestamp + now > delayMillis) {
+		if(enabled && null != port && port.isOpen() && lastRequestTimestamp + delayMillis <= now) {
 			log.info("Sending request to port {}", port.getDescriptivePortName());
-			port.writeBytes(REQUEST, REQUEST.length);
+			port.writeBytes(REQUEST, 8);
 			while(port.bytesAwaitingWrite() > 0) {}
 			lastRequestTimestamp = now;
 			log.info("Request sent successfully to port {}", port.getDescriptivePortName());
