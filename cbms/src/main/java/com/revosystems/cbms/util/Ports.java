@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 public class Ports {
 
 	public String toString(SerialPort port) {
+		
 		return String.join(" - ", port.getSystemPortName(), port.getDescriptivePortName(), port.getPortDescription());
 	}
 	
