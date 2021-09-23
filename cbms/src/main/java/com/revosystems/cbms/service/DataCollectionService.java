@@ -34,7 +34,7 @@ public class DataCollectionService implements Runnable, SerialPortDataListener {
 	
 	private SerialPort port;
 	
-	@Value("${port.name}")
+	@Value("${port.name:CH340}")
 	private String portName;
 	
 	@NonNull 
