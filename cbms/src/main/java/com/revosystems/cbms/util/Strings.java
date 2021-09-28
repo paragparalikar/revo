@@ -34,4 +34,22 @@ public class Strings {
 		return lines;
 	}
 	
+	private static final char[] hex = "0123456789abcdef".toCharArray();
+	
+	public static String toHexString(byte[] bytes) {
+        if (null == bytes) {
+            return null;
+        }
+
+        StringBuilder sb = new StringBuilder(bytes.length << 1);
+
+        for (byte aByte : bytes) {
+            sb.append(hex[(aByte & 0xf0) >> 4])
+                    .append(hex[(aByte & 0x0f)])
+            ;
+        }
+
+        return sb.toString();
+    }
+	
 }

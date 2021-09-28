@@ -1,6 +1,6 @@
 package com.revosystems.cbms.service;
 
-import java.util.Optional;
+import java.nio.ByteBuffer;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -14,6 +14,7 @@ import com.revosystems.cbms.domain.model.ChannelConfiguration;
 import com.revosystems.cbms.domain.model.Metric;
 import com.revosystems.cbms.domain.model.Sensor;
 import com.revosystems.cbms.util.Ports;
+import com.revosystems.cbms.util.Strings;
 
 import lombok.Getter;
 import lombok.NonNull;
@@ -34,7 +35,7 @@ public class DataCollectionService implements Runnable, SerialPortDataListener {
 	
 	private SerialPort port;
 	
-	@Value("${port.name:CH340}")
+	@Value("${port.name}")
 	private String portName;
 	
 	@NonNull 
@@ -76,6 +77,7 @@ public class DataCollectionService implements Runnable, SerialPortDataListener {
 		final long now = System.currentTimeMillis();
 		if(enabled && null != port && port.isOpen() && lastRequestTimestamp + delayMillis <= now) {
 			log.info("Sending request to port {}", port.getDescriptivePortName());
+			log.info("Request data : " + Long.toHexString(ByteBuffer.wrap(REQUEST).getLong()));
 			port.removeDataListener();
 			port.addDataListener(this);
 			port.writeBytes(REQUEST, 8);
@@ -87,8 +89,8 @@ public class DataCollectionService implements Runnable, SerialPortDataListener {
 	
 	@Override
 	public void serialEvent(SerialPortEvent event) {
-		log.info("Received data from port");
 		final byte[] response = event.getReceivedData();
+		log.info("Received data from port : " + Strings.toHexString(response));
 		for(int valueIndex = 3, channelIndex = 0; valueIndex < 19; valueIndex += 2, channelIndex ++) {
 			final int value = response[valueIndex] << 8 & 0xFF00 | response[valueIndex + 1] & 0xFF;
 			final Channel channel = Channel.values()[channelIndex];
