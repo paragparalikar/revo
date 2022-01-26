@@ -21,9 +21,9 @@ jobs:
       with:
         java-version: 1.8
     - name: Build with Maven
-      run: mvn -B package --file cbms/pom.xml
+      run: mvn -B package --file llms/pom.xml
     - name: Upload Maven build artifact
       uses: actions/upload-artifact@v1
       with:
         name: artifact
-        path: cbms/target/cbms-0.0.1-SNAPSHOT-spring-boot.jar
+        path: llms/target/llms-0.0.1-SNAPSHOT-spring-boot.jar
