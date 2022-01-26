@@ -1,6 +1,5 @@
 package com.revosystems.llms;
 
-import java.nio.ByteBuffer;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -11,8 +10,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.fazecast.jSerialComm.SerialPort;
-import com.fazecast.jSerialComm.SerialPortDataListener;
 import com.fazecast.jSerialComm.SerialPortEvent;
+import com.fazecast.jSerialComm.SerialPortPacketListener;
 import com.revosystems.llms.util.Ports;
 import com.revosystems.llms.util.Strings;
 
@@ -20,8 +19,8 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-public class Client implements Runnable, SerialPortDataListener {
-	private static final byte[] REQUEST = new byte[]{1,3,0,0,0,8,15,5};
+public class Client implements Runnable, SerialPortPacketListener {
+	private static final byte[] REQUEST = new byte[]{1,3,0,0,0,15,5,(byte)206};
 
 	private SerialPort port;
 	
@@ -32,20 +31,17 @@ public class Client implements Runnable, SerialPortDataListener {
 	private StationStateChangeService stationStateChangeService;
 	
 	@Override
-	@Scheduled(initialDelay = 1000, fixedRateString = "${poll.delay.millis:1000}")
+	@Scheduled(initialDelay = 1000, fixedDelayString = "${poll.delay.millis:1000}")
 	public void run(){
 		if(!isConnected()) connect();
 		if(isConnected()) write();
 	}
 	
 	private void write() {
-		log.info("Sending request to port " + port.getDescriptivePortName());
-		log.info("Request data : " + Long.toHexString(ByteBuffer.wrap(REQUEST).getLong()));
 		port.removeDataListener();
 		port.addDataListener(this);
-		port.writeBytes(REQUEST, 8);
+		port.writeBytes(REQUEST, REQUEST.length);
 		while(port.bytesAwaitingWrite() > 0) {}
-		log.info("Request sent successfully to port " + port.getDescriptivePortName());
 	}
 	
 	private boolean isConnected() {
@@ -60,7 +56,7 @@ public class Client implements Runnable, SerialPortDataListener {
 		if(null != port) port.removeDataListener();
 		port = Ports.findByName(portName);
 		if(null != port) {
-			port.setBaudRate(19200);
+			port.setBaudRate(9600);
 			port.setNumDataBits(8);
 			port.setNumStopBits(1);
 			port.setParity(SerialPort.NO_PARITY);
@@ -81,22 +77,28 @@ public class Client implements Runnable, SerialPortDataListener {
 	@Override
 	public void serialEvent(SerialPortEvent event) {
 		final byte[] response = event.getReceivedData();
-		log.info("Received data from port : " + Strings.toHexString(response));
+		log.debug("Received data from port : " + Strings.toHexString(response));
 		if(33 > response.length) {
-			log.error("Response too short, expected 33 bytes, got " + response.length);
+			log.error("Response too short, expected at least 33 bytes, got " + response.length);
 		} else {
 			final Set<StationStateChange> states = new HashSet<>();
 			for(int index = 4; index < 33; index+=2) {
+				final int stationId = index/2 - 1;
 				for(BreakdownType type : BreakdownType.values()) {
-					states.add(resolve(index - 3, response[index], type));
+					states.add(resolve(stationId, response[index], type));
 				}
 			}
 			try {
 				stationStateChangeService.saveAll(states);
 			} catch(Exception e) {
-				e.printStackTrace();
+				log.error("Failed to persist station state change", e);
 			}
 		}
+	}
+	
+	@Override
+	public int getPacketSize() {
+		return 35;
 	}
 	
 	private StationStateChange resolve(long stationId, byte state, BreakdownType type) {

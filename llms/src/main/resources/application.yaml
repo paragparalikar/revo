@@ -1,5 +1,11 @@
 spring:
+  main:    banner-mode: off
+    log-startup-info: false
+  jpa:
+    hibernate:      hbm2ddl:
+        auto: update
   datasource:
+    type: 
     url: jdbc:mysql://localhost:3306/mysql
     username: root
     password:     driver-class-name: com.mysql.cj.jdbc.Driver

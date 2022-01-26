@@ -20,7 +20,7 @@ import lombok.NonNull;
 @Data
 @Entity
 @NoArgsConstructor
-@Table(name = "STATION_STATE_CHANGE")
+@Table(name = "STATION_STATE_CHANGE", schema = "mysql")
 public class StationStateChange {
 
 	@Id 

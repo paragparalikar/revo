@@ -29,8 +29,8 @@ public class StationStateChangeService {
 				.findTopByStationIdAndTypeOrderByTimestampDesc(change.getStationId(), change.getType())
 				.orElse(null);
 		if(null == lastChange || !Objects.equals(lastChange.getState(), change.getState())) {
-			final StationStateChange managed = repository.save(change);
-			log.info("Persisted {}", managed);
+			log.info("Station state changed : {}", change);
+			repository.save(change);
 		}
 	}
 	
