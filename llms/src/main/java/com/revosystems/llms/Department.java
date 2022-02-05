@@ -1,6 +1,6 @@
 package com.revosystems.llms;
 
-public enum BreakdownType {
+public enum Department {
 
 	MAINTENANCE, QUALITY, MF, SUPERVISOR;
 
