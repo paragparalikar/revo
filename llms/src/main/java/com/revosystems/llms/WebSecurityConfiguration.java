@@ -33,8 +33,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter imple
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests().antMatchers("/", "/h2", "/h2/**").permitAll()
-			//.antMatchers(HttpMethod.GET, "/reasons").hasRole("USER")
-			//.antMatchers("/reasons", "/reasons/**").hasRole("ADMIN")
 			.anyRequest().authenticated().and()
 			.csrf().disable()
 			.cors().disable()
@@ -63,8 +61,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter imple
 			configurer.withDefaultSchema();
 			configurer.withUser("parag")
 				.password(passwordEncoder().encode("parag"))
-				.roles("USER")
-				.authorities("MF");
+				.authorities("MF", "ROLE_USER");
 			configurer.withUser("admin")
 				.password(passwordEncoder().encode("admin"))
 				.roles("ADMIN");
