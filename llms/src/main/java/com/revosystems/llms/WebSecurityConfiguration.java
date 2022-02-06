@@ -5,6 +5,7 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configurers.provisioning.JdbcUserDetailsManagerConfigurer;
@@ -24,11 +25,13 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests().antMatchers("/", "/h2", "/h2/**").permitAll()
-				.anyRequest().authenticated()
-				.and().csrf().ignoringAntMatchers("/h2/**")
-				.and().headers().frameOptions().disable()
-				.and().formLogin().permitAll().and()
-				.logout().permitAll();
+			.antMatchers(HttpMethod.GET, "/reasons").hasRole("USER")
+			.antMatchers("/reasons", "/reasons/**").hasRole("ADMIN")
+			.anyRequest().authenticated()
+			.and().csrf().ignoringAntMatchers("/h2/**")
+			.and().headers().frameOptions().disable()
+			.and().formLogin().permitAll().and()
+			.logout().permitAll();
 	}
 
 	@Override
@@ -38,10 +41,14 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.passwordEncoder(passwordEncoder());
 		
 		if (!dataSource.getConnection().getMetaData().getTables(null, "", "USERS", null).first()) {
-			configurer.withDefaultSchema()
-				.withUser("parag")
+			configurer.withDefaultSchema();
+			configurer.withUser("parag")
 				.password(passwordEncoder().encode("parag"))
-				.roles("USER");
+				.roles("USER")
+				.authorities("MF");
+			configurer.withUser("admin")
+				.password(passwordEncoder().encode("admin"))
+				.roles("ADMIN");
 		}
 	}
 
