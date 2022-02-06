@@ -7,26 +7,26 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class SecurityUtils {
 
-	public boolean isAdmin(User user) {
+	public boolean isAdmin(UserDetails user) {
 		return user.getAuthorities().stream()
 			.map(GrantedAuthority::getAuthority)
 			.anyMatch(Predicate.isEqual("ROLE_ADMIN"));
 	}
 	
-	public boolean hasAuthority(User user, String authority) {
+	public boolean hasAuthority(UserDetails user, String authority) {
 		return isAdmin(user) || user.getAuthorities().stream()
 				.map(GrantedAuthority::getAuthority)
 				.anyMatch(Predicate.isEqual(authority));
 	}
 	
-	public Set<Department> getAccessibleDepartments(User user){
+	public Set<Department> getAccessibleDepartments(UserDetails user){
 		if(isAdmin(user)) return new HashSet<>(Arrays.asList(Department.values()));
 		final Set<String> authorities = user.getAuthorities().stream()
 				.map(GrantedAuthority::getAuthority)
