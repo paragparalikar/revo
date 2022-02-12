@@ -51,7 +51,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter imple
 	}
 	
 	@Autowired
-	public void configureGlobal(AuthenticationManagerBuilder auth, JdbcUserDetailsManager userDetailsManager, DataSource dataSource, PasswordEncoder enc) throws Exception {
+	public void configureGlobal(AuthenticationManagerBuilder auth, JdbcUserDetailsManager userDetailsManager, DataSource dataSource) throws Exception {
 		auth.userDetailsService(userDetailsManager);
 	    final JdbcUserDetailsManagerConfigurer<AuthenticationManagerBuilder> configurer =
 	            new JdbcUserDetailsManagerConfigurer<>(userDetailsManager);
