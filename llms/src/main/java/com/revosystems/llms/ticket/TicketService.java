@@ -1,5 +1,7 @@
 package com.revosystems.llms.ticket;
 
+import static com.revosystems.llms.ticket.TicketStatus.OPEN;
+
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -69,9 +71,19 @@ public class TicketService {
 	private Ticket apply(Ticket ticket) {
 		final Ticket persistentTicket = ticketRepository.findTopByStationIdAndDepartmentOrderByOpenTimestampDesc(
 				ticket.getStationId(), ticket.getDepartment()).orElse(null);
-		if(null == persistentTicket) return ticket;
-		else if(ticket.isOpen() && persistentTicket.isClosed()) return ticket;
-		else if(persistentTicket.isOpen() && ticket.isClosed()) {
+		if(null == persistentTicket) {
+			if(OPEN.equals(ticket.getStatus())) {
+				log.info("No previous ticket found, new open ticket received - {}", ticket);
+				return ticket;
+			} else {
+				log.debug("No previous ticket found, received closed ticket, will be discarded - {}", ticket);
+				return null;
+			}
+		} else if(ticket.isOpen() && persistentTicket.isClosed()) {
+			log.info("Last ticket was closed, new open ticket received - {}", ticket);
+			return ticket;
+		} else if(persistentTicket.isOpen() && ticket.isClosed()) {
+			log.info("Current ticket is open, it is being closed");
 			persistentTicket.setStatus(ticket.getStatus());
 			persistentTicket.setClosedTimestamp(ticket.getClosedTimestamp());
 			return persistentTicket;

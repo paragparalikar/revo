@@ -51,7 +51,6 @@ public class Ticket {
 	@ManyToOne
 	private Reason reason;
 	
-	@NonNull
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(nullable = false, updatable = false)
 	private Date openTimestamp;

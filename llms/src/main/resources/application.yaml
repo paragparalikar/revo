@@ -3,7 +3,7 @@ spring:
   main:    banner-mode: off
     log-startup-info: false
   jpa:
-    show-sql: true
+    show-sql: false
     generate-ddl: true
     hibernate:
       ddl-auto: update  datasource:
