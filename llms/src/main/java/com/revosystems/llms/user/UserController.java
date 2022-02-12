@@ -48,8 +48,8 @@ public class UserController {
 		return new User(dto.getUsername(), passwordEncoder.encode(dto.getPassword()), authorities);
 	}
 	
-	@GetMapping("/me")
-	public UserDto whoAmI(@AuthenticationPrincipal UserDetails userDetails) {
+	@GetMapping("/self")
+	public UserDto self(@AuthenticationPrincipal UserDetails userDetails) {
 		return toDto(userDetails);
 	}
 	

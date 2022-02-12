@@ -32,7 +32,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter imple
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests().antMatchers("/", "/h2", "/h2/**").permitAll()
+		http.authorizeRequests()
+			.antMatchers("/", "/h2", "/h2/**").permitAll()
 			.anyRequest().authenticated().and()
 			.csrf().disable()
 			.cors().disable()
@@ -55,8 +56,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter imple
 	    final JdbcUserDetailsManagerConfigurer<AuthenticationManagerBuilder> configurer =
 	            new JdbcUserDetailsManagerConfigurer<>(userDetailsManager);
 	    configurer.dataSource(dataSource);
-	    auth.apply(configurer);
-	    
 	    if (!dataSource.getConnection().getMetaData().getTables(null, "", "USERS", null).first()) {
 			configurer.withDefaultSchema();
 			configurer.withUser("parag")
@@ -66,6 +65,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter imple
 				.password(passwordEncoder().encode("admin"))
 				.roles("ADMIN");
 		}
+	    auth.apply(configurer);
 	}
 	
 	@Bean
