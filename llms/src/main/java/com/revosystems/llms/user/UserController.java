@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.revosystems.llms.SecurityUtils;
+
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -37,6 +39,7 @@ public class UserController {
 		dto.setAuthorities(userDetails.getAuthorities().stream()
 				.map(GrantedAuthority::getAuthority)
 				.collect(Collectors.toSet()));
+		dto.setDepartments(SecurityUtils.getAccessibleDepartments(userDetails));
 		return dto;
 	}
 	
