@@ -50,6 +50,7 @@ public class TicketController {
 		final Reason reason = reasonService.findById(reasonId)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No reason found with id " + reasonId));
 		ticket.setReason(reason);
+		ticket.setStatus(TicketStatus.CLOSED);
 		return ticketService.save(ticket);
 	}
 	

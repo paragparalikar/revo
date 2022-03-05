@@ -65,14 +65,14 @@
 			<artifactId>springdoc-openapi-security</artifactId>
 			<version>1.6.5</version>
 		</dependency>
-		<!-- <dependency>
+		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
-		</dependency> -->
-		<dependency> 
+		</dependency>
+		<!-- <dependency> 
 			<groupId>mysql</groupId> 
 			<artifactId>mysql-connector-java</artifactId> 
-		</dependency>
+		</dependency> -->
 	</dependencies>
 
 	<build>
