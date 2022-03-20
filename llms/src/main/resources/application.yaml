@@ -1,3 +1,4 @@
+server:  port: 80 
 spring:
   sql:    init:      continue-on-error: true
   main:    banner-mode: off
