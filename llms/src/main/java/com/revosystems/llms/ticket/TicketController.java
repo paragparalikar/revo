@@ -22,6 +22,9 @@ import com.revosystems.llms.SecurityUtils;
 import com.revosystems.llms.reason.Reason;
 import com.revosystems.llms.reason.ReasonService;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @RestController
 @RequestMapping("/tickets")
 public class TicketController {
@@ -40,7 +43,10 @@ public class TicketController {
 			@RequestParam(defaultValue = "openTimestamp") String... properties){
 		final Set<Department> departments = SecurityUtils.getAccessibleDepartments(user);
 		final Pageable pageable = PageRequest.of(page, size, direction, properties);
-		return ticketService.findAllByDepartments(departments, pageable);
+		log.info("Searching tickets for user {} with departments {}", user.getUsername(), departments);
+		final Page<Ticket> ticketsPage = ticketService.findAllByDepartments(departments, pageable);
+		log.info("Found total {} tickets, returning {}", ticketsPage.getTotalElements(), ticketsPage.getNumberOfElements());
+		return ticketsPage;
 	}
 	
 	@PatchMapping

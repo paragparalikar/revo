@@ -4,13 +4,13 @@ spring:
   main:    banner-mode: off
     log-startup-info: false
   jpa:
-    show-sql: false
-    generate-ddl: true
+    show-sql: true
+    generate-ddl: false
     hibernate:
-      ddl-auto: update  datasource:
+      ddl-auto: none  datasource:
     type: 
     url: jdbc:mysql://localhost:3306/mysql
     username: root
-    password:     driver-class-name: com.mysql.cj.jdbc.Driver
+    password: root    driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:      minimum-idle: 1
       maximum-pool-size: 1
