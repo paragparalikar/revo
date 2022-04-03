@@ -61,14 +61,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter imple
 		auth.userDetailsService(userDetailsManager);
 	    final JdbcUserDetailsManagerConfigurer<AuthenticationManagerBuilder> configurer =
 	            new JdbcUserDetailsManagerConfigurer<>(userDetailsManager);
-	    final PasswordEncoder encoder = passwordEncoder();
-	    configurer
-	    	.dataSource(dataSource)
-	    	.withUser("Admin").password(encoder.encode("admin")).authorities("ROLE_ADMIN").and()
-	    	.withUser("Quality").password(encoder.encode("quality_sup")).authorities("ROLE_USER", Department.QUALITY.name()).and()
-	    	.withUser("Supervisor").password(encoder.encode("supervisor")).authorities("ROLE_USER", Department.SUPERVISOR.name()).and()
-	    	.withUser("Material").password(encoder.encode("material_sup")).authorities("ROLE_USER", Department.MF.name()).and()
-	    	.withUser("ME").password(encoder.encode("me_sup")).authorities("ROLE_USER", Department.MAINTENANCE.name());
+	    configurer.dataSource(dataSource);
 	    auth.apply(configurer);
 	}
 	
