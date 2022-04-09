@@ -20,19 +20,18 @@ import lombok.extern.slf4j.Slf4j;
 public class PortPoller<T> implements SerialPortPacketListener {
 	
 	private SerialPort port;
-	@NonNull private final byte[] request;
 	@NonNull private final String portName;
 	@NonNull private final Integer responseSize;
 	@NonNull private final Consumer<T> callback;
 	@NonNull private final PortResolver portResolver;
 	@NonNull private final Function<byte[], T> resolver;
 	
-	public void poll() {
+	public void poll(final byte[] request) {
 		if(!isConnected()) connect();
-		if(isConnected()) write();
+		if(isConnected()) write(request);
 	}
 
-	private void write() {
+	private void write(final byte[] request) {
 		port.removeDataListener();
 		port.addDataListener(this);
 		port.writeBytes(request, request.length);

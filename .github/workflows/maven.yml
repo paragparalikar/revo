@@ -26,4 +26,4 @@ jobs:
       uses: actions/upload-artifact@v1
       with:
         name: artifact
-        path: llms/target/llms-0.0.1-SNAPSHOT-spring-boot.jar
+        path: llms/target/llms-1.0.0-spring-boot.jar

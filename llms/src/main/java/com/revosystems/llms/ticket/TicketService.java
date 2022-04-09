@@ -44,7 +44,6 @@ public class TicketService {
 	@PostConstruct
 	public void init() {
 		this.portPoller = PortPoller.<Set<Ticket>>builder()
-				.request(new byte[]{1,3,0,0,0,15,5,(byte)206})
 				.responseSize(35)
 				.portName(portName)
 				.callback(this::accept)
@@ -56,7 +55,8 @@ public class TicketService {
 	@Scheduled(initialDelayString = "${poll.initial-delay.millis:1000}", 
 			fixedDelayString = "${poll.fixed-delay.millis:1000}")
 	public void poll() {
-		portPoller.poll();
+		portPoller.poll(new byte[]{1,3,0,0,0,15,5,(byte)206});
+		portPoller.poll(new byte[]{2,3,0,0,0,15,5,(byte)206});
 	}
 	
 	private void accept(Set<Ticket> tickets) {
