@@ -14,9 +14,11 @@ public class TicketsResolver implements Function<byte[], Set<Ticket>> {
 
 	@Override
 	public Set<Ticket> apply(byte[] data) {
+		final int deviceIndex = data[0];
+		final int stationIdOffset = (deviceIndex - 1) * 15;
 		final Set<Ticket> tikets = new HashSet<>();
 		for(int index = 4; index < 33; index+=2) {
-			final int stationId = index/2 - 1;
+			final int stationId = index/2 - 1 + stationIdOffset;
 			for(Department department : Department.values()) {
 				tikets.add(resolve(stationId, data[index], department));
 			}
