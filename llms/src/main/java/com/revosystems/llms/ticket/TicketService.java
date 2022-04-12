@@ -27,8 +27,11 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional
 public class TicketService {
 	
-	@Value("${llms.port-name:CH340}")
+	@Value("${llms.port-name:USB}")
 	private String portName;
+	
+	@Value("${llms.port.request-timeout:5000}")
+	private Long requestTimeoutMillis;
 	
 	@Autowired
 	private TicketsResolver ticketsResolver;
@@ -56,7 +59,7 @@ public class TicketService {
 			fixedDelayString = "${poll.fixed-delay.millis:1000}")
 	public void poll() {
 		portPoller.poll(new byte[]{1,3,0,0,0,15,5,(byte)206});
-		portPoller.poll(new byte[]{2,3,0,0,0,15,5,(byte)206});
+		portPoller.poll(new byte[]{2,3,0,0,0,15,5,(byte)253});
 	}
 	
 	private void accept(Set<Ticket> tickets) {
@@ -73,10 +76,10 @@ public class TicketService {
 				ticket.getStationId(), ticket.getDepartment()).orElse(null);
 		if(null == persistentTicket) {
 			if(OPEN.equals(ticket.getStatus())) {
-				log.info("No previous ticket found, new open ticket received - {}", ticket);
+				log.trace("No previous ticket found, new open ticket received - {}", ticket);
 				return ticket;
 			} else {
-				log.debug("No previous ticket found, received closed ticket, will be discarded - {}", ticket);
+				log.trace("No previous ticket found, received closed ticket, will be discarded - {}", ticket);
 				return null;
 			}
 		} else if(ticket.isOpen() && persistentTicket.isClosed()) {
