@@ -1,10 +1,10 @@
-server:  port: 80 
+server:  port: 8080 
 spring:
   sql:    init:      continue-on-error: true
   main:    banner-mode: off
     log-startup-info: false
   jpa:
-    show-sql: true
+    show-sql: false
     generate-ddl: false
     hibernate:
       ddl-auto: none  datasource:
