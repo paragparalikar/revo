@@ -5,32 +5,42 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.revo.llms.part.PartRepository;
 import com.revo.llms.product.Product;
 import com.revo.llms.product.ProductRepository;
-import com.revo.llms.web.ui.vaadin.common.HasNameView;
 import com.revo.llms.web.ui.vaadin.common.JpaDataProvider;
 import com.revo.llms.web.ui.vaadin.common.MainLayout;
+import com.revo.llms.web.ui.vaadin.common.TitledGridView;
 import com.revo.llms.web.ui.vaadin.part.PartView;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
 @PageTitle("Products")
 @Route(value = "products", layout = MainLayout.class)
-public class ProductView extends HasNameView<Product> {
+public class ProductView extends TitledGridView<Product> {
 	private static final long serialVersionUID = -597643178274272245L;
 
+	private final ProductEditor editor;
+	private final ProductRepository repository;
 	private final PartRepository partRepository;
+	private final DataProvider<Product, Void> dataProvider;
 	
 	public ProductView(@Autowired ProductRepository repository, @Autowired PartRepository partRepository) {
-		super(VaadinIcon.CART.create(), "Products", repository, new ProductEditor(new JpaDataProvider<>(repository), repository));
+		super(VaadinIcon.CART.create(), "Products");
+		this.repository = repository;
 		this.partRepository = partRepository;
+		this.dataProvider = new JpaDataProvider<>(repository);
+		this.editor = new ProductEditor(repository, dataProvider);
+		getGrid().setItems(dataProvider);
+		add(editor);
 	}
 	
 	@Override
 	protected void createColumns(Grid<Product> grid) {
-		grid.addColumn(Product::getId).setHeader("Id");
+		grid.addColumn(Product::getId, "id").setHeader("Id");
+		grid.addColumn(Product::getName, "name").setHeader("Name");
 		super.createColumns(grid);
 	}
 	
@@ -48,6 +58,17 @@ public class ProductView extends HasNameView<Product> {
 	@Override
 	protected void delete(Product product) {
 		partRepository.deleteByProductId(product.getId());
-		super.delete(product);
+		repository.delete(product);
+		dataProvider.refreshAll();
+	}
+
+	@Override
+	protected void create() {
+		editor.open(null);
+	}
+
+	@Override
+	protected void edit(Product value) {
+		editor.open(value);
 	}
 }
