@@ -1,8 +1,5 @@
 package com.revo.llms.web.ui.vaadin.common;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-
-import com.revo.llms.common.HasName;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.ColumnTextAlign;
@@ -14,36 +11,28 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import lombok.Getter;
 
 @Getter
-public class HasNameView<T extends HasName> extends TitledView {
-	private static final long serialVersionUID = -6215249907986160768L;
+public abstract class TitledGridView<T> extends TitledView {
+	private static final long serialVersionUID = 7661138175543626984L;
 
-	private final Grid<T> grid;
-	private final HasNameEditor<T, ?> editor;
-	private final JpaRepository<T, Long> repository;
+	private final Grid<T> grid = new Grid<>();
 	
-	@SuppressWarnings("deprecation")
-	public HasNameView(Icon icon, String title, JpaRepository<T, Long> repository, HasNameEditor<T, ?> editor) {
+	public TitledGridView(Icon icon, String title) {
 		super(icon, title);
-		this.editor = editor;
-		this.repository = repository;
-		this.grid = new Grid<T>();
 		createColumns(grid);
-		grid.addComponentColumn(this::createActionCell)
-			.setSortable(false)
-			.setHeader(createCreateButton())
-			.setTextAlign(ColumnTextAlign.END)
-			.setAutoWidth(true);
-		add(grid, editor);
-		grid.setDataProvider(editor.getDataProvider());
+		add(grid);
 	}
 	
 	protected void createColumns(Grid<T> grid) {
-		grid.addColumn(T::getName, "name").setHeader("Name");
+		grid.addComponentColumn(this::createActionCell)
+			.setSortable(false)
+			.setHeader(createActionColumnHeader())
+			.setTextAlign(ColumnTextAlign.END)
+			.setAutoWidth(true);
 	}
 	
-	private Component createCreateButton() {
+	protected Component createActionColumnHeader() {
 		final Button button = new Button("New", VaadinIcon.PLUS.create());
-		button.addClickListener(event -> editor.open(null));
+		button.addClickListener(event -> create());
 		return button;
 	}
 	
@@ -56,12 +45,8 @@ public class HasNameView<T extends HasName> extends TitledView {
 		return container;
 	}
 	
-	protected void edit(T value) {
-		editor.open(value);
-	}
+	protected abstract void create();
+	protected abstract void edit(T value);
+	protected abstract void delete(T value);
 	
-	protected void delete(T department) {
-		repository.delete(department);
-		editor.getDataProvider().refreshAll();
-	}
 }

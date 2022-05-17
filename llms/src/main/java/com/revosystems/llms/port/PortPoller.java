@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 public class PortPoller<T> implements SerialPortPacketListener {
 	
 	private SerialPort port;
-	private volatile long lastRequestTimestamp = 0;
+	@Builder.Default private volatile long lastRequestTimestamp = 0;
 	
 	@NonNull private final String portName;
 	@NonNull private final Integer responseSize;

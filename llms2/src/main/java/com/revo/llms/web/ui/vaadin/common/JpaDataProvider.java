@@ -17,7 +17,7 @@ import lombok.experimental.Delegate;
 public class JpaDataProvider<T, F> implements DataProvider<T, F> {
 	private static final long serialVersionUID = -2407236386318050172L;
 
-	@NonNull private final JpaRepository<T, Long> repository;
+	@NonNull private final JpaRepository<T, ?> repository;
 	@Delegate private final DataProvider<T, F> delegate = new CallbackDataProvider<>(this::fetch_, this::count_);
 	
 	private int count_(Query<T, F> query) {
