@@ -1,4 +1,4 @@
-package com.revo.llms.web.ui.vaadin.util;
+package com.revo.llms.util;
 
 import com.vaadin.flow.data.binder.Result;
 import com.vaadin.flow.data.binder.ValueContext;

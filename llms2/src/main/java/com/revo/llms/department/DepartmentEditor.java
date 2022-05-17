@@ -1,11 +1,9 @@
-package com.revo.llms.web.ui.vaadin.department;
+package com.revo.llms.department;
 
 import java.util.Objects;
 
-import com.revo.llms.department.Department;
-import com.revo.llms.department.DepartmentRepository;
-import com.revo.llms.web.ui.vaadin.common.TitledFormEditor;
-import com.revo.llms.web.ui.vaadin.util.DoubleToIntegerConverter;
+import com.revo.llms.common.TitledFormEditor;
+import com.revo.llms.util.DoubleToIntegerConverter;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.textfield.NumberField;

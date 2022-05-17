@@ -1,4 +1,4 @@
-package com.revo.llms.web.ui.vaadin.common;
+package com.revo.llms.common;
 
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;

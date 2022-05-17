@@ -1,7 +1,9 @@
-package com.revo.llms.web.ui.vaadin.common;
+package com.revo.llms.common;
 
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.H3;
@@ -50,9 +52,14 @@ public abstract class TitledEditor extends Dialog {
 	}
 	
 	protected Component createButtonBar() {
-		final Button saveButton = new Button("Save", VaadinIcon.DATABASE.create(), event -> action());
 		final Button cancelButton = new Button("Cancel", VaadinIcon.CLOSE.create(), event -> close());
-		final HorizontalLayout buttonsLayout = new HorizontalLayout(saveButton, cancelButton);
+		cancelButton.addClickShortcut(Key.ESCAPE);
+		cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+		final Button saveButton = new Button("Save", VaadinIcon.DATABASE.create(), event -> action());
+		saveButton.setAutofocus(true);
+		saveButton.addClickShortcut(Key.ENTER);
+		saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+		final HorizontalLayout buttonsLayout = new HorizontalLayout(cancelButton, saveButton);
 		buttonsLayout.setWidthFull();
 		buttonsLayout.setAlignItems(Alignment.END);
 		buttonsLayout.setJustifyContentMode(JustifyContentMode.END);

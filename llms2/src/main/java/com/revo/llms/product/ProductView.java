@@ -1,14 +1,12 @@
-package com.revo.llms.web.ui.vaadin.product;
+package com.revo.llms.product;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.revo.llms.common.JpaDataProvider;
+import com.revo.llms.common.MainLayout;
+import com.revo.llms.common.TitledGridView;
 import com.revo.llms.part.PartRepository;
-import com.revo.llms.product.Product;
-import com.revo.llms.product.ProductRepository;
-import com.revo.llms.web.ui.vaadin.common.JpaDataProvider;
-import com.revo.llms.web.ui.vaadin.common.MainLayout;
-import com.revo.llms.web.ui.vaadin.common.TitledGridView;
-import com.revo.llms.web.ui.vaadin.part.PartView;
+import com.revo.llms.part.PartView;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.icon.VaadinIcon;

@@ -1,4 +1,4 @@
-package com.revo.llms.web.ui.vaadin.common;
+package com.revo.llms.common;
 
 import java.util.function.Supplier;
 

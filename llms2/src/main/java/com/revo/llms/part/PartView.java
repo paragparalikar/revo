@@ -1,13 +1,11 @@
-package com.revo.llms.web.ui.vaadin.part;
+package com.revo.llms.part;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.revo.llms.part.Part;
-import com.revo.llms.part.PartRepository;
+import com.revo.llms.common.MainLayout;
+import com.revo.llms.common.TitledGridView;
 import com.revo.llms.product.Product;
 import com.revo.llms.product.ProductRepository;
-import com.revo.llms.web.ui.vaadin.common.MainLayout;
-import com.revo.llms.web.ui.vaadin.common.TitledGridView;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.router.BeforeEvent;

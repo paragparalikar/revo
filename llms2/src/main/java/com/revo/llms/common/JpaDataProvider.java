@@ -1,10 +1,10 @@
-package com.revo.llms.web.ui.vaadin.common;
+package com.revo.llms.common;
 
 import java.util.stream.Stream;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.revo.llms.web.ui.vaadin.util.VaadinUtils;
+import com.revo.llms.util.VaadinUtils;
 import com.vaadin.flow.data.provider.CallbackDataProvider;
 import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.provider.Query;

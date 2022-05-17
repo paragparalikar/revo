@@ -1,4 +1,4 @@
-package com.revo.llms.web.ui.vaadin.common;
+package com.revo.llms.common;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.html.H2;

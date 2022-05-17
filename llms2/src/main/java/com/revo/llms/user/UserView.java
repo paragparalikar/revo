@@ -1,6 +1,6 @@
-package com.revo.llms.web.ui.vaadin.view;
+package com.revo.llms.user;
 
-import com.revo.llms.web.ui.vaadin.common.MainLayout;
+import com.revo.llms.common.MainLayout;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;

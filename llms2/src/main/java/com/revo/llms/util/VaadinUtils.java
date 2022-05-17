@@ -1,4 +1,4 @@
-package com.revo.llms.web.ui.vaadin.util;
+package com.revo.llms.util;
 
 import java.util.List;
 import java.util.stream.Collectors;

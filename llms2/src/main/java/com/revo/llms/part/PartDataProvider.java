@@ -1,10 +1,8 @@
-package com.revo.llms.web.ui.vaadin.part;
+package com.revo.llms.part;
 
 import java.util.stream.Stream;
 
-import com.revo.llms.part.Part;
-import com.revo.llms.part.PartRepository;
-import com.revo.llms.web.ui.vaadin.util.VaadinUtils;
+import com.revo.llms.util.VaadinUtils;
 import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
 import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.provider.Query;

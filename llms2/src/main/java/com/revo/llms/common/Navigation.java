@@ -1,11 +1,11 @@
-package com.revo.llms.web.ui.vaadin.common;
+package com.revo.llms.common;
 
-import com.revo.llms.web.ui.vaadin.dashboard.DashboardView;
-import com.revo.llms.web.ui.vaadin.department.DepartmentView;
-import com.revo.llms.web.ui.vaadin.product.ProductView;
-import com.revo.llms.web.ui.vaadin.reason.ReasonView;
-import com.revo.llms.web.ui.vaadin.view.TicketView;
-import com.revo.llms.web.ui.vaadin.view.UserView;
+import com.revo.llms.dashboard.DashboardView;
+import com.revo.llms.department.DepartmentView;
+import com.revo.llms.product.ProductView;
+import com.revo.llms.reason.ReasonView;
+import com.revo.llms.ticket.TicketView;
+import com.revo.llms.user.UserView;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
