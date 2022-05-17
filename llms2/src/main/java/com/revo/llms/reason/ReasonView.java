@@ -25,8 +25,10 @@ public class ReasonView extends TitledGridView<Reason> {
 		this.repository = repository;
 		this.dataProvider = new JpaDataProvider<>(repository);
 		this.editor = new ReasonEditor(repository, dataProvider);
-		getGrid().setItems(dataProvider);
-		add(editor);
+		final Grid<Reason> grid = new Grid<>();
+		grid.setItems(dataProvider);
+		createColumns(grid);
+		add(grid, editor);
 	}
 
 	protected void createColumns(Grid<Reason> grid) {

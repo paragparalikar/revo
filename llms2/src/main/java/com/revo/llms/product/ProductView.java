@@ -31,8 +31,10 @@ public class ProductView extends TitledGridView<Product> {
 		this.partRepository = partRepository;
 		this.dataProvider = new JpaDataProvider<>(repository);
 		this.editor = new ProductEditor(repository, dataProvider);
-		getGrid().setItems(dataProvider);
-		add(editor);
+		final Grid<Product> grid = new Grid<>();
+		grid.setItems(dataProvider);
+		createColumns(grid);
+		add(grid, editor);
 	}
 	
 	@Override

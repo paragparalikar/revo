@@ -25,8 +25,10 @@ public class DepartmentView extends TitledGridView<Department> {
 		this.repository = repository;
 		this.dataProvider = new JpaDataProvider<>(repository);
 		this.editor = new DepartmentEditor(repository, dataProvider);
-		getGrid().setItems(dataProvider);
-		add(editor);
+		final Grid<Department> grid = new Grid<>();
+		grid.setItems(dataProvider);
+		createColumns(grid);
+		add(grid, editor);
 	}
 	
 	@Override

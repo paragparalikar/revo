@@ -9,10 +9,14 @@ import javax.validation.constraints.NotBlank;
 
 import com.revo.llms.product.Product;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 public class Part {
 
 	@Id

@@ -1,6 +1,7 @@
 package com.revo.llms.common;
 
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
@@ -22,7 +23,9 @@ public class TitledView extends VerticalLayout {
 			.set("font-size", "var(--lumo-font-size-xl)")
 			.set("margin", "0");
 		left.setJustifyContentMode(JustifyContentMode.START);
+		left.setWidth(50, Unit.PERCENTAGE);
 		right.setJustifyContentMode(JustifyContentMode.END);
+		right.setWidth(50, Unit.PERCENTAGE);
 		add(header);
 	}
 	

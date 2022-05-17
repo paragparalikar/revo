@@ -14,12 +14,8 @@ import lombok.Getter;
 public abstract class TitledGridView<T> extends TitledView {
 	private static final long serialVersionUID = 7661138175543626984L;
 
-	private final Grid<T> grid = new Grid<>();
-	
 	public TitledGridView(Icon icon, String title) {
 		super(icon, title);
-		createColumns(grid);
-		add(grid);
 	}
 	
 	protected void createColumns(Grid<T> grid) {
