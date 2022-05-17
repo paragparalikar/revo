@@ -25,7 +25,7 @@ public abstract class TitledEditor extends Dialog {
 	private final Label errorLabel = new Label();
 	private final HorizontalLayout header = new HorizontalLayout(iconSpan, title);
 	private final FormLayout form = new FormLayout();
-	private final VerticalLayout container = new VerticalLayout(title, errorLabel, form, createButtonBar());
+	private final VerticalLayout container = new VerticalLayout(header, errorLabel, form, createButtonBar());
 
 	public TitledEditor() {
 		header.setWidthFull();
