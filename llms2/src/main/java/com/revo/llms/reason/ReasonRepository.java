@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ReasonRepository extends JpaRepository<Reason, Long> {
 
+	boolean existsByTextIgnoreCase(String text);
+	
 }

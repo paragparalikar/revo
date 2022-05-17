@@ -6,13 +6,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
 
-import com.revo.llms.common.HasName;
-
 import lombok.Data;
 
 @Data
 @Entity
-public class Product implements HasName {
+public class Product {
 
 	@Id
 	@GeneratedValue

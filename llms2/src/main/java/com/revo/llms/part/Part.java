@@ -7,14 +7,13 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotBlank;
 
-import com.revo.llms.common.HasName;
 import com.revo.llms.product.Product;
 
 import lombok.Data;
 
 @Data
 @Entity
-public class Part implements HasName {
+public class Part {
 
 	@Id
 	@GeneratedValue

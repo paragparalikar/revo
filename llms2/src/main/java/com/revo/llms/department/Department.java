@@ -7,8 +7,6 @@ import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-import com.revo.llms.common.HasName;
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -16,7 +14,7 @@ import lombok.NonNull;
 @Data
 @Entity
 @NoArgsConstructor
-public class Department implements HasName {
+public class Department {
 
 	@Id
 	@GeneratedValue
