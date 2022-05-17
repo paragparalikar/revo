@@ -13,6 +13,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.revo.llms.department.Department;
+import com.revo.llms.part.Part;
 import com.revo.llms.reason.Reason;
 
 import lombok.AllArgsConstructor;
@@ -49,6 +50,9 @@ public class Ticket {
 	
 	@ManyToOne
 	private Reason reason;
+	
+	@ManyToOne
+	private Part part;
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(nullable = false, updatable = false)
