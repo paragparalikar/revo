@@ -14,6 +14,8 @@ public interface PartRepository extends JpaRepository<Part, Long> {
 	Long countByProductId(Long productId);
 	
 	void deleteByProductId(Long productId);
+	
+	List<Part> findByProductId(Long productId);
 
 	List<Part> findByProductId(Long productId, Pageable pageable);
 	

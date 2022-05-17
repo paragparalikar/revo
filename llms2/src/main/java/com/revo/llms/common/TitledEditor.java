@@ -32,7 +32,7 @@ public abstract class TitledEditor extends Dialog {
 	public TitledEditor() {
 		header.setWidthFull();
 		errorLabel.setWidthFull();
-		errorLabel.getStyle().set("text-color", "#ff0000");
+		errorLabel.getStyle().set("color", "#ff0000");
 		title.getStyle()
 			.set("font-size", "var(--lumo-font-size-xl)")
 			.set("margin", "0");
