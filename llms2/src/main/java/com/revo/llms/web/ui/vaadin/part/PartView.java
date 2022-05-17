@@ -9,6 +9,7 @@ import com.revo.llms.product.ProductRepository;
 import com.revo.llms.web.ui.vaadin.common.HasNameView;
 import com.revo.llms.web.ui.vaadin.common.MainLayout;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
 import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;
@@ -24,7 +25,7 @@ public class PartView extends HasNameView<Part> implements HasUrlParameter<Long>
 	private final ProductRepository productRepository;
 	
 	public PartView(@Autowired PartRepository partRepository, @Autowired ProductRepository productRepository) {
-		super("Parts", partRepository, new PartEditor(
+		super(VaadinIcon.COGS.create(), "Parts", partRepository, new PartEditor(
 				new PartDataProvider(partRepository).withConfigurableFilter(), 
 				partRepository));
 		this.productRepository = productRepository;
@@ -37,7 +38,7 @@ public class PartView extends HasNameView<Part> implements HasUrlParameter<Long>
 				(ConfigurableFilterDataProvider<Part, Void, Long>) getEditor().getDataProvider();
 		dataProvider.setFilter(productId);
 		this.product = productRepository.findById(productId).get();
-		getTitle().setText("Parts for " + product.getName());
+		setTitle("Parts for " + product.getName());
 	}
 	
 	@Override

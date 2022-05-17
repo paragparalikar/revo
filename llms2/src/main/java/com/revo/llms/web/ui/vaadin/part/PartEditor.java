@@ -6,9 +6,7 @@ import com.revo.llms.part.Part;
 import com.revo.llms.product.Product;
 import com.revo.llms.web.ui.vaadin.common.HasNameEditor;
 import com.revo.llms.web.ui.vaadin.util.DoubleToLongConverter;
-import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
@@ -50,9 +48,9 @@ public class PartEditor extends HasNameEditor<Part, Void> {
 	}
 	
 	@Override
-	protected void save(ClickEvent<Button> event) {
-		getValue().setProduct(product);
-		super.save(event);
+	protected void save(Part part) {
+		part.setProduct(product);
+		super.save(part);
 	}
 	
 	@Override

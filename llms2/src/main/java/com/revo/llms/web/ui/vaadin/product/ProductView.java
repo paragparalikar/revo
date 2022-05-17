@@ -24,7 +24,7 @@ public class ProductView extends HasNameView<Product> {
 	private final PartRepository partRepository;
 	
 	public ProductView(@Autowired ProductRepository repository, @Autowired PartRepository partRepository) {
-		super("Products", repository, new ProductEditor(new JpaDataProvider<>(repository), repository));
+		super(VaadinIcon.CART.create(), "Products", repository, new ProductEditor(new JpaDataProvider<>(repository), repository));
 		this.partRepository = partRepository;
 	}
 	

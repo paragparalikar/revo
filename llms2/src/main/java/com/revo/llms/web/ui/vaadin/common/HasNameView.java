@@ -7,24 +7,24 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 import lombok.Getter;
 
 @Getter
-public class HasNameView<T extends HasName> extends VerticalLayout {
+public class HasNameView<T extends HasName> extends TitledView {
 	private static final long serialVersionUID = -6215249907986160768L;
 
 	private final Grid<T> grid;
-	private final H2 title = new H2();
+	
 	private final HasNameEditor<T, ?> editor;
 	private final JpaRepository<T, Long> repository;
 	
 	@SuppressWarnings("deprecation")
-	public HasNameView(String title, JpaRepository<T, Long> repository, HasNameEditor<T, ?> editor) {
+	public HasNameView(Icon icon, String title, JpaRepository<T, Long> repository, HasNameEditor<T, ?> editor) {
+		super(icon, title);
 		this.editor = editor;
 		this.repository = repository;
 		this.grid = new Grid<T>();
@@ -34,8 +34,7 @@ public class HasNameView<T extends HasName> extends VerticalLayout {
 			.setHeader(createCreateButton())
 			.setTextAlign(ColumnTextAlign.END)
 			.setAutoWidth(true);
-		this.title.setText(title);
-		add(this.title, grid, editor);
+		add(grid, editor);
 		grid.setDataProvider(editor.getDataProvider());
 	}
 	

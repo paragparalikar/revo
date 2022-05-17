@@ -70,15 +70,19 @@ public class HasNameEditor<T extends HasName, F> extends Dialog {
 		return buttonsLayout;
 	}
 	
-	protected void save(ClickEvent<Button> event) {
+	private void save(ClickEvent<Button> event) {
 		try {
 			binder.writeBean(value);
-			repository.save(value);
+			save(value);
 			dataProvider.refreshAll();
 			close();
 		} catch (ValidationException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	protected void save(T value) {
+		repository.save(value);
 	}
 	
 	public void open(T value) {
