@@ -6,11 +6,10 @@ import com.revo.llms.part.Part;
 import com.revo.llms.part.PartRepository;
 import com.revo.llms.product.Product;
 import com.revo.llms.product.ProductRepository;
-import com.revo.llms.web.ui.vaadin.common.HasNameView;
 import com.revo.llms.web.ui.vaadin.common.MainLayout;
+import com.revo.llms.web.ui.vaadin.common.TitledGridView;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
 import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.PageTitle;
@@ -18,24 +17,26 @@ import com.vaadin.flow.router.Route;
 
 @PageTitle("Parts")
 @Route(value = "parts", layout = MainLayout.class)
-public class PartView extends HasNameView<Part> implements HasUrlParameter<Long> {
+public class PartView extends TitledGridView<Part> implements HasUrlParameter<Long> {
 	private static final long serialVersionUID = 6769661703648507977L;
 	
 	private Product product;
+	private final PartEditor editor;
+	private final PartDataProvider dataProvider;
+	private final PartRepository partRepository;
 	private final ProductRepository productRepository;
 	
 	public PartView(@Autowired PartRepository partRepository, @Autowired ProductRepository productRepository) {
-		super(VaadinIcon.COGS.create(), "Parts", partRepository, new PartEditor(
-				new PartDataProvider(partRepository).withConfigurableFilter(), 
-				partRepository));
+		super(VaadinIcon.COGS.create(), "Parts");
+		this.partRepository = partRepository;
 		this.productRepository = productRepository;
+		this.dataProvider = new PartDataProvider(partRepository);
+		this.editor = new PartEditor(partRepository, dataProvider);
+		getGrid().setItems(dataProvider);
 	}
 	
 	@Override
-	@SuppressWarnings("unchecked")
 	public void setParameter(BeforeEvent event, Long productId) {
-		final ConfigurableFilterDataProvider<Part, Void, Long> dataProvider = 
-				(ConfigurableFilterDataProvider<Part, Void, Long>) getEditor().getDataProvider();
 		dataProvider.setFilter(productId);
 		this.product = productRepository.findById(productId).get();
 		setTitle("Parts for " + product.getName());
@@ -43,13 +44,24 @@ public class PartView extends HasNameView<Part> implements HasUrlParameter<Long>
 	
 	@Override
 	protected void createColumns(Grid<Part> grid) {
-		grid.addColumn(Part::getId).setHeader("Id");
+		grid.addColumn(Part::getId, "id").setHeader("Id");
 		grid.addColumn(Part::getName, "name").setHeader("Name");
+		super.createColumns(grid);
 	}
 	
 	@Override
 	protected void edit(Part value) {
-		final PartEditor partEditor = (PartEditor) getEditor();
-		partEditor.open(product, value);
+		editor.open(product, value);
+	}
+
+	@Override
+	protected void create() {
+		editor.open(product, null);
+	}
+
+	@Override
+	protected void delete(Part part) {
+		partRepository.delete(part);
+		dataProvider.refreshAll();
 	}
 }

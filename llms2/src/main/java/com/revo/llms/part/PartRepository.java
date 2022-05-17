@@ -9,6 +9,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PartRepository extends JpaRepository<Part, Long> {
 	
+	boolean existsByNameAndProductId(String name, Long productId);
+	
 	Long countByProductId(Long productId);
 	
 	void deleteByProductId(Long productId);
