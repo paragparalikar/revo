@@ -4,6 +4,7 @@ import java.util.Objects;
 
 import com.revo.llms.common.TitledFormEditor;
 import com.revo.llms.util.DoubleToIntegerConverter;
+import com.revo.llms.util.DoubleToLongConverter;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.textfield.NumberField;
@@ -30,7 +31,7 @@ public class DepartmentEditor extends TitledFormEditor<Department> {
 		final NumberField idField = new NumberField("Id");
 		idField.setEnabled(false);
 		binder.forField(idField)
-			.withConverter(new DoubleToIntegerConverter())
+			.withConverter(new DoubleToLongConverter())
 			.bindReadOnly(Department::getId);
 		layout.add(idField);
 		

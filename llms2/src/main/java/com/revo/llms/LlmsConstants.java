@@ -11,7 +11,6 @@ public interface LlmsConstants {
 	String ROUTE_PARTS = "parts";
 
 	String PREFIX_PAGE = "page-";
-	String PREFIX_PRODUCT = "product-";
 	String PREFIX_DEPARTMENT = "department-";
 	
 	

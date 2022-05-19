@@ -18,7 +18,7 @@ public class Department {
 
 	@Id
 	@GeneratedValue
-	private Integer id;
+	private Long id;
 	
 	@NonNull
 	@NotNull

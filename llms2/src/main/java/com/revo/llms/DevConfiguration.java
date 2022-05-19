@@ -2,11 +2,11 @@ package com.revo.llms;
 
 import static com.revo.llms.LlmsConstants.ROUTE_DASHBOARD;
 import static com.revo.llms.LlmsConstants.ROUTE_DEPARTMENTS;
+import static com.revo.llms.LlmsConstants.ROUTE_PARTS;
 import static com.revo.llms.LlmsConstants.ROUTE_PRODUCTS;
 import static com.revo.llms.LlmsConstants.ROUTE_REASONS;
 import static com.revo.llms.LlmsConstants.ROUTE_TICKETS;
 import static com.revo.llms.LlmsConstants.ROUTE_USERS;
-import static com.revo.llms.LlmsConstants.ROUTE_PARTS;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -96,7 +96,6 @@ public class DevConfiguration {
 			final User user = new User();
 			user.setUsername("admin");
 			user.setPassword("admin");
-			user.getProducts().addAll(products);
 			user.getDepartments().addAll(departments);
 			user.getPages().addAll(Arrays.asList(ROUTE_DASHBOARD,
 		            		ROUTE_TICKETS,

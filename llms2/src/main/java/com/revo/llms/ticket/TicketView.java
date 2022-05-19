@@ -9,9 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.klaudeta.PaginatedGrid;
 
 import com.revo.llms.LlmsConstants;
-import com.revo.llms.common.JpaDataProvider;
 import com.revo.llms.common.MainLayout;
 import com.revo.llms.common.TitledView;
+import com.revo.llms.common.security.SecurityService;
 import com.revo.llms.part.PartRepository;
 import com.revo.llms.product.ProductRepository;
 import com.revo.llms.reason.ReasonRepository;
@@ -31,19 +31,18 @@ public class TicketView extends TitledView {
 	private static final long serialVersionUID = 821057894670434504L;
 
 	private final TicketStatusEditor editor;
-	private final TicketRepository repository;
 	private final DataProvider<Ticket, Void> dataProvider;
 	private final PaginatedGrid<Ticket> grid = new PaginatedGrid<>();
 	private final DateFormat dateFormat = new SimpleDateFormat("dd-MMM HH:mm");
 			
 	public TicketView(
+			@Autowired SecurityService securityService,
 			@Autowired TicketRepository repository,
 			@Autowired PartRepository partRepository,
 			@Autowired ReasonRepository reasonRepository,
 			@Autowired ProductRepository productRepository) {
 		super(VaadinIcon.TICKET.create(), "Tickets");
-		this.repository = repository;
-		this.dataProvider = new JpaDataProvider<>(repository);
+		this.dataProvider = new TicketDataProvider(repository, securityService);
 		this.editor = new TicketStatusEditor(repository, partRepository, reasonRepository, productRepository, dataProvider);
 		grid.setItems(dataProvider);
 		grid.setPageSize(10);

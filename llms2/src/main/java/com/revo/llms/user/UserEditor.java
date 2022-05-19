@@ -15,7 +15,6 @@ import java.util.Optional;
 
 import com.revo.llms.common.TitledFormEditor;
 import com.revo.llms.department.Department;
-import com.revo.llms.product.Product;
 import com.vaadin.flow.component.checkbox.CheckboxGroup;
 import com.vaadin.flow.component.checkbox.CheckboxGroupVariant;
 import com.vaadin.flow.component.formlayout.FormLayout;
@@ -34,19 +33,16 @@ public class UserEditor extends TitledFormEditor<User> {
 
 	private final UserService userService;
 	private final DataProvider<User, Void> dataProvider;
-	private final DataProvider<Product, Void> productDataProvider;
 	private final DataProvider<Department, Void> departmentDataProvider;
 	private Map<Tab, FormLayout> tabComponentMap = new LinkedHashMap<>();
 	private final Tabs tabs = new Tabs();
 	
 	public UserEditor(UserService userSerivce, 
 			DataProvider<User, Void> dataProvider,
-			DataProvider<Product, Void> productDataProvider,
 			DataProvider<Department, Void> departmentDataProvider) {
 		super(VaadinIcon.USER.create(), "User", User::new);
 		this.userService = userSerivce;
 		this.dataProvider = dataProvider;
-		this.productDataProvider = productDataProvider;
 		this.departmentDataProvider = departmentDataProvider;
 		tabs.addSelectedChangeListener(event -> {
 			tabComponentMap.values().forEach(form -> form.setVisible(false));
@@ -61,7 +57,6 @@ public class UserEditor extends TitledFormEditor<User> {
 		form.add(container);
 		createCredentialsTab(binder, subForm);
 		createDepartmentsTab(binder, subForm);
-		createProductsTab(binder, subForm);
 		createPagesTab(binder, subForm);
 	}
 	
@@ -87,20 +82,6 @@ public class UserEditor extends TitledFormEditor<User> {
 		binder.forField(group).bind(User::getDepartments, User::setDepartments);
 		group.addThemeVariants(CheckboxGroupVariant.LUMO_VERTICAL);
 		final Tab tab = new Tab(VaadinIcon.BUILDING.create(), new Label("Departments"));
-		final FormLayout tabForm = new FormLayout(group);
-		tabComponentMap.put(tab, tabForm);
-		form.add(tabForm);
-		tabs.add(tab);
-		tabForm.setVisible(false);
-	}
-	
-	private void createProductsTab(Binder<User> binder, FormLayout form) {
-		final CheckboxGroup<Product> group = new CheckboxGroup<>();
-		group.setItemLabelGenerator(Product::getName);
-		group.setItems(productDataProvider);
-		binder.forField(group).bind(User::getProducts, User::setProducts);
-		group.addThemeVariants(CheckboxGroupVariant.LUMO_VERTICAL);
-		final Tab tab = new Tab(VaadinIcon.CART.create(), new Label("Products"));
 		final FormLayout tabForm = new FormLayout(group);
 		tabComponentMap.put(tab, tabForm);
 		form.add(tabForm);

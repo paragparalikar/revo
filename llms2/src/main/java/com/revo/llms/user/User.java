@@ -18,7 +18,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.revo.llms.LlmsConstants;
 import com.revo.llms.department.Department;
-import com.revo.llms.product.Product;
 
 import lombok.Data;
 
@@ -35,9 +34,6 @@ public class User implements UserDetails {
 	
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Set<String> pages = new HashSet<>();
-
-	@ManyToMany(fetch = FetchType.EAGER)
-	private Set<Product> products = new HashSet<>();
 	
 	@ManyToMany(fetch = FetchType.EAGER)
 	private Set<Department> departments = new HashSet<>();
@@ -55,11 +51,6 @@ public class User implements UserDetails {
 			departments.stream()
 				.map(Department::getId)
 				.map(id -> LlmsConstants.PREFIX_DEPARTMENT + id)
-				.map(SimpleGrantedAuthority::new)
-				.forEach(authorities::add);
-			products.stream()
-				.map(Product::getId)
-				.map(id -> LlmsConstants.PREFIX_PRODUCT + id)
 				.map(SimpleGrantedAuthority::new)
 				.forEach(authorities::add);
 		}

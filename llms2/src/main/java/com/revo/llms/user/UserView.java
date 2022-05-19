@@ -11,10 +11,7 @@ import com.revo.llms.common.JpaDataProvider;
 import com.revo.llms.common.MainLayout;
 import com.revo.llms.common.TitledGridView;
 import com.revo.llms.common.security.SecurityService;
-import com.revo.llms.department.Department;
 import com.revo.llms.department.DepartmentRepository;
-import com.revo.llms.product.Product;
-import com.revo.llms.product.ProductRepository;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -38,7 +35,6 @@ public class UserView extends TitledGridView<User> {
 			@Autowired UserService userService, 
 			@Autowired SecurityService securityService,
 			@Autowired UserRepository repository, 
-			@Autowired ProductRepository productRepository,
 			@Autowired DepartmentRepository departmentRepository) {
 		super(VaadinIcon.USERS.create(), "Users");
 		this.userService = userService;
@@ -47,9 +43,7 @@ public class UserView extends TitledGridView<User> {
 		grid.setItems(dataProvider);
 		createColumns(grid);
 		
-		final DataProvider<Product, Void> productDataProvider = new JpaDataProvider<>(productRepository);
-		final DataProvider<Department, Void> departmentDataProvider = new JpaDataProvider<>(departmentRepository);
-		this.editor = new UserEditor(userService, dataProvider, productDataProvider, departmentDataProvider);
+		this.editor = new UserEditor(userService, dataProvider, new JpaDataProvider<>(departmentRepository));
 
 		add(grid, editor);
 	}

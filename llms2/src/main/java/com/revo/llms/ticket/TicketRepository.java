@@ -13,6 +13,8 @@ import com.revo.llms.department.Department;
 @Repository
 public interface TicketRepository extends JpaRepository<Ticket, Long> {
 	
+	Page<Ticket> findByDepartmentIdIn(Set<Long> departmentIds, Pageable pageable);
+	
 	Page<Ticket> findByDepartmentIn(Set<Department> department, Pageable pageable);
 
 	Optional<Ticket> findTopByStationIdAndDepartmentOrderByOpenTimestampDesc(Integer stationId, Department department);
