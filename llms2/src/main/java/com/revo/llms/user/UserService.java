@@ -3,7 +3,7 @@ package com.revo.llms.user;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +15,9 @@ import lombok.RequiredArgsConstructor;
 public class UserService implements UserDetailsService {
 
 	private final UserRepository userRepository;
-	@Getter private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+	
+	@SuppressWarnings("deprecation")
+	@Getter private final PasswordEncoder passwordEncoder = NoOpPasswordEncoder.getInstance();
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

@@ -65,9 +65,9 @@ public class UserEditor extends TitledFormEditor<User> {
 		binder.forField(usernameField).asRequired("Username is required")
 			.withValidator(this::isUsernameValid, "This username is already taken")
 			.bind(User::getUsername, User::setUsername);
-		final PasswordField passwordField = new PasswordField("Password", "Enter New Password");
+		final PasswordField passwordField = new PasswordField("Password");
 		binder.forField(passwordField).asRequired("Password is required")
-			.bind(user -> null, User::setPassword);
+			.bind(User::getPassword, User::setPassword);
 		final Tab tab = new Tab(VaadinIcon.USER.create(), new Label("Credentials"));
 		final FormLayout tabForm = new FormLayout(usernameField, passwordField);
 		tabComponentMap.put(tab, tabForm);
