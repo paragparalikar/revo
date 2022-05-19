@@ -3,9 +3,12 @@ package com.revo.llms.ticket;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
+import javax.annotation.security.PermitAll;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.klaudeta.PaginatedGrid;
 
+import com.revo.llms.LlmsConstants;
 import com.revo.llms.common.JpaDataProvider;
 import com.revo.llms.common.MainLayout;
 import com.revo.llms.common.TitledView;
@@ -21,8 +24,9 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
+@PermitAll
 @PageTitle("Tickets")
-@Route(value = "tickets", layout = MainLayout.class)
+@Route(value = LlmsConstants.ROUTE_TICKETS, layout = MainLayout.class)
 public class TicketView extends TitledView {
 	private static final long serialVersionUID = 821057894670434504L;
 

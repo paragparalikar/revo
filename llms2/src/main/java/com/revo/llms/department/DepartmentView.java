@@ -1,7 +1,10 @@
 package com.revo.llms.department;
 
+import javax.annotation.security.PermitAll;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.revo.llms.LlmsConstants;
 import com.revo.llms.common.JpaDataProvider;
 import com.revo.llms.common.MainLayout;
 import com.revo.llms.common.TitledGridView;
@@ -11,8 +14,9 @@ import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
+@PermitAll
 @PageTitle("Departments")
-@Route(value = "departments", layout = MainLayout.class)
+@Route(value = LlmsConstants.ROUTE_DEPARTMENTS, layout = MainLayout.class)
 public class DepartmentView extends TitledGridView<Department> {
 	private static final long serialVersionUID = -4243133746000404388L;
 	

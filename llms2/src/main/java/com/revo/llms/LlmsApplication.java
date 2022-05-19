@@ -2,6 +2,7 @@ package com.revo.llms;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -15,7 +16,7 @@ import com.vaadin.flow.theme.lumo.Lumo;
 
 @EnableCaching
 @EnableScheduling
-@SpringBootApplication
+@SpringBootApplication(exclude = ErrorMvcAutoConfiguration.class)
 @JsModule("@vaadin/vaadin-lumo-styles/presets/compact.js")
 @Theme(themeClass = Lumo.class, variant = Lumo.DARK)
 @PWA(name = "Line Loss Monitoring System", shortName = "LLMS", offlineResources = {})

@@ -1,7 +1,10 @@
 package com.revo.llms.reason;
 
+import javax.annotation.security.PermitAll;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.revo.llms.LlmsConstants;
 import com.revo.llms.common.JpaDataProvider;
 import com.revo.llms.common.MainLayout;
 import com.revo.llms.common.TitledGridView;
@@ -11,8 +14,9 @@ import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
+@PermitAll
 @PageTitle("Reasons")
-@Route(value = "reasons", layout = MainLayout.class)
+@Route(value = LlmsConstants.ROUTE_REASONS, layout = MainLayout.class)
 public class ReasonView extends TitledGridView<Reason> {
 	private static final long serialVersionUID = 7405219789236846586L;
 	
