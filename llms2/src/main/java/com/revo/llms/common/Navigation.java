@@ -24,6 +24,8 @@ import com.revo.llms.product.ProductView;
 import com.revo.llms.reason.ReasonView;
 import com.revo.llms.ticket.TicketView;
 import com.revo.llms.user.UserView;
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
@@ -49,9 +51,15 @@ public class Navigation extends VerticalLayout implements AfterNavigationObserve
 		this.usernameLabel = usernameLabel;
 		this.securityService = securityService;
 		setHeightFull();
-		add(tabs);
+		add(createLogo(), tabs);
 		tabs.setOrientation(Tabs.Orientation.VERTICAL);
 		tabs.addThemeVariants(LUMO_SMALL);
+	}
+	
+	private Component createLogo() {
+		final Image image = new Image("images/cnh-logo.png", "CNH");
+		image.setWidthFull();
+		return image;
 	}
 	
 	private void init() {

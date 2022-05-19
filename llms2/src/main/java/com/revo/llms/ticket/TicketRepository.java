@@ -1,5 +1,7 @@
 package com.revo.llms.ticket;
 
+import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -12,6 +14,12 @@ import com.revo.llms.department.Department;
 
 @Repository
 public interface TicketRepository extends JpaRepository<Ticket, Long> {
+	
+	List<Ticket> findByStatus(TicketStatus status);
+	
+	List<Ticket> findByOpenTimestampAfter(Date minOpen);
+	
+	long countByStatus(TicketStatus status);
 	
 	Page<Ticket> findByDepartmentIdIn(Set<Long> departmentIds, Pageable pageable);
 	

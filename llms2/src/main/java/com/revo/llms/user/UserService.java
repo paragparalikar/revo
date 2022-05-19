@@ -12,11 +12,11 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@SuppressWarnings("deprecation")
 public class UserService implements UserDetailsService {
 
 	private final UserRepository userRepository;
 	
-	@SuppressWarnings("deprecation")
 	@Getter private final PasswordEncoder passwordEncoder = NoOpPasswordEncoder.getInstance();
 	
 	@Override
