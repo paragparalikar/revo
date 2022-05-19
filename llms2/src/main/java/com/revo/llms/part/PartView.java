@@ -3,10 +3,13 @@ package com.revo.llms.part;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
+import javax.annotation.security.PermitAll;
+
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.klaudeta.PaginatedGrid;
 
+import com.revo.llms.LlmsConstants;
 import com.revo.llms.common.MainLayout;
 import com.revo.llms.common.TitledGridView;
 import com.revo.llms.product.Product;
@@ -24,8 +27,9 @@ import com.vaadin.flow.router.Route;
 
 import lombok.SneakyThrows;
 
+@PermitAll
 @PageTitle("Parts")
-@Route(value = "parts", layout = MainLayout.class)
+@Route(value = LlmsConstants.ROUTE_PARTS, layout = MainLayout.class)
 public class PartView extends TitledGridView<Part> implements HasUrlParameter<Long> {
 	private static final long serialVersionUID = 6769661703648507977L;
 	

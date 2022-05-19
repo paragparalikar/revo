@@ -5,6 +5,8 @@ import static com.revo.llms.LlmsConstants.ROUTE_DEPARTMENTS;
 import static com.revo.llms.LlmsConstants.ROUTE_PRODUCTS;
 import static com.revo.llms.LlmsConstants.ROUTE_REASONS;
 import static com.revo.llms.LlmsConstants.ROUTE_TICKETS;
+import static com.revo.llms.LlmsConstants.ROUTE_USERS;
+import static com.revo.llms.LlmsConstants.ROUTE_PARTS;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -100,7 +102,9 @@ public class DevConfiguration {
 		            		ROUTE_TICKETS,
 		            		ROUTE_DEPARTMENTS,
 		            		ROUTE_REASONS,
-		            		ROUTE_PRODUCTS));
+		            		ROUTE_PRODUCTS,
+		            		ROUTE_USERS, 
+		            		ROUTE_PARTS));
 			userService.save(user);
 		};
 	}

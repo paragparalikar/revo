@@ -7,6 +7,7 @@ import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Transient;
@@ -32,13 +33,13 @@ public class User implements UserDetails {
 	@Column(nullable = false)
 	private String password;
 	
-	@ElementCollection
+	@ElementCollection(fetch = FetchType.EAGER)
 	private Set<String> pages = new HashSet<>();
 
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.EAGER)
 	private Set<Product> products = new HashSet<>();
 	
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.EAGER)
 	private Set<Department> departments = new HashSet<>();
 
 	@Transient

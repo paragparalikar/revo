@@ -8,6 +8,7 @@ public interface LlmsConstants {
 	String ROUTE_REASONS = "reasons";
 	String ROUTE_PRODUCTS = "products";
 	String ROUTE_USERS = "users";
+	String ROUTE_PARTS = "parts";
 
 	String PREFIX_PAGE = "page-";
 	String PREFIX_PRODUCT = "product-";
