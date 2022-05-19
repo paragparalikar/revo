@@ -1,6 +1,8 @@
 package com.revo.llms.util;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.PageRequest;
@@ -18,7 +20,7 @@ import lombok.experimental.UtilityClass;
 public class VaadinUtils {
 
 	public Pageable toPageable(Query<?, ?> query) {
-		final List<Order> orders = query.getSortOrders().stream()
+		final List<Order> orders = Optional.ofNullable(query.getSortOrders()).orElse(Collections.emptyList()).stream()
 			.map(order -> new Order(toDirection(order.getDirection()), order.getSorted()))
 			.collect(Collectors.toList());
 		return PageRequest.of(query.getPage(), query.getPageSize(), Sort.by(orders));
