@@ -1,25 +1,40 @@
 package com.revo.llms.common.security;
 
-import org.springframework.context.annotation.Bean;
+import static com.revo.llms.LlmsConstants.PREFIX_PAGE;
+import static com.revo.llms.LlmsConstants.ROUTE_DASHBOARD;
+import static com.revo.llms.LlmsConstants.ROUTE_DEPARTMENTS;
+import static com.revo.llms.LlmsConstants.ROUTE_PRODUCTS;
+import static com.revo.llms.LlmsConstants.ROUTE_REASONS;
+import static com.revo.llms.LlmsConstants.ROUTE_TICKETS;
+import static com.revo.llms.LlmsConstants.ROUTE_USERS;
+
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
-import com.revo.llms.LlmsConstants;
+import com.revo.llms.user.UserService;
 import com.vaadin.flow.spring.security.VaadinWebSecurityConfigurerAdapter;
+
+import lombok.RequiredArgsConstructor;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfiguration extends VaadinWebSecurityConfigurerAdapter {
+	
+	private final UserService userService; 
 
 	@Override
     protected void configure(HttpSecurity http) throws Exception {
+        http.authorizeRequests()
+        	.antMatchers("/" + ROUTE_DASHBOARD).hasAuthority(PREFIX_PAGE + ROUTE_DASHBOARD)
+        	.antMatchers("/" + ROUTE_TICKETS).hasAuthority(PREFIX_PAGE + ROUTE_TICKETS)
+        	.antMatchers("/" + ROUTE_DEPARTMENTS).hasAuthority(PREFIX_PAGE + ROUTE_DEPARTMENTS)
+        	.antMatchers("/" + ROUTE_REASONS).hasAuthority(PREFIX_PAGE + ROUTE_REASONS)
+        	.antMatchers("/" + ROUTE_PRODUCTS).hasAuthority(PREFIX_PAGE + ROUTE_PRODUCTS)
+        	.antMatchers("/" + ROUTE_USERS).hasAuthority(PREFIX_PAGE + ROUTE_USERS);
         super.configure(http);
         setLoginView(http, LoginView.class); 
     }
@@ -30,23 +45,10 @@ public class SecurityConfiguration extends VaadinWebSecurityConfigurerAdapter {
         super.configure(web);
     }
 	
-	@Bean
-    @Override
-    public UserDetailsService userDetailsService() {
-        return new InMemoryUserDetailsManager(User.withUsername("admin") 
-            .password(passwordEncoder().encode("admin"))
-            .authorities(
-            		LlmsConstants.PREFIX_PAGE + LlmsConstants.ROUTE_DASHBOARD,
-            		LlmsConstants.PREFIX_PAGE + LlmsConstants.ROUTE_TICKETS,
-            		LlmsConstants.PREFIX_PAGE + LlmsConstants.ROUTE_DEPARTMENTS,
-            		LlmsConstants.PREFIX_PAGE + LlmsConstants.ROUTE_REASONS)
-            .build());
-    }
-	
-	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
+	@Override
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+		auth.userDetailsService(userService)
+			.passwordEncoder(userService.getPasswordEncoder());
 	}
-	
 	
 }
