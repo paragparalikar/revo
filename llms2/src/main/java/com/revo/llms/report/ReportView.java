@@ -25,6 +25,7 @@ public class ReportView extends VerticalLayout {
 
 	private final ReportService reportService;
 	private final TicketCountByDepartmentCard ticketCountByDepartmentCard;
+	private final TicketTimeByDepartmentCard ticketTimeByDepartmentCard;
 	private final DateTimePicker toPicker = new DateTimePicker("To", LocalDateTime.now());
 	private final DateTimePicker fromPicker = new DateTimePicker("From", LocalDateTime.now().minusMonths(1));
 	private final HorizontalLayout dateTimePickerRow = new HorizontalLayout(fromPicker, toPicker);
@@ -37,11 +38,12 @@ public class ReportView extends VerticalLayout {
 		dateTimePickerRow.setWidthFull();
 		dateTimePickerRow.setJustifyContentMode(JustifyContentMode.CENTER);
 		setSizeFull();
+		this.ticketTimeByDepartmentCard = new TicketTimeByDepartmentCard(reportService);
 		this.ticketCountByDepartmentCard = new TicketCountByDepartmentCard(reportService);
 		
-		row1.add(ticketCountByDepartmentCard);
+		row1.add(ticketCountByDepartmentCard, ticketTimeByDepartmentCard);
 		row1.setWidthFull();
-		row1.setJustifyContentMode(JustifyContentMode.BETWEEN);
+		row1.setJustifyContentMode(JustifyContentMode.EVENLY);
 		add(row1);
 		update();
 	}
@@ -50,6 +52,7 @@ public class ReportView extends VerticalLayout {
 		final Date to = Date.from(this.toPicker.getValue().atZone(ZoneId.systemDefault()).toInstant());
 		final Date from = Date.from(this.fromPicker.getValue().atZone(ZoneId.systemDefault()).toInstant());
 		final List<Ticket> tickets = reportService.findByClosedTimestampAfterAndOpenTimestampBefore(from, to);
+		ticketTimeByDepartmentCard.update(tickets);
 		ticketCountByDepartmentCard.update(tickets);
 	}
 	

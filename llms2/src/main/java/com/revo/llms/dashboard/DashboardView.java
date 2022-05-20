@@ -31,13 +31,14 @@ public class DashboardView extends VerticalLayout {
 		this.todaysTicketStatusByDepartmentCard = new TodaysTicketStatusByDepartmentCard(dashboardService);
 		
 		row1.setWidthFull();
-		row1.setAlignItems(Alignment.STRETCH);
+		row1.setJustifyContentMode(JustifyContentMode.BETWEEN);
 		row1.add(totalCountCard, countByDepartmentCard, todaysTicketStatusByDepartmentCard);
 		
 		row2.setWidthFull();
-		row2.setAlignItems(Alignment.STRETCH);
+		row2.setJustifyContentMode(JustifyContentMode.BETWEEN);
 		row2.add(countByDepartmentVsStationCard);
 		
+		//setAlignItems(Alignment.STRETCH);
 		add(row1, row2);
 	}
 	

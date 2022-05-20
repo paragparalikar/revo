@@ -31,7 +31,7 @@ public class MainLayout extends AppLayout {
 		logoutButton.addClickListener(event -> securityService.logout());
         
 		getElement().getStyle().set("height", "100%");
-		setPrimarySection(Section.NAVBAR);
+		setPrimarySection(Section.DRAWER);
 		addToDrawer(new Navigation(securityService, usernameLabel));
 		addToNavbar(header);
 	}

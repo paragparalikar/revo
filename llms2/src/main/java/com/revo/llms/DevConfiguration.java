@@ -11,6 +11,7 @@ import static com.revo.llms.LlmsConstants.ROUTE_REPORTS;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -85,11 +86,13 @@ public class DevConfiguration {
 				for(Reason reason: reasons) {
 					for(int stationId = 1; stationId <= 30; stationId++) {
 						final int count = (int) (Math.random() * 10);
+						final Calendar calendar = Calendar.getInstance();
+						calendar.add(Calendar.HOUR, -1 * count);
 						for(int index = 0; index < count; index++) {
 							final Ticket ticket = new Ticket();
 							ticket.setStationId(stationId);
 							ticket.setStatus(TicketStatus.OPEN);
-							ticket.setOpenTimestamp(new Date());
+							ticket.setOpenTimestamp(calendar.getTime());
 							ticket.setDepartment(department);
 							if(0 == index % 2) {
 								ticket.setStatus(TicketStatus.CLOSED);
