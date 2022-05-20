@@ -3,12 +3,12 @@ package com.revo.llms.common.security;
 import static com.revo.llms.LlmsConstants.PREFIX_PAGE;
 import static com.revo.llms.LlmsConstants.ROUTE_DASHBOARD;
 import static com.revo.llms.LlmsConstants.ROUTE_DEPARTMENTS;
+import static com.revo.llms.LlmsConstants.ROUTE_PARTS;
 import static com.revo.llms.LlmsConstants.ROUTE_PRODUCTS;
 import static com.revo.llms.LlmsConstants.ROUTE_REASONS;
+import static com.revo.llms.LlmsConstants.ROUTE_REPORTS;
 import static com.revo.llms.LlmsConstants.ROUTE_TICKETS;
 import static com.revo.llms.LlmsConstants.ROUTE_USERS;
-import static com.revo.llms.LlmsConstants.ROUTE_PARTS;
-import static com.revo.llms.LlmsConstants.ROUTE_REPORTS;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -56,5 +56,5 @@ public class SecurityConfiguration extends VaadinWebSecurityConfigurerAdapter {
 		auth.userDetailsService(userService)
 			.passwordEncoder(userService.getPasswordEncoder());
 	}
-	
+
 }

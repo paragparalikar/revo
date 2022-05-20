@@ -11,9 +11,9 @@ spring:
     log-startup-info: false
   jpa:
     show-sql: true
-    generate-ddl: true
+    generate-ddl: false
     hibernate:
-      ddl-auto: create
+      ddl-auto: none
   datasource:
     url: jdbc:h2:mem:llms
     username: sa
@@ -23,6 +23,13 @@ spring:
       minimum-idle: 1
       maximum-pool-size: 1
   mustache:    check-template-location: false
+  flyway:
+    url: jdbc:h2:mem:llms
+    default-schema: PUBLIC
+    schemas:    - PUBLIC
+    user: sa    password: 
+    locations:    - classpath:db/migration
+    - filesystem:C:/llms/db/migration
       
 logging:
   level:
