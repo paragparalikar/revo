@@ -14,7 +14,8 @@ public interface LlmsConstants {
 	String PREFIX_PAGE = "page-";
 	String PREFIX_DEPARTMENT = "department-";
 	
-	String[] COLORS = new String[] {"magenta", "purple", "brown", "blue", "red", "pink"};
+	String[] COLORS = new String[] {"#967ADA", "#E4B693", "#D670AC",  "#4B89DA", "#35BB9B", "#F5BA45",
+			"magenta", "purple", "brown", "blue", "red", "pink"};
 	
 	
 }

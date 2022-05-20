@@ -30,13 +30,13 @@ public class TodaysTicketStatusByDepartmentCard extends AbstractCard {
 		final BarChartConfig config = new BarChartConfig();
 		
 		final BarDataset openDataset = new BarDataset();
-		openDataset.backgroundColor("red");
-		openDataset.borderColor("red");
+		openDataset.backgroundColor("#E8563F");
+		openDataset.borderColor("#E8563F");
 		openDataset.label("Opened");
 		
 		final BarDataset closedDataset = new BarDataset();
-		closedDataset.backgroundColor("green");
-		closedDataset.borderColor("green");
+		closedDataset.backgroundColor("#8AC054");
+		closedDataset.borderColor("#8AC054");
 		closedDataset.label("Closed");
 		
 		final List<String> labels = new ArrayList<>(data.size());
