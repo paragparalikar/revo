@@ -11,8 +11,8 @@ public abstract class AbstractReportCard extends Card {
 	public AbstractReportCard() {
 		setBorderRadius("5px");
 		setBackground("#213345");
-		setMinWidth("250px");
-		setMinHeight("250px");
+		setMinWidth("500px");
+		setMinHeight("225px");
 	}
 	
 	public abstract void update(List<Ticket> tickets);

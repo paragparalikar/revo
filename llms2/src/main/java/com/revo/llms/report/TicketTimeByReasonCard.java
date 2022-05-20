@@ -12,29 +12,29 @@ import org.vaadin.addons.chartjs.options.scale.CategoryScale;
 import org.vaadin.addons.chartjs.options.scale.DefaultScale;
 
 import com.revo.llms.LlmsConstants;
-import com.revo.llms.department.Department;
+import com.revo.llms.reason.Reason;
 import com.revo.llms.ticket.Ticket;
 
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class TicketTimeByDepartmentCard extends AbstractReportCard {
-	private static final long serialVersionUID = -7395996931307750310L;
+public class TicketTimeByReasonCard extends AbstractReportCard {
+	private static final long serialVersionUID = 5706710352098415494L;
 
 	private final ReportService reportService;
 	
 	@Override
 	public void update(List<Ticket> tickets) {
-		final Map<Department, Long> data = reportService.getTicketTimeByDepartment(tickets);
+		final Map<Reason, Long> data = reportService.getTicketTimeByReason(tickets);
 		final BarDataset dataset = new BarDataset();
 		dataset.backgroundColor(LlmsConstants.COLORS);
 		dataset.borderColor(LlmsConstants.COLORS);
 		
 		final List<Double> dataItems = new ArrayList<>(data.size());
 		final List<String> labels = new ArrayList<>(data.size());
-		data.forEach((department, minutes) -> {
-			labels.add(department.getName());
-			dataItems.add(minutes.doubleValue());
+		data.forEach((reason, hours) -> {
+			labels.add(null == reason ? "None" : reason.getText());
+			dataItems.add(hours.doubleValue());
 		});
 		dataset.dataAsList(dataItems);
 		
@@ -53,7 +53,7 @@ public class TicketTimeByDepartmentCard extends AbstractReportCard {
 					.display(true)
 					.fullWidth(true)
 					.fontColor("white")
-					.text("Ticket Time By Department").and()
+					.text("Ticket Time By Reasons").and()
 				.scales()
 					.add(Axis.Y, new CategoryScale()
 							.display(true)

@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.revo.llms.department.Department;
+import com.revo.llms.reason.Reason;
 import com.revo.llms.ticket.Ticket;
 import com.revo.llms.ticket.TicketService;
 
@@ -29,6 +30,22 @@ public class ReportService {
 		return tickets.stream()
 				.map(Ticket::getDepartment)
 				.collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+	}
+	
+	public Map<Reason, Long> getTotalTicketCountByReason(List<Ticket> tickets){
+		return tickets.stream()
+				.map(Ticket::getReason)
+				.collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+	}
+	
+	public Map<Reason, Long> getTicketTimeByReason(List<Ticket> tickets){
+		return tickets.stream()
+				.collect(Collectors.groupingBy(Ticket::getReason, 
+						Collectors.mapping(ticket -> {
+							final Date open = ticket.getOpenTimestamp();
+							final Date close = null == ticket.getClosedTimestamp() ? new Date() : ticket.getClosedTimestamp();
+							return Duration.ofMillis(close.getTime() - open.getTime()).toHours();
+						}, Collectors.summingLong(Long::longValue))));
 	}
 	
 	public Map<Department, Long> getTicketTimeByDepartment(List<Ticket> tickets){

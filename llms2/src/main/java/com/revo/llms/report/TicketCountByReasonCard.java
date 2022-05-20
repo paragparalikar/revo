@@ -9,27 +9,30 @@ import org.vaadin.addons.chartjs.data.PieDataset;
 import org.vaadin.addons.chartjs.options.Position;
 
 import com.revo.llms.LlmsConstants;
-import com.revo.llms.department.Department;
+import com.revo.llms.reason.Reason;
 import com.revo.llms.ticket.Ticket;
 
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class TicketCountByDepartmentCard extends AbstractReportCard {
-	private static final long serialVersionUID = -6191498638729089329L;
+public class TicketCountByReasonCard extends AbstractReportCard {
+	private static final long serialVersionUID = 1746593911626591253L;
 
 	private final ReportService reportService;
-
+	
 	@Override
 	public void update(List<Ticket> tickets) {
-		final Map<Department, Long> counts = reportService.getTotalTicketCountByDepartment(tickets);
+		final Map<Reason, Long> counts = reportService.getTotalTicketCountByReason(tickets);
 		
 		final DonutChartConfig config = new DonutChartConfig();
 		final PieDataset dataset = new PieDataset();
 		
 		dataset.backgroundColor(LlmsConstants.COLORS);
 		dataset.borderColor(LlmsConstants.COLORS);
-		counts.forEach((department, count) -> dataset.addLabeledData(department.getName(), count.doubleValue()));
+		counts.forEach((reason, count) -> {
+			final String text = null == reason ? "None" : reason.getText();
+			dataset.addLabeledData(text, count.doubleValue());
+		});
 		config.data()
 			.addDataset(dataset)
 			.extractLabelsFromDataset(true).and()
@@ -38,7 +41,7 @@ public class TicketCountByDepartmentCard extends AbstractReportCard {
 				.title()
 					.display(true)
 					.position(Position.BOTTOM)
-					.text("Total Tickets by Departments")
+					.text("Total Tickets by Reasons")
 					.fontColor("white")
 					.fullWidth(true).and()
 				.legend()
@@ -51,5 +54,5 @@ public class TicketCountByDepartmentCard extends AbstractReportCard {
 		chart.setHeightFull();
 		add(chart);
 	}
-	
+
 }
