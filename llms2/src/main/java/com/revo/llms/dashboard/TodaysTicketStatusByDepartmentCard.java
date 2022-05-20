@@ -62,9 +62,8 @@ public class TodaysTicketStatusByDepartmentCard extends AbstractCard {
 				.legend().display(true).and().done();
 		
 		final ChartJs chart = new ChartJs(config);
-		chart.setWidth("450px");
+		chart.setWidth("500px");
 		chart.setHeight("250px");
-		setFlexGrow(1);
 		add(chart);
 	}
 	

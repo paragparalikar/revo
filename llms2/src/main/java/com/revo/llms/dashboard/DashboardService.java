@@ -38,6 +38,25 @@ public class DashboardService {
 				.collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
 	}
 	
+	public Map<Integer, Map<Department, Long>> getTodaysOpenTicketCountByDepartmentByStation(){
+		final List<Department> departments = departmentService.findAll();
+		final List<Ticket> tickets = ticketService.findByStatus(TicketStatus.OPEN);
+		final Map<Integer, Map<Department, Long>> result = new HashMap<>(30);
+		for(int stationId = 1; stationId <= 30; stationId++) {
+			final Map<Department, Long> counts = new HashMap<>(departments.size());
+			for(Department department : departments) {
+				final Integer localStationId = Integer.valueOf(stationId);
+				final Long count = tickets.stream()
+						.filter(ticket -> Objects.equals(department, ticket.getDepartment()))
+						.filter(ticket -> Objects.equals(localStationId, ticket.getStationId()))
+						.count();
+				counts.put(department, count);
+			}
+			result.put(stationId, counts);
+		}
+		return result;
+	}
+	
 	public Map<Department, Map<TicketStatus, Long>> getTodaysTicketCountByDepartmentByStatus(){
 		final List<Department> departments = departmentService.findAll();
 		final List<Ticket> tickets = ticketService.findByOpenTimestampAfter(getMidnightTime());
