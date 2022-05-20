@@ -1,6 +1,8 @@
 package com.revo.llms.ticket;
 
 
+import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -98,6 +100,18 @@ public class TicketService {
 
 	public Optional<Ticket> findById(Long id){
 		return ticketRepository.findById(id);
+	}
+	
+	public long countByStatus(TicketStatus status) {
+		return ticketRepository.countByStatus(status);
+	}
+	
+	public List<Ticket> findByStatus(TicketStatus status){
+		return ticketRepository.findByStatus(status);
+	}
+	
+	public List<Ticket> findByOpenTimestampAfter(Date date){
+		return ticketRepository.findByOpenTimestampAfter(date);
 	}
 	
 	@Transactional

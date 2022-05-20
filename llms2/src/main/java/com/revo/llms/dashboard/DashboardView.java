@@ -2,12 +2,8 @@ package com.revo.llms.dashboard;
 
 import javax.annotation.security.PermitAll;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.revo.llms.LlmsConstants;
 import com.revo.llms.common.MainLayout;
-import com.revo.llms.department.DepartmentRepository;
-import com.revo.llms.ticket.TicketRepository;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
@@ -26,11 +22,10 @@ public class DashboardView extends VerticalLayout {
 	private final TodaysTicketStatusByDepartmentCard todaysTicketStatusByDepartmentCard;
 	private final HorizontalLayout row1 = new HorizontalLayout();
 	
-	public DashboardView(@Autowired TicketRepository repository,
-			@Autowired DepartmentRepository departmentRepository) {
-		this.totalCountCard = new TotalCountCard(repository);
-		this.countByDepartmentCard = new CountByDepartmentCard(repository);
-		this.todaysTicketStatusByDepartmentCard = new TodaysTicketStatusByDepartmentCard(repository, departmentRepository);
+	public DashboardView(DashboardService dashboardService) {
+		this.totalCountCard = new TotalCountCard(dashboardService);
+		this.countByDepartmentCard = new CountByDepartmentCard(dashboardService);
+		this.todaysTicketStatusByDepartmentCard = new TodaysTicketStatusByDepartmentCard(dashboardService);
 		add(row1);
 		row1.setWidthFull();
 		row1.setAlignItems(Alignment.STRETCH);
