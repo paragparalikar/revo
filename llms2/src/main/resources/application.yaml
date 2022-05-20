@@ -10,7 +10,7 @@ spring:
     banner-mode: off
     log-startup-info: false
   jpa:
-    show-sql: true
+    show-sql: false
     generate-ddl: false
     hibernate:
       ddl-auto: none
@@ -34,7 +34,6 @@ spring:
 logging:
   level:
     '[org.atmosphere]': WARN
-    '[com.revo.llms.port]': OFF
     
 vaadin:
   whitelisted-packages: com.vaadin,org.vaadin,dev.hilla,com.revo.llms
