@@ -36,10 +36,9 @@ public class ReportView extends VerticalLayout {
 	
 	public ReportView(ReportService reportService) {
 		this.reportService = reportService;
-		add(dateTimePickerRow);
 		dateTimePickerRow.setWidthFull();
 		dateTimePickerRow.setJustifyContentMode(JustifyContentMode.CENTER);
-		setSizeFull();
+		
 		this.ticketTimeByReasonCard = new TicketTimeByReasonCard(reportService);
 		this.ticketCountByReasonCard = new TicketCountByReasonCard(reportService);
 		this.ticketTimeByDepartmentCard = new TicketTimeByDepartmentCard(reportService);
@@ -52,8 +51,12 @@ public class ReportView extends VerticalLayout {
 		row2.add(ticketCountByReasonCard, ticketTimeByReasonCard);
 		row2.setWidthFull();
 		row2.setJustifyContentMode(JustifyContentMode.EVENLY);
-		add(row1, row2);
+		add(dateTimePickerRow, row1, row2);
+		setSizeFull();
 		update();
+		
+		toPicker.addValueChangeListener(event -> update());
+		fromPicker.addValueChangeListener(event -> update());
 	}
 	
 	private void update() {

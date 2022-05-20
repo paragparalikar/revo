@@ -23,9 +23,9 @@ public class TicketCountByReasonCard extends AbstractReportCard {
 	@Override
 	public void update(List<Ticket> tickets) {
 		final Map<Reason, Long> counts = reportService.getTotalTicketCountByReason(tickets);
-		
 		final DonutChartConfig config = new DonutChartConfig();
 		final PieDataset dataset = new PieDataset();
+		final ChartJs chart = new ChartJs(config);
 		
 		dataset.backgroundColor(LlmsConstants.COLORS);
 		dataset.borderColor(LlmsConstants.COLORS);
@@ -33,7 +33,7 @@ public class TicketCountByReasonCard extends AbstractReportCard {
 			final String text = null == reason ? "None" : reason.getText();
 			dataset.addLabeledData(text, count.doubleValue());
 		});
-		config.data()
+		config.data().clear()
 			.addDataset(dataset)
 			.extractLabelsFromDataset(true).and()
 			.options()
@@ -49,7 +49,7 @@ public class TicketCountByReasonCard extends AbstractReportCard {
 					.position(Position.LEFT).and()
 				.done();
 		
-		final ChartJs chart = new ChartJs(config);
+		getContent().removeAll();
 		chart.setWidth("500px");
 		chart.setHeightFull();
 		add(chart);

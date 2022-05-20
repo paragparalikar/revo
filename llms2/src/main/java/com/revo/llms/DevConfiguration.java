@@ -87,7 +87,7 @@ public class DevConfiguration {
 					for(int stationId = 1; stationId <= 30; stationId++) {
 						final int count = (int) (Math.random() * 10);
 						final Calendar calendar = Calendar.getInstance();
-						calendar.add(Calendar.HOUR, -1 * count);
+						calendar.add(Calendar.DATE, -1 * count);
 						for(int index = 0; index < count; index++) {
 							final Ticket ticket = new Ticket();
 							ticket.setStationId(stationId);

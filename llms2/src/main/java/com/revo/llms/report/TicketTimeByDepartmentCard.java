@@ -26,10 +26,12 @@ public class TicketTimeByDepartmentCard extends AbstractReportCard {
 	@Override
 	public void update(List<Ticket> tickets) {
 		final Map<Department, Long> data = reportService.getTicketTimeByDepartment(tickets);
+		final BarChartConfig config = new BarChartConfig();
 		final BarDataset dataset = new BarDataset();
+		final ChartJs chart = new ChartJs(config);
+		
 		dataset.backgroundColor(LlmsConstants.COLORS);
 		dataset.borderColor(LlmsConstants.COLORS);
-		
 		final List<Double> dataItems = new ArrayList<>(data.size());
 		final List<String> labels = new ArrayList<>(data.size());
 		data.forEach((department, minutes) -> {
@@ -37,11 +39,9 @@ public class TicketTimeByDepartmentCard extends AbstractReportCard {
 			dataItems.add(minutes.doubleValue());
 		});
 		dataset.dataAsList(dataItems);
-		
-		final BarChartConfig config = new BarChartConfig();
 		config
 			.horizontal()
-			.data()
+			.data().clear()
 				.addDataset(dataset)
 				.labelsAsList(labels)
 				.extractLabelsFromDataset(false).and()
@@ -65,8 +65,7 @@ public class TicketTimeByDepartmentCard extends AbstractReportCard {
 								.display(true)
 								.labelString("Hours").and()).and()
 				.done();
-		
-		final ChartJs chart = new ChartJs(config);
+		getContent().removeAll();
 		chart.setWidth("500px");
 		chart.setHeightFull();
 		add(chart);

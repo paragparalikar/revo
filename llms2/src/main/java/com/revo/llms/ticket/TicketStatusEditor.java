@@ -55,7 +55,7 @@ public class TicketStatusEditor extends TitledEditor {
 		final Component reasonComponent = createReasonComponent();
 		final ComboBox<Part> partComboBox = createPartComboBox();
 		final Component productComponent = createProdcutComponent(partComboBox::setItems);
-		form.add(reasonComponent, partComboBox, productComponent);
+		form.add(productComponent, partComboBox, reasonComponent);
 	}
 	
 	private Component createReasonComponent() {

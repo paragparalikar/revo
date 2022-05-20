@@ -19,18 +19,17 @@ public class TicketCountByDepartmentCard extends AbstractReportCard {
 	private static final long serialVersionUID = -6191498638729089329L;
 
 	private final ReportService reportService;
-
+	
 	@Override
 	public void update(List<Ticket> tickets) {
 		final Map<Department, Long> counts = reportService.getTotalTicketCountByDepartment(tickets);
 		
 		final DonutChartConfig config = new DonutChartConfig();
 		final PieDataset dataset = new PieDataset();
-		
 		dataset.backgroundColor(LlmsConstants.COLORS);
 		dataset.borderColor(LlmsConstants.COLORS);
 		counts.forEach((department, count) -> dataset.addLabeledData(department.getName(), count.doubleValue()));
-		config.data()
+		config.data().clear()
 			.addDataset(dataset)
 			.extractLabelsFromDataset(true).and()
 			.options()
@@ -46,6 +45,7 @@ public class TicketCountByDepartmentCard extends AbstractReportCard {
 					.position(Position.LEFT).and()
 				.done();
 		
+		getContent().removeAll();
 		final ChartJs chart = new ChartJs(config);
 		chart.setWidth("500px");
 		chart.setHeightFull();
