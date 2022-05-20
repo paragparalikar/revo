@@ -4,14 +4,13 @@ import static com.revo.llms.LlmsConstants.ROUTE_USERS;
 
 import javax.annotation.security.PermitAll;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.revo.llms.common.JpaDataProvider;
 import com.revo.llms.common.MainLayout;
 import com.revo.llms.common.TitledGridView;
 import com.revo.llms.common.security.SecurityService;
-import com.revo.llms.department.DepartmentRepository;
+import com.revo.llms.department.DepartmentDataProvider;
+import com.revo.llms.department.DepartmentService;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -32,18 +31,17 @@ public class UserView extends TitledGridView<User> {
 	private final UserEditor editor;
 	
 	public UserView(
-			@Autowired UserService userService, 
-			@Autowired SecurityService securityService,
-			@Autowired UserRepository repository, 
-			@Autowired DepartmentRepository departmentRepository) {
+			UserService userService, 
+			SecurityService securityService,
+			DepartmentService departmentService) {
 		super(VaadinIcon.USERS.create(), "Users");
 		this.userService = userService;
 		this.securityService = securityService;
-		this.dataProvider = new JpaDataProvider<>(repository);
+		this.dataProvider = new UserDataProvider(userService);
 		grid.setItems(dataProvider);
 		createColumns(grid);
 		
-		this.editor = new UserEditor(userService, dataProvider, new JpaDataProvider<>(departmentRepository));
+		this.editor = new UserEditor(userService, dataProvider, new DepartmentDataProvider(departmentService));
 
 		add(grid, editor);
 	}

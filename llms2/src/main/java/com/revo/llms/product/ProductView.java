@@ -2,13 +2,9 @@ package com.revo.llms.product;
 
 import javax.annotation.security.PermitAll;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.revo.llms.LlmsConstants;
-import com.revo.llms.common.JpaDataProvider;
 import com.revo.llms.common.MainLayout;
 import com.revo.llms.common.TitledGridView;
-import com.revo.llms.part.PartRepository;
 import com.revo.llms.part.PartView;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
@@ -25,16 +21,14 @@ public class ProductView extends TitledGridView<Product> {
 	private static final long serialVersionUID = -597643178274272245L;
 
 	private final ProductEditor editor;
-	private final ProductRepository repository;
-	private final PartRepository partRepository;
+	private final ProductService productService;
 	private final DataProvider<Product, Void> dataProvider;
 	
-	public ProductView(@Autowired ProductRepository repository, @Autowired PartRepository partRepository) {
+	public ProductView(ProductService productService) {
 		super(VaadinIcon.CART.create(), "Products");
-		this.repository = repository;
-		this.partRepository = partRepository;
-		this.dataProvider = new JpaDataProvider<>(repository);
-		this.editor = new ProductEditor(repository, dataProvider);
+		this.productService = productService;
+		this.dataProvider = new ProductDataProvider(productService);
+		this.editor = new ProductEditor(productService, dataProvider);
 		final Grid<Product> grid = new Grid<>();
 		grid.setItems(dataProvider);
 		createColumns(grid);
@@ -61,8 +55,7 @@ public class ProductView extends TitledGridView<Product> {
 	
 	@Override
 	protected void delete(Product product) {
-		partRepository.deleteByProductId(product.getId());
-		repository.delete(product);
+		productService.deleteById(product.getId());
 		dataProvider.refreshAll();
 	}
 

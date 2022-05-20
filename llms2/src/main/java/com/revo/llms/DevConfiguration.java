@@ -72,27 +72,36 @@ public class DevConfiguration {
 				final Product result = productRepository.save(product);
 				products.add(result);
 			}
-			for(int index = 1; index <= 2000; index++) {
+			for(int index = 1; index <= 100; index++) {
 				for(Product product : products) {
 					final Part part = new Part(null, "Part-"+index, product);
 					final Part result = partRepository.save(part);
 					parts.add(result);
 				}
 			}
-			for(int index = 1; index <= 100; index++) {
-				final Ticket ticket = new Ticket();
-				ticket.setStationId(2);
-				ticket.setStatus(TicketStatus.OPEN);
-				ticket.setOpenTimestamp(new Date());
-				ticket.setDepartment(departments.get(index % departments.size()));
-				if(0 == index % 2) {
-					ticket.setStatus(TicketStatus.CLOSED);
-					ticket.setClosedTimestamp(new Date());
-					ticket.setReason(reasons.get(index % reasons.size()));
-					ticket.setPart(parts.get(index % parts.size()));
+			
+			for(Department department : departments) {
+				for(Reason reason: reasons) {
+					for(int stationId = 1; stationId <= 30; stationId++) {
+						final int count = (int) (Math.random() * 10);
+						for(int index = 0; index < count; index++) {
+							final Ticket ticket = new Ticket();
+							ticket.setStationId(stationId);
+							ticket.setStatus(TicketStatus.OPEN);
+							ticket.setOpenTimestamp(new Date());
+							ticket.setDepartment(department);
+							if(0 == index % 2) {
+								ticket.setStatus(TicketStatus.CLOSED);
+								ticket.setClosedTimestamp(new Date());
+								ticket.setReason(reason);
+								ticket.setPart(parts.get(index % parts.size()));
+							}
+							ticketRepository.save(ticket);
+						}
+					}
 				}
-				ticketRepository.save(ticket);
 			}
+			
 			final User user = new User();
 			user.setUsername("admin");
 			user.setPassword("admin");

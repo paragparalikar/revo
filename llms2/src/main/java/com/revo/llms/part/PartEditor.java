@@ -15,14 +15,14 @@ public class PartEditor extends TitledFormEditor<Part> {
 	private static final long serialVersionUID = -2419791616710226909L;
 
 	private Product product;
-	private final PartRepository repository;
+	private final PartService partService;
 	private final PartDataProvider dataProvider;
 	
 	public PartEditor(
-			PartRepository repository,
+			PartService partService,
 			PartDataProvider dataProvider2) {
 		super(VaadinIcon.COGS.create(), "Parts", Part::new);
-		this.repository = repository;
+		this.partService = partService;
 		this.dataProvider = dataProvider2;
 		createForm(getBinder(), getForm());
 	}
@@ -44,7 +44,8 @@ public class PartEditor extends TitledFormEditor<Part> {
 	}
 	
 	private boolean isNameValid(String name) {
-		return null == name || Objects.equals(name, getValue().getName()) || !repository.existsByNameAndProductId(name, product.getId());
+		return null == name || Objects.equals(name, getValue().getName()) 
+				|| !partService.existsByNameAndProductId(name, product.getId());
 	}
 
 	public void open(Product product, Part part) {
@@ -55,7 +56,7 @@ public class PartEditor extends TitledFormEditor<Part> {
 	@Override
 	protected void edit(Part part) {
 		part.setProduct(product);
-		repository.save(part);
+		partService.save(part);
 		dataProvider.refreshAll();
 	}
 

@@ -2,10 +2,7 @@ package com.revo.llms.reason;
 
 import javax.annotation.security.PermitAll;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.revo.llms.LlmsConstants;
-import com.revo.llms.common.JpaDataProvider;
 import com.revo.llms.common.MainLayout;
 import com.revo.llms.common.TitledGridView;
 import com.vaadin.flow.component.grid.Grid;
@@ -21,14 +18,14 @@ public class ReasonView extends TitledGridView<Reason> {
 	private static final long serialVersionUID = 7405219789236846586L;
 	
 	private final ReasonEditor editor;
-	private final ReasonRepository repository;
+	private final ReasonService reasonService;
 	private final DataProvider<Reason, Void> dataProvider;
 	
-	public ReasonView(@Autowired ReasonRepository repository) {
+	public ReasonView(ReasonService reasonService) {
 		super(VaadinIcon.EXCLAMATION_CIRCLE.create(), "Reasons");
-		this.repository = repository;
-		this.dataProvider = new JpaDataProvider<>(repository);
-		this.editor = new ReasonEditor(repository, dataProvider);
+		this.reasonService = reasonService;
+		this.dataProvider = new ReasonDataProvider(reasonService);
+		this.editor = new ReasonEditor(reasonService, dataProvider);
 		final Grid<Reason> grid = new Grid<>();
 		grid.setItems(dataProvider);
 		createColumns(grid);
@@ -53,7 +50,7 @@ public class ReasonView extends TitledGridView<Reason> {
 
 	@Override
 	protected void delete(Reason value) {
-		repository.delete(value);
+		reasonService.delete(value);
 		dataProvider.refreshAll();
 	}
 	

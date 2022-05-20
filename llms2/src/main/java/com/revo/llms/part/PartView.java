@@ -6,14 +6,13 @@ import java.nio.charset.StandardCharsets;
 import javax.annotation.security.PermitAll;
 
 import org.apache.commons.io.IOUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.klaudeta.PaginatedGrid;
 
 import com.revo.llms.LlmsConstants;
 import com.revo.llms.common.MainLayout;
 import com.revo.llms.common.TitledGridView;
 import com.revo.llms.product.Product;
-import com.revo.llms.product.ProductRepository;
+import com.revo.llms.product.ProductService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
@@ -35,16 +34,16 @@ public class PartView extends TitledGridView<Part> implements HasUrlParameter<Lo
 	
 	private Product product;
 	private final PartEditor editor;
+	private final PartService partService;
+	private final ProductService productService;
 	private final PartDataProvider dataProvider;
-	private final PartRepository partRepository;
-	private final ProductRepository productRepository;
 	
-	public PartView(@Autowired PartRepository partRepository, @Autowired ProductRepository productRepository) {
+	public PartView(PartService partService, ProductService productSerive) {
 		super(VaadinIcon.COGS.create(), "Parts");
-		this.partRepository = partRepository;
-		this.productRepository = productRepository;
-		this.dataProvider = new PartDataProvider(partRepository);
-		this.editor = new PartEditor(partRepository, dataProvider);
+		this.partService = partService;
+		this.productService = productSerive;
+		this.dataProvider = new PartDataProvider(partService);
+		this.editor = new PartEditor(partService, dataProvider);
 		final PaginatedGrid<Part> grid = new PaginatedGrid<>();
 		grid.setItems(dataProvider);
 		grid.setPageSize(10);
@@ -69,14 +68,14 @@ public class PartView extends TitledGridView<Part> implements HasUrlParameter<Lo
 		for(String line : IOUtils.readLines(is, StandardCharsets.UTF_8)) {
 			final String[] tokens = line.split(",");
 			final Part part = new Part(Long.parseLong(tokens[0]), tokens[1], product);
-			partRepository.save(part);
+			partService.save(part);
 		}
 		dataProvider.refreshAll();
 	}
 	
 	@Override
 	public void setParameter(BeforeEvent event, Long productId) {
-		this.product = productRepository.findById(productId).get();
+		this.product = productService.findById(productId).get();
 		setTitle("Parts for " + product.getName());
 		dataProvider.setProduct(product);
 		dataProvider.refreshAll();
@@ -101,7 +100,7 @@ public class PartView extends TitledGridView<Part> implements HasUrlParameter<Lo
 
 	@Override
 	protected void delete(Part part) {
-		partRepository.delete(part);
+		partService.delete(part);
 		dataProvider.refreshAll();
 	}
 }

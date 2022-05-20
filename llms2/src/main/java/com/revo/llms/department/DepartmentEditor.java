@@ -15,14 +15,14 @@ import com.vaadin.flow.data.provider.DataProvider;
 public class DepartmentEditor extends TitledFormEditor<Department> {
 	private static final long serialVersionUID = -7011701870382258164L;
 	
-	private final DepartmentRepository repository;
+	private final DepartmentService departmentService;
 	private final DataProvider<Department, Void> dataProvider;
 	
 	public DepartmentEditor(
-			DepartmentRepository repository, 
+			DepartmentService departmentService, 
 			DataProvider<Department, Void> dataProvider) {
 		super(VaadinIcon.BUILDING.create(), "Department", Department::new);
-		this.repository = repository;
+		this.departmentService = departmentService;
 		this.dataProvider = dataProvider;
 		createForm(getBinder(), getForm());
 	}
@@ -53,16 +53,16 @@ public class DepartmentEditor extends TitledFormEditor<Department> {
 	}
 	
 	private boolean isCodeValid(Integer code) {
-		return null == code || Objects.equals(code, getValue().getCode()) || !repository.existsByCode(code);
+		return null == code || Objects.equals(code, getValue().getCode()) || !departmentService.existsByCode(code);
 	}
 	
 	private boolean isNameValid(String name) {
-		return null == name || Objects.equals(name, getValue().getName()) || !repository.existsByNameIgnoreCase(name);
+		return null == name || Objects.equals(name, getValue().getName()) || !departmentService.existsByNameIgnoreCase(name);
 	}
 	
 	@Override
 	protected void edit(Department value) {
-		repository.save(value);
+		departmentService.save(value);
 		dataProvider.refreshAll();
 	}
 	

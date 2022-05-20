@@ -32,6 +32,8 @@ public class DashboardView extends VerticalLayout {
 		this.countByDepartmentCard = new CountByDepartmentCard(repository);
 		this.todaysTicketStatusByDepartmentCard = new TodaysTicketStatusByDepartmentCard(repository, departmentRepository);
 		add(row1);
+		row1.setWidthFull();
+		row1.setAlignItems(Alignment.STRETCH);
 		row1.add(totalCountCard, countByDepartmentCard, todaysTicketStatusByDepartmentCard);
 	}
 	

@@ -2,10 +2,7 @@ package com.revo.llms.department;
 
 import javax.annotation.security.PermitAll;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.revo.llms.LlmsConstants;
-import com.revo.llms.common.JpaDataProvider;
 import com.revo.llms.common.MainLayout;
 import com.revo.llms.common.TitledGridView;
 import com.vaadin.flow.component.grid.Grid;
@@ -21,14 +18,14 @@ public class DepartmentView extends TitledGridView<Department> {
 	private static final long serialVersionUID = -4243133746000404388L;
 	
 	private final DepartmentEditor editor;
-	private final DepartmentRepository repository;
+	private final DepartmentService departmentService;
 	private final DataProvider<Department, Void> dataProvider;
 	
-	public DepartmentView(@Autowired DepartmentRepository repository) {
+	public DepartmentView(DepartmentService departmentService) {
 		super(VaadinIcon.BUILDING.create(), "Departments");
-		this.repository = repository;
-		this.dataProvider = new JpaDataProvider<>(repository);
-		this.editor = new DepartmentEditor(repository, dataProvider);
+		this.departmentService = departmentService;
+		this.dataProvider = new DepartmentDataProvider(departmentService);
+		this.editor = new DepartmentEditor(departmentService, dataProvider);
 		final Grid<Department> grid = new Grid<>();
 		grid.setItems(dataProvider);
 		createColumns(grid);
@@ -56,10 +53,10 @@ public class DepartmentView extends TitledGridView<Department> {
 	@Override
 	protected void delete(Department value) {
 		try {
-			repository.delete(value);
+			departmentService.delete(value);
 			dataProvider.refreshAll();
 		}catch(Exception e) {
-			// TODO setError
+			setError(e.getMessage());
 			e.printStackTrace();
 		}
 	}

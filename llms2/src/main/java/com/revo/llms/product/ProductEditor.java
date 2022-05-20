@@ -14,12 +14,12 @@ import com.vaadin.flow.data.provider.DataProvider;
 public class ProductEditor extends TitledFormEditor<Product> {
 	private static final long serialVersionUID = -6947933593729998570L;
 
-	private final ProductRepository repository;
+	private final ProductService productService;
 	private final DataProvider<Product, Void> dataProvider;
 	
-	public ProductEditor(ProductRepository repository, DataProvider<Product, Void> dataProvider) {
+	public ProductEditor(ProductService productService, DataProvider<Product, Void> dataProvider) {
 		super(VaadinIcon.CART.create(), "Product", Product::new);
-		this.repository = repository;
+		this.productService = productService;
 		this.dataProvider = dataProvider;
 		createForm(getBinder(), getForm());
 	}
@@ -41,12 +41,13 @@ public class ProductEditor extends TitledFormEditor<Product> {
 	}
 	
 	private boolean isNameValid(String name) {
-		return null == name || Objects.equals(name, getValue().getName()) || !repository.existsByNameIgnoreCase(name);
+		return null == name || Objects.equals(name, getValue().getName()) || 
+				!productService.existsByNameIgnoreCase(name);
 	}
 
 	@Override
 	protected void edit(Product value) {
-		repository.save(value);
+		productService.save(value);
 		dataProvider.refreshAll();
 	}
 

@@ -14,12 +14,12 @@ import com.vaadin.flow.data.provider.DataProvider;
 public class ReasonEditor extends TitledFormEditor<Reason> {
 	private static final long serialVersionUID = 5363061667786794597L;
 
-	private final ReasonRepository repository;
+	private final ReasonService reasonService;
 	private final DataProvider<Reason, Void> dataProvider;
 	
-	public ReasonEditor(ReasonRepository repository, DataProvider<Reason, Void> dataProvider) {
+	public ReasonEditor(ReasonService reasonService, DataProvider<Reason, Void> dataProvider) {
 		super(VaadinIcon.EXCLAMATION_CIRCLE.create(), "Reason", Reason::new);
-		this.repository = repository;
+		this.reasonService = reasonService;
 		this.dataProvider = dataProvider;
 		createForm(getBinder(), getForm());
 	}
@@ -42,12 +42,12 @@ public class ReasonEditor extends TitledFormEditor<Reason> {
 
 	private boolean isTextValid(String text) {
 		return null == text || Objects.equals(text, getValue().getText()) || 
-				!repository.existsByTextIgnoreCase(text);
+				!reasonService.existsByTextIgnoreCase(text);
 	}
 	
 	@Override
 	protected void edit(Reason value) {
-		repository.save(value);
+		reasonService.save(value);
 		dataProvider.refreshAll();
 	}
 

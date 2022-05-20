@@ -31,18 +31,18 @@ import com.vaadin.flow.data.provider.DataProvider;
 public class UserEditor extends TitledFormEditor<User> {
 	private static final long serialVersionUID = -8504715148318995250L;
 
-	private final UserService userService;
-	private final DataProvider<User, Void> dataProvider;
-	private final DataProvider<Department, Void> departmentDataProvider;
-	private Map<Tab, FormLayout> tabComponentMap = new LinkedHashMap<>();
 	private final Tabs tabs = new Tabs();
+	private final UserService userService;
+	private final DataProvider<User, Void> userDataProvider;
+	private final DataProvider<Department, Void> departmentDataProvider;
+	private final Map<Tab, FormLayout> tabComponentMap = new LinkedHashMap<>();
 	
 	public UserEditor(UserService userSerivce, 
 			DataProvider<User, Void> dataProvider,
 			DataProvider<Department, Void> departmentDataProvider) {
 		super(VaadinIcon.USER.create(), "User", User::new);
 		this.userService = userSerivce;
-		this.dataProvider = dataProvider;
+		this.userDataProvider = dataProvider;
 		this.departmentDataProvider = departmentDataProvider;
 		tabs.addSelectedChangeListener(event -> {
 			tabComponentMap.values().forEach(form -> form.setVisible(false));
@@ -110,7 +110,7 @@ public class UserEditor extends TitledFormEditor<User> {
 	@Override
 	protected void edit(User value) {
 		userService.save(value);
-		dataProvider.refreshAll();
+		userDataProvider.refreshAll();
 	}
 
 }

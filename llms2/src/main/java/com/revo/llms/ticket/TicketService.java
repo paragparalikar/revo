@@ -15,7 +15,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.revo.llms.department.Department;
 import com.revo.llms.port.PortPoller;
 import com.revo.llms.port.PortResolver;
 
@@ -93,8 +92,8 @@ public class TicketService {
 		else return null;
 	}
 	
-	public Page<Ticket> findAllByDepartments(Set<Department> departments, Pageable pageable){
-		return ticketRepository.findByDepartmentIn(departments, pageable);
+	public Page<Ticket> findByDepartmentIdIn(Set<Long> departmentIds, Pageable pageable){
+		return ticketRepository.findByDepartmentIdIn(departmentIds, pageable);
 	}
 
 	public Optional<Ticket> findById(Long id){

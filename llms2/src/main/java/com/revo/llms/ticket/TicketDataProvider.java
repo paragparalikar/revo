@@ -24,7 +24,7 @@ import lombok.experimental.Delegate;
 public class TicketDataProvider implements DataProvider<Ticket, Void> {
 	private static final long serialVersionUID = -6035690994345301935L;
 
-	@NonNull private final TicketRepository repository;
+	@NonNull private final TicketService ticketService;
 	@NonNull private final SecurityService securityService;
 	@Delegate private final DataProvider<Ticket, Void> delegate = new CallbackDataProvider<>(this::fetch_, this::count_);
 	
@@ -40,7 +40,7 @@ public class TicketDataProvider implements DataProvider<Ticket, Void> {
 		final Pageable pageable = VaadinUtils.toPageable(query);
 		final UserDetails user = securityService.getAuthenticatedUser();
 		final Set<Long> departmentIds = resolve(user, LlmsConstants.PREFIX_DEPARTMENT);
-		return repository.findByDepartmentIdIn(departmentIds, pageable);
+		return ticketService.findByDepartmentIdIn(departmentIds, pageable);
 	}
 	
 	private Set<Long> resolve(UserDetails user, String prefix){
