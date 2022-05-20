@@ -162,6 +162,13 @@
 					<wait>500</wait>
 					<maxAttempts>240</maxAttempts>
 				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<groupId>com.vaadin</groupId>
