@@ -9,9 +9,12 @@ public interface LlmsConstants {
 	String ROUTE_PRODUCTS = "products";
 	String ROUTE_USERS = "users";
 	String ROUTE_PARTS = "parts";
+	String ROUTE_REPORTS = "reports";
 
 	String PREFIX_PAGE = "page-";
 	String PREFIX_DEPARTMENT = "department-";
+	
+	String[] COLORS = new String[] {"magenta", "purple", "brown", "blue", "red", "pink"};
 	
 	
 }

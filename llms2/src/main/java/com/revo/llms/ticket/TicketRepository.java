@@ -19,6 +19,8 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
 	
 	List<Ticket> findByOpenTimestampAfter(Date minOpen);
 	
+	List<Ticket> findByClosedTimestampAfterAndOpenTimestampBefore(Date from, Date to);
+	
 	long countByStatus(TicketStatus status);
 	
 	Page<Ticket> findByDepartmentIdIn(Set<Long> departmentIds, Pageable pageable);

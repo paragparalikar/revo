@@ -7,6 +7,7 @@ import static com.revo.llms.LlmsConstants.ROUTE_PRODUCTS;
 import static com.revo.llms.LlmsConstants.ROUTE_REASONS;
 import static com.revo.llms.LlmsConstants.ROUTE_TICKETS;
 import static com.revo.llms.LlmsConstants.ROUTE_USERS;
+import static com.revo.llms.LlmsConstants.ROUTE_REPORTS;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -92,7 +93,7 @@ public class UserEditor extends TitledFormEditor<User> {
 	private void createPagesTab(Binder<User> binder, FormLayout form) {
 		final CheckboxGroup<String> group = new CheckboxGroup<>();
 		group.setItems(ROUTE_DASHBOARD, ROUTE_DEPARTMENTS, ROUTE_PARTS,
-				ROUTE_PRODUCTS, ROUTE_REASONS, ROUTE_TICKETS, ROUTE_USERS);
+				ROUTE_PRODUCTS, ROUTE_REASONS, ROUTE_TICKETS, ROUTE_USERS, ROUTE_REPORTS);
 		binder.forField(group).bind(User::getPages, User::setPages);
 		group.addThemeVariants(CheckboxGroupVariant.LUMO_VERTICAL);
 		final Tab tab = new Tab(VaadinIcon.FILE_O.create(), new Label("Pages"));

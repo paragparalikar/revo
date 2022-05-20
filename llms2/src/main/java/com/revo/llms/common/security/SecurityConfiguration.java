@@ -8,6 +8,7 @@ import static com.revo.llms.LlmsConstants.ROUTE_REASONS;
 import static com.revo.llms.LlmsConstants.ROUTE_TICKETS;
 import static com.revo.llms.LlmsConstants.ROUTE_USERS;
 import static com.revo.llms.LlmsConstants.ROUTE_PARTS;
+import static com.revo.llms.LlmsConstants.ROUTE_REPORTS;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -36,7 +37,10 @@ public class SecurityConfiguration extends VaadinWebSecurityConfigurerAdapter {
         	.antMatchers("/" + ROUTE_REASONS).hasAuthority(PREFIX_PAGE + ROUTE_REASONS)
         	.antMatchers("/" + ROUTE_PRODUCTS).hasAuthority(PREFIX_PAGE + ROUTE_PRODUCTS)
         	.antMatchers("/" + ROUTE_USERS).hasAuthority(PREFIX_PAGE + ROUTE_USERS)
+        	.antMatchers("/" + ROUTE_REPORTS).hasAuthority(PREFIX_PAGE + ROUTE_REPORTS)
         	.antMatchers("/" + ROUTE_PARTS + "/*").hasAuthority(PREFIX_PAGE + ROUTE_PARTS);
+        
+        
         super.configure(http);
         setLoginView(http, LoginView.class); 
     }

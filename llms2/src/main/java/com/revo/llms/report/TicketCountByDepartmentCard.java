@@ -1,5 +1,6 @@
-package com.revo.llms.dashboard;
+package com.revo.llms.report;
 
+import java.util.List;
 import java.util.Map;
 
 import org.vaadin.addons.chartjs.ChartJs;
@@ -9,23 +10,28 @@ import org.vaadin.addons.chartjs.options.Position;
 
 import com.revo.llms.LlmsConstants;
 import com.revo.llms.department.Department;
+import com.revo.llms.ticket.Ticket;
 
-public class CountByDepartmentCard extends AbstractCard {
-	private static final long serialVersionUID = 2426736790179100496L;
+public class TicketCountByDepartmentCard extends AbstractReportCard {
+	private static final long serialVersionUID = -6191498638729089329L;
 
-	private final DashboardService dashboardService;
+	private final ReportService reportService;
 	
-	public CountByDepartmentCard(DashboardService dashboardService) {
-		this.dashboardService = dashboardService;
-		update();
+	public TicketCountByDepartmentCard(ReportService reportService) {
+		this.reportService = reportService;
 	}
-	
+
 	@Override
-	public void update() {
-		final Map<Department, Long> counts = dashboardService.getOpenTicketCountByDepartment();
+	public void update(List<Ticket> tickets) {
+		final Map<Department, Long> counts = reportService.getTotalTicketCountByDepartment(tickets);
+		
 		
 		final DonutChartConfig config = new DonutChartConfig();
 		final PieDataset dataset = new PieDataset();
+		
+		//final PolarAreaChartConfig config = new PolarAreaChartConfig();
+		//final PolarAreaDataset dataset = new PolarAreaDataset();
+		
 		dataset.backgroundColor(LlmsConstants.COLORS);
 		dataset.borderColor(LlmsConstants.COLORS);
 		counts.forEach((department, count) -> dataset.addLabeledData(department.getName(), count.doubleValue()));
@@ -36,13 +42,16 @@ public class CountByDepartmentCard extends AbstractCard {
 				.title()
 					.display(true)
 					.position(Position.BOTTOM)
-					.text("Open Tickets by Departments")
+					.text("Total Tickets by Departments")
 					.fontColor("white")
-					.fullWidth(true).and().done();
+					.fullWidth(true).and()
+				.legend()
+					.display(false).and()
+				.done();
 		
 		final ChartJs chart = new ChartJs(config);
 		chart.setWidthFull();
 		add(chart);
 	}
-
+	
 }

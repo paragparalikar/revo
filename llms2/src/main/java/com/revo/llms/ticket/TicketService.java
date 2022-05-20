@@ -97,6 +97,10 @@ public class TicketService {
 	public Page<Ticket> findByDepartmentIdIn(Set<Long> departmentIds, Pageable pageable){
 		return ticketRepository.findByDepartmentIdIn(departmentIds, pageable);
 	}
+	
+	public List<Ticket> findByClosedTimestampAfterAndOpenTimestampBefore(Date from, Date to){
+		return ticketRepository.findByClosedTimestampAfterAndOpenTimestampBefore(from, to);
+	}
 
 	public Optional<Ticket> findById(Long id){
 		return ticketRepository.findById(id);
