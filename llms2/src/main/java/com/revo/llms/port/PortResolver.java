@@ -27,13 +27,4 @@ public class PortResolver {
 				.orElse(null);
 	}
 	
-	public static void main(String[] args) {
-		Stream.of(SerialPort.getCommPorts()).forEach(port -> {
-			System.out.println("System name : " + port.getSystemPortName());
-			System.out.println("Descriptive name : " + port.getDescriptivePortName());
-			System.out.println("Port description : " + port.getPortDescription());
-			System.out.println();
-		});
-	}
-	
 }
