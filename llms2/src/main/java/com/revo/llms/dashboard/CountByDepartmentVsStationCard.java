@@ -80,6 +80,7 @@ public class CountByDepartmentVsStationCard extends AbstractCard {
 				.and().done();
 		
 		final ChartJs chart = new ChartJs(config);
+		getContent().removeAll();
 		chart.setWidth("1000px");
 		chart.setHeight("250px");
 		add(chart);

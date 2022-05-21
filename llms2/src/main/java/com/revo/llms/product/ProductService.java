@@ -2,6 +2,8 @@ package com.revo.llms.product;
 
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -38,6 +40,7 @@ public class ProductService {
 		return productRepository.existsByNameIgnoreCase(name);
 	}
 	
+	@Transactional
 	public void deleteById(Long productId) {
 		partService.deleteByProductId(productId);
 		productRepository.deleteById(productId);

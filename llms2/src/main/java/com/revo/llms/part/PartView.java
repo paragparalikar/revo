@@ -6,6 +6,7 @@ import java.nio.charset.StandardCharsets;
 import javax.annotation.security.PermitAll;
 
 import org.apache.commons.io.IOUtils;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.vaadin.klaudeta.PaginatedGrid;
 
 import com.revo.llms.LlmsConstants;
@@ -100,7 +101,11 @@ public class PartView extends TitledGridView<Part> implements HasUrlParameter<Lo
 
 	@Override
 	protected void delete(Part part) {
-		partService.delete(part);
-		dataProvider.refreshAll();
+		try {
+			partService.delete(part);
+			dataProvider.refreshAll();
+		} catch(DataIntegrityViolationException dive) {
+			setError("There are tickets associated with this part, thus part can not be deleted");
+		}
 	}
 }

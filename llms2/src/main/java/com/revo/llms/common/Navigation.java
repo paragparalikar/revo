@@ -55,13 +55,20 @@ public class Navigation extends VerticalLayout implements AfterNavigationObserve
 		this.usernameLabel = usernameLabel;
 		this.securityService = securityService;
 		setHeightFull();
-		add(createLogo(), tabs);
+		add(createLogo(), tabs, createFooter());
+		expand(tabs);
 		tabs.setOrientation(Tabs.Orientation.VERTICAL);
 		tabs.addThemeVariants(LUMO_SMALL);
 	}
 	
 	private Component createLogo() {
 		final Image image = new Image("images/cnh-logo.png", "CNH");
+		image.setWidthFull();
+		return image;
+	}
+	
+	private Component createFooter() {
+		final Image image = new Image("images/logo-revo.png", "Revo");
 		image.setWidthFull();
 		return image;
 	}

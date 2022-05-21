@@ -41,6 +41,7 @@ public class CountByDepartmentCard extends AbstractCard {
 					.fullWidth(true).and().done();
 		
 		final ChartJs chart = new ChartJs(config);
+		getContent().removeAll();
 		chart.setWidthFull();
 		add(chart);
 	}

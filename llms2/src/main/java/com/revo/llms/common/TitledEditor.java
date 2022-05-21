@@ -7,7 +7,6 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.H3;
-import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -24,15 +23,13 @@ public abstract class TitledEditor extends Dialog {
 	
 	private final H3 title = new H3();
 	private final Span iconSpan = new Span();
-	private final Label errorLabel = new Label();
+	private final ErrorBar errorBar = new ErrorBar();
 	private final HorizontalLayout header = new HorizontalLayout(iconSpan, title);
 	private final FormLayout form = new FormLayout();
-	private final VerticalLayout container = new VerticalLayout(header, errorLabel, form, createButtonBar());
+	private final VerticalLayout container = new VerticalLayout(header, errorBar, form, createButtonBar());
 
 	public TitledEditor() {
 		header.setWidthFull();
-		errorLabel.setWidthFull();
-		errorLabel.getStyle().set("color", "#ff0000");
 		title.getStyle()
 			.set("font-size", "var(--lumo-font-size-xl)")
 			.set("margin", "0");
@@ -48,7 +45,7 @@ public abstract class TitledEditor extends Dialog {
 	}
 	
 	public void setError(String value) {
-		errorLabel.setText(value);
+		errorBar.setError(value);
 	}
 	
 	protected Component createButtonBar() {

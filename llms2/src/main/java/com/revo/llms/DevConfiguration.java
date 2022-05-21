@@ -1,16 +1,5 @@
 package com.revo.llms;
 
-import static com.revo.llms.LlmsConstants.ROUTE_DASHBOARD;
-import static com.revo.llms.LlmsConstants.ROUTE_DEPARTMENTS;
-import static com.revo.llms.LlmsConstants.ROUTE_PARTS;
-import static com.revo.llms.LlmsConstants.ROUTE_PRODUCTS;
-import static com.revo.llms.LlmsConstants.ROUTE_REASONS;
-import static com.revo.llms.LlmsConstants.ROUTE_TICKETS;
-import static com.revo.llms.LlmsConstants.ROUTE_USERS;
-import static com.revo.llms.LlmsConstants.ROUTE_REPORTS;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -31,8 +20,6 @@ import com.revo.llms.reason.ReasonRepository;
 import com.revo.llms.ticket.Ticket;
 import com.revo.llms.ticket.TicketRepository;
 import com.revo.llms.ticket.TicketStatus;
-import com.revo.llms.user.User;
-import com.revo.llms.user.UserService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -41,49 +28,59 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class DevConfiguration {
 
-	private final UserService userService;
 	private final TicketRepository ticketRepository;
 	private final DepartmentRepository departmentRepository;
 	private final ReasonRepository reasonRepository;
 	private final ProductRepository productRepository;
 	private final PartRepository partRepository;
 	
-	@Bean
-	public CommandLineRunner dataSetup() {
-		return args -> {
-			final List<Part> parts = new ArrayList<>();
-			final List<Reason> reasons = new ArrayList<>();
-			final List<Product> products = new ArrayList<>();
-			final List<Department> departments = new ArrayList<>();
+	private void createDepartments() {
+		if(0 == departmentRepository.count()) {
 			for(int index = 1; index <= 4; index++) {
 				final Department department = new Department();
 				department.setCode(index);
 				department.setName("Department-"+index);
-				final Department result = departmentRepository.save(department);
-				departments.add(result);
+				departmentRepository.save(department);
 			}
+		}
+	}
+	
+	private void createReasons() {
+		if(0 == reasonRepository.count()) {
 			for(int index = 1; index <= 5; index++) {
 				final Reason reason = new Reason();
 				reason.setText("Reason-"+index);
-				final Reason result = reasonRepository.save(reason);
-				reasons.add(result);
+				reasonRepository.save(reason);
 			}
+		}
+	}
+	
+	private void createProducts() {
+		if(0 == productRepository.count()) {
 			for(int index = 1; index <= 2; index++) {
 				final Product product = new Product();
 				product.setName("Product-"+index);
-				final Product result = productRepository.save(product);
-				products.add(result);
+				productRepository.save(product);
 			}
-			for(int index = 1; index <= 100; index++) {
-				for(Product product : products) {
+		}
+	}
+	
+	private void createParts() {
+		if(0 == partRepository.count()) {
+			for(Product product : productRepository.findAll()) {
+				for(int index = 1; index <= 100; index++) {
 					final Part part = new Part(null, "Part-"+index, product);
-					final Part result = partRepository.save(part);
-					parts.add(result);
+					partRepository.save(part);
 				}
 			}
-			
-			for(Department department : departments) {
-				for(Reason reason: reasons) {
+		}
+	}
+	
+	private void createTickets() {
+		if(0 == ticketRepository.count()) {
+			final List<Part> parts = partRepository.findAll();
+			for(Department department : departmentRepository.findAll()) {
+				for(Reason reason: reasonRepository.findAll()) {
 					for(int stationId = 1; stationId <= 30; stationId++) {
 						final int count = (int) (Math.random() * 10);
 						final Calendar calendar = Calendar.getInstance();
@@ -105,20 +102,17 @@ public class DevConfiguration {
 					}
 				}
 			}
-			
-			final User user = new User();
-			user.setUsername("admin");
-			user.setPassword("admin");
-			user.getDepartments().addAll(departments);
-			user.getPages().addAll(Arrays.asList(ROUTE_DASHBOARD,
-		            		ROUTE_TICKETS,
-		            		ROUTE_DEPARTMENTS,
-		            		ROUTE_REASONS,
-		            		ROUTE_PRODUCTS,
-		            		ROUTE_USERS, 
-		            		ROUTE_REPORTS,
-		            		ROUTE_PARTS));
-			userService.save(user);
+		}
+	}
+	
+	@Bean
+	public CommandLineRunner dataSetup() {
+		return args -> {
+			createDepartments();
+			createReasons();
+			createProducts();
+			createParts();
+			createTickets();
 		};
 	}
 	

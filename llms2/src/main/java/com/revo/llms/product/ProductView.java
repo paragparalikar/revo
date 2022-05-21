@@ -2,6 +2,8 @@ package com.revo.llms.product;
 
 import javax.annotation.security.PermitAll;
 
+import org.springframework.dao.DataIntegrityViolationException;
+
 import com.revo.llms.LlmsConstants;
 import com.revo.llms.common.MainLayout;
 import com.revo.llms.common.TitledGridView;
@@ -55,8 +57,12 @@ public class ProductView extends TitledGridView<Product> {
 	
 	@Override
 	protected void delete(Product product) {
-		productService.deleteById(product.getId());
-		dataProvider.refreshAll();
+		try {
+			productService.deleteById(product.getId());
+			dataProvider.refreshAll();
+		} catch(DataIntegrityViolationException dive) {
+			setError("There are tickets associated with this product, thus product can not be deleted");
+		}
 	}
 
 	@Override
