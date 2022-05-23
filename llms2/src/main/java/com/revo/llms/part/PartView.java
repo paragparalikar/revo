@@ -25,10 +25,12 @@ import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
+import de.codecamp.vaadin.security.spring.access.SecuredAccess;
 import lombok.SneakyThrows;
 
 @PermitAll
 @PageTitle("Parts")
+@SecuredAccess("hasAuthority('page-parts')")
 @Route(value = LlmsConstants.ROUTE_PARTS, layout = MainLayout.class)
 public class PartView extends TitledGridView<Part> implements HasUrlParameter<Long> {
 	private static final long serialVersionUID = 6769661703648507977L;

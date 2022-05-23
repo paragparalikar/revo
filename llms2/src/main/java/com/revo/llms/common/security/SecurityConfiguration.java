@@ -1,15 +1,5 @@
 package com.revo.llms.common.security;
 
-import static com.revo.llms.LlmsConstants.PREFIX_PAGE;
-import static com.revo.llms.LlmsConstants.ROUTE_DASHBOARD;
-import static com.revo.llms.LlmsConstants.ROUTE_DEPARTMENTS;
-import static com.revo.llms.LlmsConstants.ROUTE_PARTS;
-import static com.revo.llms.LlmsConstants.ROUTE_PRODUCTS;
-import static com.revo.llms.LlmsConstants.ROUTE_REASONS;
-import static com.revo.llms.LlmsConstants.ROUTE_REPORTS;
-import static com.revo.llms.LlmsConstants.ROUTE_TICKETS;
-import static com.revo.llms.LlmsConstants.ROUTE_USERS;
-
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -30,17 +20,6 @@ public class SecurityConfiguration extends VaadinWebSecurityConfigurerAdapter {
 
 	@Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-        	.antMatchers("/" + ROUTE_DASHBOARD).hasAuthority(PREFIX_PAGE + ROUTE_DASHBOARD)
-        	.antMatchers("/" + ROUTE_TICKETS).hasAuthority(PREFIX_PAGE + ROUTE_TICKETS)
-        	.antMatchers("/" + ROUTE_DEPARTMENTS).hasAuthority(PREFIX_PAGE + ROUTE_DEPARTMENTS)
-        	.antMatchers("/" + ROUTE_REASONS).hasAuthority(PREFIX_PAGE + ROUTE_REASONS)
-        	.antMatchers("/" + ROUTE_PRODUCTS).hasAuthority(PREFIX_PAGE + ROUTE_PRODUCTS)
-        	.antMatchers("/" + ROUTE_USERS).hasAuthority(PREFIX_PAGE + ROUTE_USERS)
-        	.antMatchers("/" + ROUTE_REPORTS).hasAuthority(PREFIX_PAGE + ROUTE_REPORTS)
-        	.antMatchers("/" + ROUTE_PARTS + "/*").hasAuthority(PREFIX_PAGE + ROUTE_PARTS);
-        
-        
         super.configure(http);
         setLoginView(http, LoginView.class); 
     }

@@ -25,8 +25,11 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
+import de.codecamp.vaadin.security.spring.access.SecuredAccess;
+
 @PermitAll
 @PageTitle("Tickets")
+@SecuredAccess("hasAuthority('page-tickets')")
 @Route(value = LlmsConstants.ROUTE_TICKETS, layout = MainLayout.class)
 public class TicketView extends TitledView {
 	private static final long serialVersionUID = 821057894670434504L;

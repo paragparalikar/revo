@@ -98,6 +98,11 @@
 			<version>0.1.38</version>
 		</dependency>
 		<dependency>
+			<groupId>de.codecamp.vaadin</groupId>
+			<artifactId>vaadin-security-spring-boot-starter</artifactId>
+			<version>3.0.2</version>
+		</dependency>
+		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 		</dependency>

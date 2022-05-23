@@ -11,8 +11,11 @@ import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
+import de.codecamp.vaadin.security.spring.access.SecuredAccess;
+
 @PermitAll
 @PageTitle("Reasons")
+@SecuredAccess("hasAuthority('page-reasons')")
 @Route(value = LlmsConstants.ROUTE_REASONS, layout = MainLayout.class)
 public class ReasonView extends TitledGridView<Reason> {
 	private static final long serialVersionUID = 7405219789236846586L;

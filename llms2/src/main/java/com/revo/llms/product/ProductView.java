@@ -16,8 +16,11 @@ import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
+import de.codecamp.vaadin.security.spring.access.SecuredAccess;
+
 @PermitAll
 @PageTitle("Products")
+@SecuredAccess("hasAuthority('page-products')")
 @Route(value = LlmsConstants.ROUTE_PRODUCTS, layout = MainLayout.class)
 public class ProductView extends TitledGridView<Product> {
 	private static final long serialVersionUID = -597643178274272245L;

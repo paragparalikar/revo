@@ -11,8 +11,11 @@ import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
+import de.codecamp.vaadin.security.spring.access.SecuredAccess;
+
 @PermitAll
 @PageTitle("Departments")
+@SecuredAccess("hasAuthority('page-departments')")
 @Route(value = LlmsConstants.ROUTE_DEPARTMENTS, layout = MainLayout.class)
 public class DepartmentView extends TitledGridView<Department> {
 	private static final long serialVersionUID = -4243133746000404388L;

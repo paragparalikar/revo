@@ -18,8 +18,11 @@ import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
+import de.codecamp.vaadin.security.spring.access.SecuredAccess;
+
 @PermitAll
 @PageTitle("Users")
+@SecuredAccess("hasAuthority('page-users')")
 @Route(value = ROUTE_USERS, layout = MainLayout.class)
 public class UserView extends TitledGridView<User> {
 	private static final long serialVersionUID = 4494009539554472127L;
