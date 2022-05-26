@@ -266,7 +266,8 @@
     "@polymer/paper-button": "$@polymer/paper-button",
     "@polymer/paper-icon-button": "$@polymer/paper-icon-button",
     "lit-element": "$lit-element",
-    "lit-html": "$lit-html"
+    "lit-html": "$lit-html",
+    "@polymer/paper-ripple": "$@polymer/paper-ripple"
   },
   "vaadin": {
     "dependencies": {
