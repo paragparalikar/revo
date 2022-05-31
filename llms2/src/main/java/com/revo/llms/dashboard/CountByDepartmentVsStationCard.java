@@ -59,7 +59,7 @@ public class CountByDepartmentVsStationCard extends AbstractCard {
 			.extractLabelsFromDataset(false).and()
 			.options()
 				.title()
-					.text("Open Ticket Count for Station and Department")
+					.text("Open Tickets for Station and Department")
 					.fontColor("white")
 					.display(true)
 					.position(Position.BOTTOM)

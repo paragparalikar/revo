@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -29,17 +30,20 @@ public class ReportService {
 	public Map<Department, Long> getTotalTicketCountByDepartment(List<Ticket> tickets){
 		return tickets.stream()
 				.map(Ticket::getDepartment)
+				.filter(Objects::nonNull)
 				.collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
 	}
 	
 	public Map<Reason, Long> getTotalTicketCountByReason(List<Ticket> tickets){
 		return tickets.stream()
 				.map(Ticket::getReason)
+				.filter(Objects::nonNull)
 				.collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
 	}
 	
 	public Map<Reason, Long> getTicketTimeByReason(List<Ticket> tickets){
 		return tickets.stream()
+				.filter(ticket -> Objects.nonNull(ticket.getReason()))
 				.collect(Collectors.groupingBy(Ticket::getReason, 
 						Collectors.mapping(ticket -> {
 							final Date open = ticket.getOpenTimestamp();
@@ -50,6 +54,7 @@ public class ReportService {
 	
 	public Map<Department, Long> getTicketTimeByDepartment(List<Ticket> tickets){
 		return tickets.stream()
+				.filter(ticket -> Objects.nonNull(ticket.getDepartment()))
 				.collect(Collectors.groupingBy(Ticket::getDepartment, 
 						Collectors.mapping(ticket -> {
 							final Date open = ticket.getOpenTimestamp();

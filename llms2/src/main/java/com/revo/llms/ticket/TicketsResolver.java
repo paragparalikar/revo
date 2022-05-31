@@ -47,7 +47,7 @@ public class TicketsResolver implements Function<byte[], Set<Ticket>> {
 	}
 	
 	private TicketStatus resolve(byte status, Department department) {
-		return 0 < (status & ((byte)Math.pow(2, department.getId()))) ?
+		return 0 < (status & ((byte)Math.pow(2, department.getCode()))) ?
 				TicketStatus.OPEN : 
 				TicketStatus.CLOSED;
 	}
