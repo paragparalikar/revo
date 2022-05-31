@@ -83,8 +83,7 @@ public class TicketView extends TitledView {
 	}
 	
 	private Component createActionColumn(Ticket ticket) {
-		final Button button = new Button("Close", VaadinIcon.CHECK.create());
-		button.setEnabled(!TicketStatus.CLOSED.equals(ticket.getStatus()));
+		final Button button = new Button("Edit", VaadinIcon.EDIT.create());
 		button.addClickListener(event -> ticketStatusEditor.open(ticket));
 		return button;
 	}

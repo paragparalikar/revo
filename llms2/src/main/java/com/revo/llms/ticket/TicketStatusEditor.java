@@ -4,7 +4,6 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Consumer;
 
 import com.revo.llms.common.TitledEditor;
 import com.revo.llms.part.Part;
@@ -13,7 +12,6 @@ import com.revo.llms.product.Product;
 import com.revo.llms.reason.Reason;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.combobox.ComboBox;
-import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
@@ -28,6 +26,7 @@ public class TicketStatusEditor extends TitledEditor {
 	private Ticket ticket;
 	private final PartService partService;
 	private final TicketService ticketService;
+	private final ComboBox<Part> partComboBox;
 	private final Binder<Ticket> binder = new Binder<>();
 	private final DataProvider<Ticket, Void> ticketDataProvider;
 	private final DataProvider<Reason, String> reasonFilteringDataProvider;
@@ -48,14 +47,11 @@ public class TicketStatusEditor extends TitledEditor {
 		
 		setIcon(VaadinIcon.TICKET.create());
 		setTitle("Close Ticket");
-		createForm(getForm());
-	}
-	
-	private void createForm(FormLayout form) {
+		
+		this.partComboBox = createPartComboBox();
 		final Component reasonComponent = createReasonComponent();
-		final ComboBox<Part> partComboBox = createPartComboBox();
-		final Component productComponent = createProdcutComponent(partComboBox::setItems);
-		form.add(productComponent, partComboBox, reasonComponent);
+		final Component productComponent = createProdcutComponent();
+		getForm().add(productComponent, partComboBox, reasonComponent);
 	}
 	
 	private Component createReasonComponent() {
@@ -74,22 +70,27 @@ public class TicketStatusEditor extends TitledEditor {
 		return partBox;
 	}
 	
-	private Component createProdcutComponent(Consumer<List<Part>> partsConsumer) {
+	private Component createProdcutComponent() {
 		final ComboBox<Product> productBox = new ComboBox<>("Product");
 		productBox.setItems(productFilteringDataProvider);
 		productBox.setItemLabelGenerator(Product::getName);
-		productBox.addValueChangeListener(event -> {
-			Optional.ofNullable(event.getValue()).ifPresent(product -> {
-				final List<Part> parts = partService.findByProductId(product.getId());
-				parts.sort(Comparator.comparing(Part::getName));
-				partsConsumer.accept(parts);
-			});
-		});
+		binder.forField(productBox).asRequired().bind(ticket -> Optional.ofNullable(ticket)
+				.map(Ticket::getPart)
+				.map(Part::getProduct)
+				.orElse(null), (ticket, product) -> {});
+		productBox.addValueChangeListener(event -> Optional.ofNullable(event.getValue()).ifPresent(product -> setParts(product)));
 		return productBox;
+	}
+	
+	private void setParts(Product product) {
+		final List<Part> parts = partService.findByProductId(product.getId());
+		parts.sort(Comparator.comparing(Part::getName));
+		partComboBox.setItems(parts);
 	}
 	
 	public void open(@NonNull Ticket ticket) {
 		this.ticket = ticket;
+		Optional.ofNullable(ticket.getPart()).map(Part::getProduct).ifPresent(this::setParts);
 		binder.readBean(ticket);
 		open();
 	}
@@ -101,7 +102,7 @@ public class TicketStatusEditor extends TitledEditor {
 			ticket.setClosedTimestamp(new Date());
 			ticket.setStatus(TicketStatus.CLOSED);
 			ticketService.save(ticket);
-			ticketDataProvider.refreshItem(ticket);
+			ticketDataProvider.refreshAll();
 			close();
 		} catch (ValidationException e) {
 			setError(e.getMessage());
