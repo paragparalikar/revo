@@ -40,7 +40,7 @@ public class CountByDepartmentVsStationCard extends AbstractCard {
 			for(Department department : counts.keySet()) {
 				final BubbleData bubble = new BubbleData();
 				bubble.x(stationId.doubleValue());
-				bubble.y(department.getId().doubleValue());
+				bubble.y(department.getCode().doubleValue());
 				final Long count = counts.getOrDefault(department, 0l);
 				bubble.r(count.doubleValue());
 				dataItems.add(bubble);
@@ -76,7 +76,7 @@ public class CountByDepartmentVsStationCard extends AbstractCard {
 							.display(true)
 							.scaleLabel()
 								.display(true)
-								.labelString("Departments").and())	
+								.labelString("Department Code").and())	
 				.and().done();
 		
 		final ChartJs chart = new ChartJs(config);

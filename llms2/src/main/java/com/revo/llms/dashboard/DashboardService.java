@@ -42,7 +42,7 @@ public class DashboardService {
 		final List<Department> departments = departmentService.findAll();
 		final List<Ticket> tickets = ticketService.findByStatus(TicketStatus.OPEN);
 		final Map<Integer, Map<Department, Long>> result = new HashMap<>(30);
-		for(int stationId = 1; stationId <= 30; stationId++) {
+		for(int stationId = 0; stationId < 30; stationId++) {
 			final Map<Department, Long> counts = new HashMap<>(departments.size());
 			for(Department department : departments) {
 				final Integer localStationId = Integer.valueOf(stationId);
