@@ -19,27 +19,19 @@ public class DashboardView extends VerticalLayout {
 
 	private final TotalCountCard totalCountCard;
 	private final CountByDepartmentCard countByDepartmentCard;
-	private final CountByDepartmentVsStationCard countByDepartmentVsStationCard;
 	private final TodaysTicketStatusByDepartmentCard todaysTicketStatusByDepartmentCard;
 	private final HorizontalLayout row1 = new HorizontalLayout();
-	private final HorizontalLayout row2 = new HorizontalLayout();
 	
 	public DashboardView(DashboardService dashboardService) {
 		this.totalCountCard = new TotalCountCard(dashboardService);
 		this.countByDepartmentCard = new CountByDepartmentCard(dashboardService);
-		this.countByDepartmentVsStationCard = new CountByDepartmentVsStationCard(dashboardService);
 		this.todaysTicketStatusByDepartmentCard = new TodaysTicketStatusByDepartmentCard(dashboardService);
 		
 		row1.setWidthFull();
 		row1.setJustifyContentMode(JustifyContentMode.BETWEEN);
 		row1.add(totalCountCard, countByDepartmentCard, todaysTicketStatusByDepartmentCard);
-		
-		row2.setWidthFull();
-		row2.setJustifyContentMode(JustifyContentMode.BETWEEN);
-		row2.add(countByDepartmentVsStationCard);
-		
-		//setAlignItems(Alignment.STRETCH);
-		add(row1, row2);
+
+		add(row1);
 	}
 	
 }
