@@ -56,8 +56,9 @@ public class TicketService {
 	
 	@Scheduled(initialDelayString = "${poll.initial-delay.millis:1000}", 
 			fixedDelayString = "${poll.fixed-delay.millis:1000}")
-	public void poll() {
+	public void poll() throws InterruptedException {
 		portPoller.poll(new byte[]{1,3,0,0,0,15,5,(byte)206});
+		Thread.sleep(500);
 		portPoller.poll(new byte[]{2,3,0,0,0,15,5,(byte)253});
 	}
 	

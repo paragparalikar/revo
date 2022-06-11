@@ -27,7 +27,6 @@ public class PortPoller<T> implements SerialPortPacketListener {
 	@NonNull private final Consumer<T> callback;
 	@NonNull private final PortResolver portResolver;
 	@NonNull private final Function<byte[], T> resolver;
-	@NonNull @Builder.Default private final Long requestTimeout = 5000L;
 	
 	public void poll(final byte[] request) {
 		if(!isConnected()) {
@@ -41,13 +40,6 @@ public class PortPoller<T> implements SerialPortPacketListener {
 	}
 
 	private void write(final byte[] request) {
-		while(lastRequestTimestamp + requestTimeout >= System.currentTimeMillis()) {
-			log.trace("Previous request is yet to get response or timeout, will yield");
-			Thread.yield();
-		} 
-		if(lastRequestTimestamp > 0) {
-			log.error("REQUEST TIMEOUT : Previous request has timed out, this may lead to potential data loss");
-		}
 		port.removeDataListener();
 		port.addDataListener(PortPoller.this);
 		log.debug("Writing request to port : {}", request);
