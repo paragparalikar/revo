@@ -10,8 +10,8 @@ import java.util.List;
 import javax.annotation.security.PermitAll;
 
 import com.revo.llms.common.Broadcaster;
-import com.revo.llms.common.MainLayout;
 import com.revo.llms.common.Broadcaster.Registration;
+import com.revo.llms.common.MainLayout;
 import com.revo.llms.ticket.Ticket;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.DetachEvent;
@@ -19,11 +19,9 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.datetimepicker.DateTimePicker;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
-@Push
 @PermitAll
 @PageTitle("Report")
 @Route(value = ROUTE_REPORTS, layout = MainLayout.class)
