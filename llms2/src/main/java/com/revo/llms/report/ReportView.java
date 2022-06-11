@@ -9,14 +9,21 @@ import java.util.List;
 
 import javax.annotation.security.PermitAll;
 
+import com.revo.llms.common.Broadcaster;
 import com.revo.llms.common.MainLayout;
+import com.revo.llms.common.Broadcaster.Registration;
 import com.revo.llms.ticket.Ticket;
+import com.vaadin.flow.component.AttachEvent;
+import com.vaadin.flow.component.DetachEvent;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.datetimepicker.DateTimePicker;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
+@Push
 @PermitAll
 @PageTitle("Report")
 @Route(value = ROUTE_REPORTS, layout = MainLayout.class)
@@ -24,6 +31,7 @@ public class ReportView extends VerticalLayout {
 	private static final long serialVersionUID = 9218395343919664712L;
 
 	private final ReportService reportService;
+	private Registration broadcasterRegistration;
 	private final TicketTimeByReasonCard ticketTimeByReasonCard;
 	private final TicketCountByReasonCard ticketCountByReasonCard;
 	private final TicketCountByDepartmentCard ticketCountByDepartmentCard;
@@ -58,6 +66,19 @@ public class ReportView extends VerticalLayout {
 		toPicker.addValueChangeListener(event -> update());
 		fromPicker.addValueChangeListener(event -> update());
 	}
+	
+	@Override
+	protected void onAttach(AttachEvent attachEvent) {
+		super.onAttach(attachEvent);
+		final UI ui = attachEvent.getUI();
+        broadcasterRegistration = Broadcaster.register(newMessage -> ui.access(() -> update()));
+	}
+	
+	@Override
+    protected void onDetach(DetachEvent detachEvent) {
+        broadcasterRegistration.remove();
+        broadcasterRegistration = null;
+    }
 	
 	private void update() {
 		final Date to = Date.from(this.toPicker.getValue().atZone(ZoneId.systemDefault()).toInstant());

@@ -10,14 +10,18 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.revo.llms.common.Broadcaster;
 import com.revo.llms.port.PortPoller;
 import com.revo.llms.port.PortResolver;
+import com.revo.llms.ticket.event.TicketClosedEvent;
+import com.revo.llms.ticket.event.TicketOpenedEvent;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -40,6 +44,9 @@ public class TicketService {
 	
 	@Autowired
 	private PortResolver portResolver;
+	
+	@Autowired
+	private ApplicationEventPublisher eventPublisher;
 	
 	private PortPoller<Set<Ticket>> portPoller;
 	
@@ -67,7 +74,14 @@ public class TicketService {
 			.map(this::apply)
 			.filter(Objects::nonNull)
 			.forEach(ticket -> {
-				log.info("Persisted ticket {}", ticketRepository.save(ticket));
+				final Ticket managed = ticketRepository.save(ticket);
+				if(TicketStatus.OPEN.equals(managed.getStatus())) {
+					eventPublisher.publishEvent(new TicketOpenedEvent(managed));
+				} else if(TicketStatus.CLOSED.equals(managed.getStatus())) {
+					eventPublisher.publishEvent(new TicketClosedEvent(managed));
+				} 
+				Broadcaster.broadcast(managed.toString());
+				log.info("Persisted ticket {}", managed);
 			});
 	}
 	
