@@ -1,6 +1,7 @@
 package com.revo.llms.dashboard;
 
-import java.util.Calendar;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -76,12 +77,9 @@ public class DashboardService {
 	}
 	
 	private Date getMidnightTime() {
-		final Calendar calendar = Calendar.getInstance();
-		calendar.set(Calendar.MILLISECOND, 0);
-		calendar.set(Calendar.SECOND, 0);
-		calendar.set(Calendar.MINUTE, 0);
-		calendar.set(Calendar.HOUR_OF_DAY, 0);
-		return calendar.getTime();
+		final ZonedDateTime zonedDateTime = ZonedDateTime.now().truncatedTo(ChronoUnit.DAYS);
+		final long epochMillis = zonedDateTime.toInstant().toEpochMilli();
+		return new Date(epochMillis);
 	}
 
 }

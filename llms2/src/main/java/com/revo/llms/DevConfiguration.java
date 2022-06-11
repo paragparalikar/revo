@@ -1,4 +1,4 @@
-package com.revo.llms;
+	package com.revo.llms;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -36,7 +36,7 @@ public class DevConfiguration {
 	
 	private void createDepartments() {
 		if(0 == departmentRepository.count()) {
-			for(int index = 1; index <= 4; index++) {
+			for(int index = 0; index < 4; index++) {
 				final Department department = new Department();
 				department.setCode(index);
 				department.setName("Department-"+index);
@@ -112,7 +112,7 @@ public class DevConfiguration {
 			createReasons();
 			createProducts();
 			createParts();
-			createTickets();
+		//	createTickets();
 		};
 	}
 	
