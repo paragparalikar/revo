@@ -6,6 +6,7 @@ public interface LlmsConstants {
 	String ROUTE_TICKETS = "tickets";
 	String ROUTE_DEPARTMENTS = "departments";
 	String ROUTE_REASONS = "reasons";
+	String ROUTE_CATEGORIES = "categories";
 	String ROUTE_PRODUCTS = "products";
 	String ROUTE_USERS = "users";
 	String ROUTE_PARTS = "parts";

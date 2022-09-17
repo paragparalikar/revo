@@ -65,7 +65,7 @@ public class TicketView extends TitledView {
 			SecurityService securityService) {
 		super(VaadinIcon.TICKET.create(), "Tickets");
 		dateTimePickerRow.setWidthFull();
-		dateTimePickerRow.setJustifyContentMode(JustifyContentMode.CENTER);
+		dateTimePickerRow.setJustifyContentMode(JustifyContentMode.END);
 		dateTimePickerRow.setVerticalComponentAlignment(Alignment.END, downloadAnchor);
 		this.ticketDataProvider = new TicketDataProvider(ticketService, securityService, 
 				fromPicker::getValue, toPicker::getValue);
@@ -120,7 +120,7 @@ public class TicketView extends TitledView {
 	private void createColumns(Grid<Ticket> grid) {
 		grid.addColumn(Ticket::getId, "id").setHeader("Id").setWidth("4em");
 		grid.addColumn(Ticket::getStatus, "status").setHeader("Status").setWidth("5em");
-		grid.addColumn(ticket -> ticket.getStation().getName(), "station").setHeader("Station").setWidth("5em");
+		grid.addColumn(ticket -> ticket.getStation().getName(), "station.name").setHeader("Station").setWidth("5em");
 		grid.addColumn(ticket -> ticket.getDepartment().getName(), "department.name").setHeader("Department");
 		grid.addColumn(ticket -> dateFormat.format(ticket.getOpenTimestamp()), "openTimestamp").setHeader("Open").setAutoWidth(true);
 		grid.addColumn(ticket -> null == ticket.getClosedTimestamp() ? null : 

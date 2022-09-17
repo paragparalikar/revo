@@ -3,6 +3,7 @@ package com.revo.llms.reason;
 import javax.annotation.security.PermitAll;
 
 import com.revo.llms.LlmsConstants;
+import com.revo.llms.category.CategoryService;
 import com.revo.llms.common.MainLayout;
 import com.revo.llms.common.TitledGridView;
 import com.vaadin.flow.component.grid.Grid;
@@ -24,11 +25,11 @@ public class ReasonView extends TitledGridView<Reason> {
 	private final ReasonService reasonService;
 	private final DataProvider<Reason, Void> dataProvider;
 	
-	public ReasonView(ReasonService reasonService) {
+	public ReasonView(ReasonService reasonService, CategoryService categoryService) {
 		super(VaadinIcon.EXCLAMATION_CIRCLE.create(), "Reasons");
 		this.reasonService = reasonService;
 		this.dataProvider = new ReasonDataProvider(reasonService);
-		this.editor = new ReasonEditor(reasonService, dataProvider);
+		this.editor = new ReasonEditor(reasonService, categoryService, dataProvider);
 		final Grid<Reason> grid = new Grid<>();
 		grid.setItems(dataProvider);
 		createColumns(grid);
@@ -37,6 +38,7 @@ public class ReasonView extends TitledGridView<Reason> {
 
 	protected void createColumns(Grid<Reason> grid) {
 		grid.addColumn(Reason::getId, "id").setHeader("Id");
+		grid.addColumn(reason -> reason.getCategory().getName(), "category.name").setHeader("Category");
 		grid.addColumn(Reason::getText, "text").setHeader("Text");
 		super.createColumns(grid);
 	}

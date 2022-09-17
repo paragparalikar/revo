@@ -10,6 +10,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
+import com.revo.llms.category.Category;
+import com.revo.llms.category.CategoryRepository;
 import com.revo.llms.department.Department;
 import com.revo.llms.department.DepartmentRepository;
 import com.revo.llms.part.Part;
@@ -38,6 +40,7 @@ public class DevConfiguration {
 	private final PartRepository partRepository;
 	private final UserRepository userRepository;
 	private final StationService stationService;
+	private final CategoryRepository categoryRepository;
 	
 	private void createDepartments() {
 		if(0 == departmentRepository.count()) {
@@ -50,12 +53,25 @@ public class DevConfiguration {
 		}
 	}
 	
+	private void createCategories() {
+		if(0 == categoryRepository.count()) {
+			for(int index = 1; index < 5; index++) {
+				final Category category = new Category();
+				category.setName("Category-"+index);
+				categoryRepository.saveAndFlush(category);
+			}
+		}
+	}
+	
 	private void createReasons() {
 		if(0 == reasonRepository.count()) {
-			for(int index = 1; index <= 5; index++) {
-				final Reason reason = new Reason();
-				reason.setText("Reason-"+index);
-				reasonRepository.save(reason);
+			for(Category category : categoryRepository.findAll()) {
+				for(int index = 1; index <= 5; index++) {
+					final Reason reason = new Reason();
+					reason.setCategory(category);
+					reason.setText("Reason-"+index+"-"+category.getName());
+					reasonRepository.save(reason);
+				}
 			}
 		}
 	}
@@ -132,7 +148,8 @@ public class DevConfiguration {
 					LlmsConstants.ROUTE_REPORTS,
 					LlmsConstants.ROUTE_TICKETS,
 					LlmsConstants.ROUTE_USERS,
-					LlmsConstants.ROUTE_STATIONS
+					LlmsConstants.ROUTE_STATIONS,
+					LlmsConstants.ROUTE_CATEGORIES
 					));
 			userRepository.save(user);
 		});
@@ -142,6 +159,7 @@ public class DevConfiguration {
 	public CommandLineRunner dataSetup() {
 		return args -> {
 			createDepartments();
+			createCategories();
 			createReasons();
 			createProducts();
 			createParts();

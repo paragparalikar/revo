@@ -1,9 +1,13 @@
 package com.revo.llms.reason;
 
+import java.util.List;
 import java.util.Objects;
 
+import com.revo.llms.category.Category;
+import com.revo.llms.category.CategoryService;
 import com.revo.llms.common.TitledFormEditor;
 import com.revo.llms.util.DoubleToLongConverter;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.textfield.NumberField;
@@ -15,10 +19,13 @@ public class ReasonEditor extends TitledFormEditor<Reason> {
 	private static final long serialVersionUID = 5363061667786794597L;
 
 	private final ReasonService reasonService;
+	private final CategoryService categoryService;
 	private final DataProvider<Reason, Void> dataProvider;
 	
-	public ReasonEditor(ReasonService reasonService, DataProvider<Reason, Void> dataProvider) {
+	public ReasonEditor(ReasonService reasonService, CategoryService categoryService, 
+			DataProvider<Reason, Void> dataProvider) {
 		super(VaadinIcon.EXCLAMATION_CIRCLE.create(), "Reason", Reason::new);
+		this.categoryService = categoryService;
 		this.reasonService = reasonService;
 		this.dataProvider = dataProvider;
 		createForm(getBinder(), getForm());
@@ -31,6 +38,14 @@ public class ReasonEditor extends TitledFormEditor<Reason> {
 			.withConverter(new DoubleToLongConverter())
 			.bindReadOnly(Reason::getId);
 		layout.add(idField);
+		
+		final List<Category> categories = categoryService.findAll();
+		final ComboBox<Category> categoryComboBox = new ComboBox<>("Category", categories);
+		categoryComboBox.setItemLabelGenerator(Category::getName);
+		binder.forField(categoryComboBox)
+			.asRequired()
+			.bind(Reason::getCategory, Reason::setCategory);
+		layout.add(categoryComboBox);
 		
 		final TextField textField = new TextField("Text");
 		binder.forField(textField)

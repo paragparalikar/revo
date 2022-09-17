@@ -16,7 +16,7 @@ public class StationEditor extends TitledFormEditor<Station> {
 	private final DataProvider<Station, ?> dataProvider;
 	
 	public StationEditor(StationService stationService, DataProvider<Station, ?> dataProvider) {
-		super(VaadinIcon.TABLE.create(), "Station", null);
+		super(VaadinIcon.WRENCH.create(), "Station", null);
 		this.stationService = stationService;
 		this.dataProvider = dataProvider;
 		createForm(getBinder(), getForm());

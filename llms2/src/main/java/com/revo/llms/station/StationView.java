@@ -31,7 +31,7 @@ public class StationView extends TitledView {
 	private final PaginatedGrid<Station> grid = new PaginatedGrid<>();
 
 	public StationView(StationService stationService) {
-		super(VaadinIcon.TABLE.create(), "Stations");
+		super(VaadinIcon.WRENCH.create(), "Stations");
 		stationDataProvider = new ListDataProvider<Station>(stationService.findAll());
 		stationEditor = new StationEditor(stationService, stationDataProvider);
  		grid.setDataProvider(stationDataProvider);

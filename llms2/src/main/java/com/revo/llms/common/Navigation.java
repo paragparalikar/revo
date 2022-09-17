@@ -1,6 +1,7 @@
 package com.revo.llms.common;
 
 import static com.revo.llms.LlmsConstants.PREFIX_PAGE;
+import static com.revo.llms.LlmsConstants.ROUTE_CATEGORIES;
 import static com.revo.llms.LlmsConstants.ROUTE_DASHBOARD;
 import static com.revo.llms.LlmsConstants.ROUTE_DEPARTMENTS;
 import static com.revo.llms.LlmsConstants.ROUTE_PRODUCTS;
@@ -14,13 +15,15 @@ import static com.vaadin.flow.component.icon.VaadinIcon.BUILDING;
 import static com.vaadin.flow.component.icon.VaadinIcon.CART;
 import static com.vaadin.flow.component.icon.VaadinIcon.DASHBOARD;
 import static com.vaadin.flow.component.icon.VaadinIcon.EXCLAMATION_CIRCLE;
-import static com.vaadin.flow.component.icon.VaadinIcon.TABLE;
+import static com.vaadin.flow.component.icon.VaadinIcon.SPLIT;
 import static com.vaadin.flow.component.icon.VaadinIcon.TICKET;
 import static com.vaadin.flow.component.icon.VaadinIcon.USERS;
+import static com.vaadin.flow.component.icon.VaadinIcon.WRENCH;
 import static com.vaadin.flow.component.tabs.TabsVariant.LUMO_SMALL;
 
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.revo.llms.category.CategoryView;
 import com.revo.llms.common.security.SecurityService;
 import com.revo.llms.dashboard.DashboardView;
 import com.revo.llms.department.DepartmentView;
@@ -52,7 +55,8 @@ public class Navigation extends VerticalLayout implements AfterNavigationObserve
 	private final Tab productTab = new Tab(CART.create(), new RouterLink("Products", ProductView.class));
 	private final Tab userTab = new Tab(USERS.create(), new RouterLink("Users", UserView.class));
 	private final Tab reportTab = new Tab(BAR_CHART_H.create(), new RouterLink("Reports", ReportView.class));
-	private final Tab stationTab = new Tab(TABLE.create(), new RouterLink("Stations", StationView.class));
+	private final Tab stationTab = new Tab(WRENCH.create(), new RouterLink("Stations", StationView.class));
+	private final Tab categoryTab = new Tab(SPLIT.create(), new RouterLink("Reason Categories", CategoryView.class));
 	private final Tabs tabs = new Tabs();
 	
 	public Navigation(SecurityService securityService, final Label usernameLabel) {
@@ -86,6 +90,7 @@ public class Navigation extends VerticalLayout implements AfterNavigationObserve
 			if(securityService.hasAuthority(PREFIX_PAGE + ROUTE_TICKETS)) tabs.add(ticketTab);
 			if(securityService.hasAuthority(PREFIX_PAGE + ROUTE_DEPARTMENTS)) tabs.add(departmentTab);
 			if(securityService.hasAuthority(PREFIX_PAGE + ROUTE_STATIONS)) tabs.add(stationTab);
+			if(securityService.hasAuthority(PREFIX_PAGE + ROUTE_CATEGORIES)) tabs.add(categoryTab);
 			if(securityService.hasAuthority(PREFIX_PAGE + ROUTE_REASONS)) tabs.add(reasonTab);
 			if(securityService.hasAuthority(PREFIX_PAGE + ROUTE_PRODUCTS)) tabs.add(productTab);
 			if(securityService.hasAuthority(PREFIX_PAGE + ROUTE_USERS)) tabs.add(userTab);
@@ -102,6 +107,7 @@ public class Navigation extends VerticalLayout implements AfterNavigationObserve
 		case ROUTE_TICKETS: if(securityService.hasAuthority(PREFIX_PAGE + ROUTE_TICKETS)) tabs.setSelectedTab(ticketTab); break;
 		case ROUTE_DEPARTMENTS: if(securityService.hasAuthority(PREFIX_PAGE + ROUTE_DEPARTMENTS)) tabs.setSelectedTab(departmentTab); break;
 		case ROUTE_STATIONS: if(securityService.hasAuthority(PREFIX_PAGE + ROUTE_STATIONS)) tabs.setSelectedTab(stationTab); break;
+		case ROUTE_CATEGORIES : if(securityService.hasAuthority(PREFIX_PAGE + ROUTE_CATEGORIES)) tabs.setSelectedTab(categoryTab); break;
 		case ROUTE_REASONS: if(securityService.hasAuthority(PREFIX_PAGE + ROUTE_REASONS)) tabs.setSelectedTab(reasonTab); break;
 		case ROUTE_PRODUCTS: if(securityService.hasAuthority(PREFIX_PAGE + ROUTE_PRODUCTS)) tabs.setSelectedTab(productTab); break;
 		case ROUTE_USERS: if(securityService.hasAuthority(PREFIX_PAGE + ROUTE_USERS))tabs.setSelectedTab(userTab); break;

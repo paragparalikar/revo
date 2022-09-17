@@ -1,19 +1,20 @@
-package com.revo.llms.reason;
+package com.revo.llms.category;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotBlank;
 
-import com.revo.llms.category.Category;
-
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
-public class Reason {
+@NoArgsConstructor
+@AllArgsConstructor
+public class Category {
 
 	@Id
 	@GeneratedValue
@@ -21,9 +22,6 @@ public class Reason {
 	
 	@NotBlank
 	@Column(nullable = false, unique = true)
-	private String text;
+	private String name;
 	
-	@ManyToOne(optional = false)
-	private Category category;
-
 }
