@@ -45,7 +45,7 @@ public class TicketCountByReasonCard extends AbstractReportCard {
 					.fontColor("white")
 					.fullWidth(true).and()
 				.legend()
-					.display(true)
+					.display(false)
 					.position(Position.LEFT).and()
 				.done();
 		
