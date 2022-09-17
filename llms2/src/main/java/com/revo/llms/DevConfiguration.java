@@ -18,6 +18,7 @@ import com.revo.llms.product.Product;
 import com.revo.llms.product.ProductRepository;
 import com.revo.llms.reason.Reason;
 import com.revo.llms.reason.ReasonRepository;
+import com.revo.llms.station.StationService;
 import com.revo.llms.ticket.Ticket;
 import com.revo.llms.ticket.TicketRepository;
 import com.revo.llms.ticket.TicketStatus;
@@ -36,6 +37,7 @@ public class DevConfiguration {
 	private final ProductRepository productRepository;
 	private final PartRepository partRepository;
 	private final UserRepository userRepository;
+	private final StationService stationService;
 	
 	private void createDepartments() {
 		if(0 == departmentRepository.count()) {
@@ -90,7 +92,7 @@ public class DevConfiguration {
 						calendar.add(Calendar.DATE, -1 * count);
 						for(int index = 0; index < count; index++) {
 							final Ticket ticket = new Ticket();
-							ticket.setStationId(stationId);
+							ticket.setStation(stationService.findById(stationId).get());
 							ticket.setStatus(TicketStatus.OPEN);
 							ticket.setOpenTimestamp(calendar.getTime());
 							ticket.setDepartment(department);

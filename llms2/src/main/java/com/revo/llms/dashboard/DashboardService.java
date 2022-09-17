@@ -49,7 +49,7 @@ public class DashboardService {
 				final Integer localStationId = Integer.valueOf(stationId);
 				final Long count = tickets.stream()
 						.filter(ticket -> Objects.equals(department, ticket.getDepartment()))
-						.filter(ticket -> Objects.equals(localStationId, ticket.getStationId()))
+						.filter(ticket -> Objects.equals(localStationId, ticket.getStation().getId()))
 						.count();
 				counts.put(department, count);
 			}

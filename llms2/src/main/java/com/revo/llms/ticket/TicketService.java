@@ -87,7 +87,7 @@ public class TicketService {
 	
 	private Ticket apply(Ticket ticket) {
 		final Ticket persistentTicket = ticketRepository.findTopByStationIdAndDepartmentOrderByOpenTimestampDesc(
-				ticket.getStationId(), ticket.getDepartment()).orElse(null);
+				ticket.getStation().getId(), ticket.getDepartment()).orElse(null);
 		if(null == persistentTicket) {
 			if(TicketStatus.OPEN.equals(ticket.getStatus())) {
 				log.trace("No previous ticket found, new open ticket received - {}", ticket);

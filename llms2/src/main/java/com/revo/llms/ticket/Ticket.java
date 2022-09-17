@@ -15,6 +15,7 @@ import javax.persistence.TemporalType;
 import com.revo.llms.department.Department;
 import com.revo.llms.part.Part;
 import com.revo.llms.reason.Reason;
+import com.revo.llms.station.Station;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,8 +36,8 @@ public class Ticket {
 	private Long id;
 	
 	@NonNull 
-	@Column(nullable = false, updatable = false)
-	private Integer stationId;
+	@ManyToOne(optional = false)
+	private Station station;
 	
 	@With
 	@NonNull 

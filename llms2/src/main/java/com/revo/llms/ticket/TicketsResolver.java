@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import com.revo.llms.department.Department;
 import com.revo.llms.department.DepartmentService;
+import com.revo.llms.station.StationService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -17,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class TicketsResolver implements Function<byte[], Set<Ticket>> {
 
+	private final StationService stationService;
 	private final DepartmentService departmentService;
 	
 	@Override
@@ -37,7 +39,7 @@ public class TicketsResolver implements Function<byte[], Set<Ticket>> {
 	private Ticket resolve(int stationId, byte status, Department department) {
 		final TicketStatus ticketStatus = resolve(status, department);
 		final Ticket ticket = Ticket.builder()
-				.stationId(stationId)
+				.station(stationService.findById(stationId).get())
 				.status(ticketStatus)
 				.department(department)
 				.build();

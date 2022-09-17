@@ -1,6 +1,6 @@
 package com.revo.llms.ticket;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.Set;
@@ -28,8 +28,8 @@ public class TicketDataProvider extends AbstractBackEndDataProvider<Ticket, Void
 
 	@NonNull private final TicketService ticketService;
 	@NonNull private final SecurityService securityService;
-	@NonNull private final Supplier<LocalDateTime> fromDateProvider;
-	@NonNull private final Supplier<LocalDateTime> toDateProvider;
+	@NonNull private final Supplier<LocalDate> fromDateProvider;
+	@NonNull private final Supplier<LocalDate> toDateProvider;
 	
 	@Override
 	protected Stream<Ticket> fetchFromBackEnd(Query<Ticket, Void> query) {
@@ -45,8 +45,8 @@ public class TicketDataProvider extends AbstractBackEndDataProvider<Ticket, Void
 		final Pageable pageable = VaadinUtils.toPageable(query);
 		final UserDetails user = securityService.getAuthenticatedUser();
 		final Set<Long> departmentIds = resolve(user, LlmsConstants.PREFIX_DEPARTMENT);
-		final Date to = Date.from(toDateProvider.get().atZone(ZoneId.systemDefault()).toInstant());
-		final Date from = Date.from(fromDateProvider.get().atZone(ZoneId.systemDefault()).toInstant());
+		final Date to = Date.from(toDateProvider.get().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+		final Date from = Date.from(fromDateProvider.get().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
 		return ticketService.findByDepartmentIdInAndOpenTimestampBetween(departmentIds, from, to, pageable);
 	}
 	

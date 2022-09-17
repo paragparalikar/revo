@@ -19,7 +19,7 @@ public class StationService {
 	@PostConstruct
 	public void init() {
 		if(0 == stationRepository.count()) {
-			for(int id = 1; id <= 32; id++) {
+			for(int id = 1; id <= 30; id++) {
 				stationRepository.save(new Station(id, String.valueOf(id)));
 			}
 		}

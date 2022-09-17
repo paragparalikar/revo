@@ -2,7 +2,7 @@ package com.revo.llms.ticket;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import javax.annotation.security.PermitAll;
 
@@ -24,7 +24,7 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.datetimepicker.DateTimePicker;
+import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -48,8 +48,8 @@ public class TicketView extends TitledView {
 	private final PaginatedGrid<Ticket> grid = new PaginatedGrid<>();
 	private final DateFormat dateFormat = new SimpleDateFormat("dd-MMM HH:mm");
 	private final Button downloadButton = new Button("Download", VaadinIcon.DOWNLOAD.create(), event -> download());
-	private final DateTimePicker toPicker = new DateTimePicker("To", LocalDateTime.now());
-	private final DateTimePicker fromPicker = new DateTimePicker("From", LocalDateTime.now().minusMonths(1));
+	private final DatePicker toPicker = new DatePicker("To", LocalDate.now());
+	private final DatePicker fromPicker = new DatePicker("From", LocalDate.now().minusMonths(1));
 	private final HorizontalLayout dateTimePickerRow = new HorizontalLayout(fromPicker, toPicker, downloadButton);
 			
 	public TicketView(
@@ -61,6 +61,7 @@ public class TicketView extends TitledView {
 		super(VaadinIcon.TICKET.create(), "Tickets");
 		dateTimePickerRow.setWidthFull();
 		dateTimePickerRow.setJustifyContentMode(JustifyContentMode.CENTER);
+		dateTimePickerRow.setVerticalComponentAlignment(Alignment.END, downloadButton);
 		this.ticketDataProvider = new TicketDataProvider(ticketService, securityService, 
 				fromPicker::getValue, toPicker::getValue);
 		this.ticketStatusEditor = TicketStatusEditor.builder()
@@ -77,6 +78,8 @@ public class TicketView extends TitledView {
 		createColumns(grid);
 		add(grid, ticketStatusEditor);
 		addRight(dateTimePickerRow);
+		toPicker.addValueChangeListener(event -> ticketDataProvider.refreshAll());
+		fromPicker.addValueChangeListener(event -> ticketDataProvider.refreshAll());
 	}
 	
 	@Override
@@ -96,7 +99,7 @@ public class TicketView extends TitledView {
 	private void createColumns(Grid<Ticket> grid) {
 		grid.addColumn(Ticket::getId, "id").setHeader("Id").setWidth("4em");
 		grid.addColumn(Ticket::getStatus, "status").setHeader("Status").setWidth("5em");
-		grid.addColumn(Ticket::getStationId, "stationId").setHeader("Station").setWidth("5em");
+		grid.addColumn(ticket -> ticket.getStation().getName(), "station").setHeader("Station").setWidth("5em");
 		grid.addColumn(ticket -> ticket.getDepartment().getName(), "department.name").setHeader("Department");
 		grid.addColumn(ticket -> dateFormat.format(ticket.getOpenTimestamp()), "openTimestamp").setHeader("Open").setAutoWidth(true);
 		grid.addColumn(ticket -> null == ticket.getClosedTimestamp() ? null : 
