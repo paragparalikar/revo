@@ -2,12 +2,15 @@ package com.revo.llms.ticket;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 
 import javax.annotation.security.PermitAll;
 
 import org.vaadin.klaudeta.PaginatedGrid;
 
 import com.revo.llms.LlmsConstants;
+import com.revo.llms.common.Broadcaster;
+import com.revo.llms.common.Broadcaster.Registration;
 import com.revo.llms.common.MainLayout;
 import com.revo.llms.common.TitledView;
 import com.revo.llms.common.security.SecurityService;
@@ -16,10 +19,15 @@ import com.revo.llms.product.ProductFilteringDataProvider;
 import com.revo.llms.product.ProductService;
 import com.revo.llms.reason.ReasonFilteringDataProvider;
 import com.revo.llms.reason.ReasonService;
+import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.DetachEvent;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.datetimepicker.DateTimePicker;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.PageTitle;
@@ -34,10 +42,15 @@ import de.codecamp.vaadin.security.spring.access.SecuredAccess;
 public class TicketView extends TitledView {
 	private static final long serialVersionUID = 821057894670434504L;
 
+	private Registration broadcasterRegistration;
 	private final TicketStatusEditor ticketStatusEditor;
 	private final DataProvider<Ticket, Void> ticketDataProvider;
 	private final PaginatedGrid<Ticket> grid = new PaginatedGrid<>();
 	private final DateFormat dateFormat = new SimpleDateFormat("dd-MMM HH:mm");
+	private final Button downloadButton = new Button("Download", VaadinIcon.DOWNLOAD.create(), event -> download());
+	private final DateTimePicker toPicker = new DateTimePicker("To", LocalDateTime.now());
+	private final DateTimePicker fromPicker = new DateTimePicker("From", LocalDateTime.now().minusMonths(1));
+	private final HorizontalLayout dateTimePickerRow = new HorizontalLayout(fromPicker, toPicker, downloadButton);
 			
 	public TicketView(
 			PartService partService,
@@ -46,7 +59,10 @@ public class TicketView extends TitledView {
 			ProductService productService,
 			SecurityService securityService) {
 		super(VaadinIcon.TICKET.create(), "Tickets");
-		this.ticketDataProvider = new TicketDataProvider(ticketService, securityService);
+		dateTimePickerRow.setWidthFull();
+		dateTimePickerRow.setJustifyContentMode(JustifyContentMode.CENTER);
+		this.ticketDataProvider = new TicketDataProvider(ticketService, securityService, 
+				fromPicker::getValue, toPicker::getValue);
 		this.ticketStatusEditor = TicketStatusEditor.builder()
 				.partService(partService)
 				.ticketService(ticketService)
@@ -60,7 +76,22 @@ public class TicketView extends TitledView {
 		grid.setPaginatorSize(5);
 		createColumns(grid);
 		add(grid, ticketStatusEditor);
+		addRight(dateTimePickerRow);
 	}
+	
+	@Override
+	protected void onAttach(AttachEvent attachEvent) {
+		super.onAttach(attachEvent);
+		final UI ui = attachEvent.getUI();
+        broadcasterRegistration = Broadcaster.register(newMessage -> 
+        	ui.access(() -> ticketDataProvider.refreshAll()));
+	}
+	
+	@Override
+    protected void onDetach(DetachEvent detachEvent) {
+        broadcasterRegistration.remove();
+        broadcasterRegistration = null;
+    }
 
 	private void createColumns(Grid<Ticket> grid) {
 		grid.addColumn(Ticket::getId, "id").setHeader("Id").setWidth("4em");
@@ -73,13 +104,11 @@ public class TicketView extends TitledView {
 		grid.addColumn(ticket -> null == ticket.getReason() ? null : ticket.getReason().getText(), "reason.text").setHeader("Reason");
 		grid.addColumn(ticket -> null == ticket.getPart() ? null : ticket.getPart().getProduct().getName(), "part.product.name").setHeader("Product");
 		grid.addColumn(ticket -> null == ticket.getPart() ? null : ticket.getPart().getName(), "part.name").setHeader("Part");
-		grid.addColumn(new ComponentRenderer<>(this::createActionColumn)).setHeader(createActionColumnHeader());
+		grid.addColumn(new ComponentRenderer<>(this::createActionColumn));
 	}
-	
-	private Component createActionColumnHeader() {
-		final Button button = new Button("Refresh", VaadinIcon.REFRESH.create());
-		button.addClickListener(event -> ticketDataProvider.refreshAll());
-		return button;
+
+	private void download() {
+		getUI().get().getPage().open(null);
 	}
 	
 	private Component createActionColumn(Ticket ticket) {

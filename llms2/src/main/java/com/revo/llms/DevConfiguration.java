@@ -1,5 +1,6 @@
 	package com.revo.llms;
 
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -20,6 +21,7 @@ import com.revo.llms.reason.ReasonRepository;
 import com.revo.llms.ticket.Ticket;
 import com.revo.llms.ticket.TicketRepository;
 import com.revo.llms.ticket.TicketStatus;
+import com.revo.llms.user.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -33,6 +35,7 @@ public class DevConfiguration {
 	private final ReasonRepository reasonRepository;
 	private final ProductRepository productRepository;
 	private final PartRepository partRepository;
+	private final UserRepository userRepository;
 	
 	private void createDepartments() {
 		if(0 == departmentRepository.count()) {
@@ -102,7 +105,35 @@ public class DevConfiguration {
 					}
 				}
 			}
+		} else {
+			int counter = 0;
+			for(Ticket ticket : ticketRepository.findAll()) {
+				if(++counter % 2 == 0) {
+					ticket.setStatus(TicketStatus.OPEN);
+				} else {
+					ticket.setStatus(TicketStatus.CLOSED);
+				}
+				ticketRepository.save(ticket);
+			}
 		}
+	}
+	
+	private void authorizeUsers() {
+		userRepository.findAll().forEach(user -> {
+			user.getDepartments().addAll(departmentRepository.findAll());
+			user.getPages().addAll(Arrays.asList(
+					LlmsConstants.ROUTE_DASHBOARD,
+					LlmsConstants.ROUTE_DEPARTMENTS,
+					LlmsConstants.ROUTE_PARTS,
+					LlmsConstants.ROUTE_PRODUCTS,
+					LlmsConstants.ROUTE_REASONS,
+					LlmsConstants.ROUTE_REPORTS,
+					LlmsConstants.ROUTE_TICKETS,
+					LlmsConstants.ROUTE_USERS,
+					LlmsConstants.ROUTE_STATIONS
+					));
+			userRepository.save(user);
+		});
 	}
 	
 	@Bean
@@ -112,7 +143,8 @@ public class DevConfiguration {
 			createReasons();
 			createProducts();
 			createParts();
-		//	createTickets();
+			createTickets();
+			authorizeUsers();
 		};
 	}
 	

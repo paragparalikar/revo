@@ -1,6 +1,10 @@
 package com.revo.llms.ticket;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -12,35 +16,38 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.revo.llms.LlmsConstants;
 import com.revo.llms.common.security.SecurityService;
 import com.revo.llms.util.VaadinUtils;
-import com.vaadin.flow.data.provider.CallbackDataProvider;
-import com.vaadin.flow.data.provider.DataProvider;
+import com.vaadin.flow.data.provider.AbstractBackEndDataProvider;
 import com.vaadin.flow.data.provider.Query;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.Delegate;
 
 @RequiredArgsConstructor
-public class TicketDataProvider implements DataProvider<Ticket, Void> {
+public class TicketDataProvider extends AbstractBackEndDataProvider<Ticket, Void> {
 	private static final long serialVersionUID = -6035690994345301935L;
 
 	@NonNull private final TicketService ticketService;
 	@NonNull private final SecurityService securityService;
-	@Delegate private final DataProvider<Ticket, Void> delegate = new CallbackDataProvider<>(this::fetch_, this::count_);
+	@NonNull private final Supplier<LocalDateTime> fromDateProvider;
+	@NonNull private final Supplier<LocalDateTime> toDateProvider;
 	
-	private int count_(Query<Ticket, Void> query) {
-		return (int) load(query).getTotalElements();
-	}
-
-	private Stream<Ticket> fetch_(Query<Ticket, Void> query) {
+	@Override
+	protected Stream<Ticket> fetchFromBackEnd(Query<Ticket, Void> query) {
 		return load(query).stream();
+	}
+	
+	@Override
+	protected int sizeInBackEnd(Query<Ticket, Void> query) {
+		return (int) load(query).getTotalElements();
 	}
 	
 	private Page<Ticket> load(Query<Ticket, Void> query){
 		final Pageable pageable = VaadinUtils.toPageable(query);
 		final UserDetails user = securityService.getAuthenticatedUser();
 		final Set<Long> departmentIds = resolve(user, LlmsConstants.PREFIX_DEPARTMENT);
-		return ticketService.findByDepartmentIdIn(departmentIds, pageable);
+		final Date to = Date.from(toDateProvider.get().atZone(ZoneId.systemDefault()).toInstant());
+		final Date from = Date.from(fromDateProvider.get().atZone(ZoneId.systemDefault()).toInstant());
+		return ticketService.findByDepartmentIdInAndOpenTimestampBetween(departmentIds, from, to, pageable);
 	}
 	
 	private Set<Long> resolve(UserDetails user, String prefix){
