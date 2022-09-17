@@ -33,6 +33,7 @@ import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.RouteAlias;
 import com.vaadin.flow.server.StreamResource;
 
 import de.codecamp.vaadin.security.spring.access.SecuredAccess;
@@ -40,6 +41,7 @@ import de.codecamp.vaadin.security.spring.access.SecuredAccess;
 @PermitAll
 @PageTitle("Tickets")
 @SecuredAccess("hasAuthority('page-tickets')")
+@RouteAlias(value = "null", layout = MainLayout.class)
 @Route(value = LlmsConstants.ROUTE_TICKETS, layout = MainLayout.class)
 public class TicketView extends TitledView {
 	private static final long serialVersionUID = 821057894670434504L;
@@ -95,8 +97,8 @@ public class TicketView extends TitledView {
 				.build());
 		streamResource.setCacheTime(1000);
 		streamResource.setHeader("Cache-Control", "private,no-cache,no-store");
-		streamResource.setHeader("Content-Disposition", "attachment;filename=tickets.xlsx");
-		streamResource.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+		streamResource.setHeader("Content-Disposition", "attachment;filename=tickets.xls");
+		streamResource.setContentType("application/vnd.ms-excel");
 		downloadAnchor.setHref(streamResource);
 		downloadAnchor.add(downloadButton);
 	}

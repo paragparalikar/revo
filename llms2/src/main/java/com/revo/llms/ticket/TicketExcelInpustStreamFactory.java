@@ -43,7 +43,7 @@ public class TicketExcelInpustStreamFactory implements InputStreamFactory {
 	private final SecurityService securityService;
 	private final Supplier<LocalDate> toDateProvider;
 	private final Supplier<LocalDate> fromDateProvider;
-	private final DateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
+	private final DateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss a");
 	
 	@Override
 	@SneakyThrows

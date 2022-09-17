@@ -54,7 +54,7 @@ public class PortPoller<T> implements SerialPortPacketListener {
 	}
 	
 	private void connect() {
-		if(null == port) log.info("Looking up and opening port for first time");
+		if(null == port) log.debug("Looking up and opening port for first time");
 		else if(!port.isOpen()) log.info("Port is not open, looking up and opening it again");
 		else if(!hasName(portName, port)) log.info("Port name has changed, looking up and opening appropriate port");
 		
@@ -70,7 +70,7 @@ public class PortPoller<T> implements SerialPortPacketListener {
 			port.setComPortTimeouts(SerialPort.TIMEOUT_READ_BLOCKING | SerialPort.TIMEOUT_WRITE_BLOCKING, 30000, 30000);
 			log.info("Started listening on port {}", toString(port));
 		} else {
-			log.error("Could not find any port for name " + portName);
+			log.debug("Could not find any port for name " + portName);
 		}
 	}
 	
