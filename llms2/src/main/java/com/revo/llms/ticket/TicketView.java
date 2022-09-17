@@ -26,12 +26,14 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.StreamResource;
 
 import de.codecamp.vaadin.security.spring.access.SecuredAccess;
 
@@ -47,10 +49,11 @@ public class TicketView extends TitledView {
 	private final DataProvider<Ticket, Void> ticketDataProvider;
 	private final PaginatedGrid<Ticket> grid = new PaginatedGrid<>();
 	private final DateFormat dateFormat = new SimpleDateFormat("dd-MMM HH:mm");
+	private final Anchor downloadAnchor = new Anchor();
 	private final Button downloadButton = new Button("Download", VaadinIcon.DOWNLOAD.create(), event -> download());
 	private final DatePicker toPicker = new DatePicker("To", LocalDate.now());
 	private final DatePicker fromPicker = new DatePicker("From", LocalDate.now().minusMonths(1));
-	private final HorizontalLayout dateTimePickerRow = new HorizontalLayout(fromPicker, toPicker, downloadButton);
+	private final HorizontalLayout dateTimePickerRow = new HorizontalLayout(fromPicker, toPicker, downloadAnchor);
 			
 	public TicketView(
 			PartService partService,
@@ -61,7 +64,7 @@ public class TicketView extends TitledView {
 		super(VaadinIcon.TICKET.create(), "Tickets");
 		dateTimePickerRow.setWidthFull();
 		dateTimePickerRow.setJustifyContentMode(JustifyContentMode.CENTER);
-		dateTimePickerRow.setVerticalComponentAlignment(Alignment.END, downloadButton);
+		dateTimePickerRow.setVerticalComponentAlignment(Alignment.END, downloadAnchor);
 		this.ticketDataProvider = new TicketDataProvider(ticketService, securityService, 
 				fromPicker::getValue, toPicker::getValue);
 		this.ticketStatusEditor = TicketStatusEditor.builder()
@@ -80,6 +83,22 @@ public class TicketView extends TitledView {
 		addRight(dateTimePickerRow);
 		toPicker.addValueChangeListener(event -> ticketDataProvider.refreshAll());
 		fromPicker.addValueChangeListener(event -> ticketDataProvider.refreshAll());
+		createDownloadAnchor(ticketService, securityService);
+	}
+	
+	private void createDownloadAnchor(TicketService ticketService, SecurityService securityService) {
+		final StreamResource streamResource = new StreamResource("tickets.xlsx", TicketExcelInpustStreamFactory.builder()
+				.fromDateProvider(fromPicker::getValue)
+				.toDateProvider(toPicker::getValue)
+				.securityService(securityService)
+				.ticketService(ticketService)
+				.build());
+		streamResource.setCacheTime(1000);
+		streamResource.setHeader("Cache-Control", "private,no-cache,no-store");
+		streamResource.setHeader("Content-Disposition", "attachment;filename=tickets.xlsx");
+		streamResource.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+		downloadAnchor.setHref(streamResource);
+		downloadAnchor.add(downloadButton);
 	}
 	
 	@Override
