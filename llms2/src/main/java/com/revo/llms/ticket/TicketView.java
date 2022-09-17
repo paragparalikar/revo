@@ -9,15 +9,17 @@ import javax.annotation.security.PermitAll;
 import org.vaadin.klaudeta.PaginatedGrid;
 
 import com.revo.llms.LlmsConstants;
+import com.revo.llms.category.CategoryDataProvider;
+import com.revo.llms.category.CategoryService;
 import com.revo.llms.common.Broadcaster;
 import com.revo.llms.common.Broadcaster.Registration;
 import com.revo.llms.common.MainLayout;
 import com.revo.llms.common.TitledView;
 import com.revo.llms.common.security.SecurityService;
 import com.revo.llms.part.PartService;
-import com.revo.llms.product.ProductFilteringDataProvider;
+import com.revo.llms.product.ProductDataProvider;
 import com.revo.llms.product.ProductService;
-import com.revo.llms.reason.ReasonFilteringDataProvider;
+import com.revo.llms.reason.ReasonDataProvider;
 import com.revo.llms.reason.ReasonService;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
@@ -62,6 +64,7 @@ public class TicketView extends TitledView {
 			TicketService ticketService,
 			ReasonService reasonService,
 			ProductService productService,
+			CategoryService categoryService,
 			SecurityService securityService) {
 		super(VaadinIcon.TICKET.create(), "Tickets");
 		dateTimePickerRow.setWidthFull();
@@ -72,9 +75,11 @@ public class TicketView extends TitledView {
 		this.ticketStatusEditor = TicketStatusEditor.builder()
 				.partService(partService)
 				.ticketService(ticketService)
+				.reasonService(reasonService)
 				.ticketDataProvider(ticketDataProvider)
-				.reasonFilteringDataProvider(new ReasonFilteringDataProvider(reasonService))
-				.productFilteringDataProvider(new ProductFilteringDataProvider(productService))
+				.reasonDataProvider(new ReasonDataProvider<String>(reasonService))
+				.productDataProvider(new ProductDataProvider<String>(productService))
+				.categoryDataProvider(new CategoryDataProvider<String>(categoryService))
 				.build();
 		
 		grid.setItems(ticketDataProvider);

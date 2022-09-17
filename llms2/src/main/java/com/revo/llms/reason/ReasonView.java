@@ -28,7 +28,7 @@ public class ReasonView extends TitledGridView<Reason> {
 	public ReasonView(ReasonService reasonService, CategoryService categoryService) {
 		super(VaadinIcon.EXCLAMATION_CIRCLE.create(), "Reasons");
 		this.reasonService = reasonService;
-		this.dataProvider = new ReasonDataProvider(reasonService);
+		this.dataProvider = new ReasonDataProvider<Void>(reasonService);
 		this.editor = new ReasonEditor(reasonService, categoryService, dataProvider);
 		final Grid<Reason> grid = new Grid<>();
 		grid.setItems(dataProvider);

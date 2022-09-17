@@ -32,7 +32,7 @@ public class ProductView extends TitledGridView<Product> {
 	public ProductView(ProductService productService) {
 		super(VaadinIcon.CART.create(), "Products");
 		this.productService = productService;
-		this.dataProvider = new ProductDataProvider(productService);
+		this.dataProvider = new ProductDataProvider<Void>(productService);
 		this.editor = new ProductEditor(productService, dataProvider);
 		final Grid<Product> grid = new Grid<>();
 		grid.setItems(dataProvider);

@@ -3,27 +3,26 @@ package com.revo.llms.product;
 import java.util.stream.Stream;
 
 import com.revo.llms.util.VaadinUtils;
-import com.vaadin.flow.data.provider.DataProvider;
+import com.vaadin.flow.data.provider.AbstractBackEndDataProvider;
 import com.vaadin.flow.data.provider.Query;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.Delegate;
 
 @RequiredArgsConstructor
-public class ProductDataProvider implements DataProvider<Product, Void> {
+public class ProductDataProvider<T> extends AbstractBackEndDataProvider<Product, T> {
 	private static final long serialVersionUID = -3214093958984183834L;
 
 	@NonNull private final ProductService productService;
-	@Delegate private final DataProvider<Product, Void> delegate = 
-			DataProvider.fromCallbacks(this::findByQuery, this::countByQuery);
-			
-	private int countByQuery(Query<Product, Void> query) {
-		return (int) productService.count();
+	
+	@Override
+	protected Stream<Product> fetchFromBackEnd(Query<Product, T> query) {
+		return productService.findAll(VaadinUtils.toPageable(query)).stream();
 	}
 
-	private Stream<Product> findByQuery(Query<Product, Void> query) {
-		return productService.findAll(VaadinUtils.toPageable(query)).stream();
+	@Override
+	protected int sizeInBackEnd(Query<Product, T> query) {
+		return (int) productService.count();
 	}
 	
 }
