@@ -53,6 +53,7 @@ public class TicketView extends TitledView {
 	private final DataProvider<Ticket, Void> ticketDataProvider;
 	private final PaginatedGrid<Ticket> grid = new PaginatedGrid<>();
 	private final DateFormat dateFormat = new SimpleDateFormat("dd-MMM HH:mm");
+	//private final DecimalFormat numberFormat = new DecimalFormat("#.00"); 
 	private final Anchor downloadAnchor = new Anchor();
 	private final Button downloadButton = new Button("Download", VaadinIcon.DOWNLOAD.create(), event -> download());
 	private final DatePicker toPicker = new DatePicker("To", LocalDate.now());
@@ -130,12 +131,14 @@ public class TicketView extends TitledView {
 		grid.addColumn(ticket -> dateFormat.format(ticket.getOpenTimestamp()), "openTimestamp").setHeader("Open").setAutoWidth(true);
 		grid.addColumn(ticket -> null == ticket.getClosedTimestamp() ? null : 
 			dateFormat.format(ticket.getClosedTimestamp()), "closedTimestamp").setHeader("Closed").setAutoWidth(true);
+		grid.addColumn(Ticket::getLossInHours, "lossInHours").setHeader("Loss(Hrs)");
+		grid.addColumn(ticket -> null == ticket.getReason() ? null : ticket.getReason().getCategory().getName(), "reason.category.name").setHeader("Reason Category");
 		grid.addColumn(ticket -> null == ticket.getReason() ? null : ticket.getReason().getText(), "reason.text").setHeader("Reason");
 		grid.addColumn(ticket -> null == ticket.getPart() ? null : ticket.getPart().getProduct().getName(), "part.product.name").setHeader("Product");
 		grid.addColumn(ticket -> null == ticket.getPart() ? null : ticket.getPart().getName(), "part.name").setHeader("Part");
 		grid.addColumn(new ComponentRenderer<>(this::createActionColumn));
 	}
-
+	
 	private void download() {
 		getUI().get().getPage().open(null);
 	}

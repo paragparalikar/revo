@@ -12,6 +12,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.Formula;
+
 import com.revo.llms.department.Department;
 import com.revo.llms.part.Part;
 import com.revo.llms.reason.Reason;
@@ -61,6 +63,9 @@ public class Ticket {
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date closedTimestamp;
+	
+	@Formula("TIMESTAMPDIFF('HOUR', open_timestamp, closed_timestamp)")
+	private Double lossInHours;
 	
 	public boolean isOpen() {
 		return TicketStatus.OPEN.equals(status);
