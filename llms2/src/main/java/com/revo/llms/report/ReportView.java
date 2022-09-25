@@ -30,8 +30,8 @@ public class ReportView extends VerticalLayout {
 
 	private final ReportService reportService;
 	private Registration broadcasterRegistration;
-	private final TicketTimeByReasonCard ticketTimeByReasonCard;
-	private final TicketCountByReasonCard ticketCountByReasonCard;
+	private final TicketTimeByCategoryCard ticketTimeByCategoryCard;
+	private final TicketCountByCategoryCard ticketCountByCategoryCard;
 	private final TicketCountByDepartmentCard ticketCountByDepartmentCard;
 	private final TicketTimeByDepartmentCard ticketTimeByDepartmentCard;
 	private final DateTimePicker toPicker = new DateTimePicker("To", LocalDateTime.now());
@@ -45,8 +45,8 @@ public class ReportView extends VerticalLayout {
 		dateTimePickerRow.setWidthFull();
 		dateTimePickerRow.setJustifyContentMode(JustifyContentMode.CENTER);
 		
-		this.ticketTimeByReasonCard = new TicketTimeByReasonCard(reportService);
-		this.ticketCountByReasonCard = new TicketCountByReasonCard(reportService);
+		this.ticketTimeByCategoryCard = new TicketTimeByCategoryCard(reportService);
+		this.ticketCountByCategoryCard = new TicketCountByCategoryCard(reportService);
 		this.ticketTimeByDepartmentCard = new TicketTimeByDepartmentCard(reportService);
 		this.ticketCountByDepartmentCard = new TicketCountByDepartmentCard(reportService);
 		
@@ -54,7 +54,7 @@ public class ReportView extends VerticalLayout {
 		row1.setWidthFull();
 		row1.setJustifyContentMode(JustifyContentMode.EVENLY);
 		
-		row2.add(ticketCountByReasonCard, ticketTimeByReasonCard);
+		row2.add(ticketCountByCategoryCard, ticketTimeByCategoryCard);
 		row2.setWidthFull();
 		row2.setJustifyContentMode(JustifyContentMode.EVENLY);
 		add(dateTimePickerRow, row1, row2);
@@ -84,8 +84,8 @@ public class ReportView extends VerticalLayout {
 		final List<Ticket> tickets = reportService.findByClosedTimestampAfterAndOpenTimestampBefore(from, to);
 		ticketTimeByDepartmentCard.update(tickets);
 		ticketCountByDepartmentCard.update(tickets);
-		ticketCountByReasonCard.update(tickets);
-		ticketTimeByReasonCard.update(tickets);
+		ticketCountByCategoryCard.update(tickets);
+		ticketTimeByCategoryCard.update(tickets);
 	}
 	
 }

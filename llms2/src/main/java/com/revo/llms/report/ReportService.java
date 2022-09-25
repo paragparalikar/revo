@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.revo.llms.category.Category;
 import com.revo.llms.department.Department;
 import com.revo.llms.reason.Reason;
 import com.revo.llms.ticket.Ticket;
@@ -41,10 +42,31 @@ public class ReportService {
 				.collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
 	}
 	
+	public Map<Category, Long> getTotalTicketCountByCategory(List<Ticket> tickets){
+		return tickets.stream()
+				.map(Ticket::getReason)
+				.filter(Objects::nonNull)
+				.map(Reason::getCategory)
+				.filter(Objects::nonNull)
+				.collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+	}
+	
 	public Map<Reason, Long> getTicketTimeByReason(List<Ticket> tickets){
 		return tickets.stream()
 				.filter(ticket -> Objects.nonNull(ticket.getReason()))
 				.collect(Collectors.groupingBy(Ticket::getReason, 
+						Collectors.mapping(ticket -> {
+							final Date open = ticket.getOpenTimestamp();
+							final Date close = null == ticket.getClosedTimestamp() ? new Date() : ticket.getClosedTimestamp();
+							return Duration.ofMillis(close.getTime() - open.getTime()).toHours();
+						}, Collectors.summingLong(Long::longValue))));
+	}
+	
+	public Map<Category, Long> getTicketTimeByCategory(List<Ticket> tickets){
+		return tickets.stream()
+				.filter(ticket -> Objects.nonNull(ticket.getReason()))
+				.filter(ticket -> Objects.nonNull(ticket.getReason().getCategory()))
+				.collect(Collectors.groupingBy(ticket -> ticket.getReason().getCategory(), 
 						Collectors.mapping(ticket -> {
 							final Date open = ticket.getOpenTimestamp();
 							final Date close = null == ticket.getClosedTimestamp() ? new Date() : ticket.getClosedTimestamp();
