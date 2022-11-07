@@ -22,6 +22,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.revo.llms.LlmsConstants;
+import com.revo.llms.category.Category;
 import com.revo.llms.common.security.SecurityService;
 import com.revo.llms.department.Department;
 import com.revo.llms.part.Part;
@@ -70,33 +71,39 @@ public class TicketExcelInpustStreamFactory implements InputStreamFactory {
 		row.createCell(0, HSSFCell.CELL_TYPE_NUMERIC).setCellValue(Optional.ofNullable(ticket)
 				.map(Ticket::getId).orElse(null));
 		row.createCell(1, HSSFCell.CELL_TYPE_STRING).setCellValue(Optional.ofNullable(ticket)
-				.map(Ticket::getStation).map(Station::getName).orElse(null));
-		row.createCell(2, HSSFCell.CELL_TYPE_STRING).setCellValue(Optional.ofNullable(ticket)
 				.map(Ticket::getStatus).map(TicketStatus::name).orElse(null));
+		row.createCell(2, HSSFCell.CELL_TYPE_STRING).setCellValue(Optional.ofNullable(ticket)
+				.map(Ticket::getStation).map(Station::getName).orElse(null));
 		row.createCell(3, HSSFCell.CELL_TYPE_STRING).setCellValue(Optional.ofNullable(ticket)
 				.map(Ticket::getDepartment).map(Department::getName).orElse(null));
 		row.createCell(4, HSSFCell.CELL_TYPE_STRING).setCellValue(Optional.ofNullable(ticket)
-				.map(Ticket::getReason).map(Reason::getText).orElse(null));
-		row.createCell(5, HSSFCell.CELL_TYPE_STRING).setCellValue(Optional.ofNullable(ticket)
-				.map(Ticket::getPart).map(Part::getProduct).map(Product::getName).orElse(null));
-		row.createCell(6, HSSFCell.CELL_TYPE_STRING).setCellValue(Optional.ofNullable(ticket)
-				.map(Ticket::getPart).map(Part::getName).orElse(null));
-		row.createCell(7, HSSFCell.CELL_TYPE_STRING).setCellValue(Optional.ofNullable(ticket)
 				.map(Ticket::getOpenTimestamp).map(dateFormat::format).orElse(null));
-		row.createCell(8, HSSFCell.CELL_TYPE_STRING).setCellValue(Optional.ofNullable(ticket)
+		row.createCell(5, HSSFCell.CELL_TYPE_STRING).setCellValue(Optional.ofNullable(ticket)
 				.map(Ticket::getClosedTimestamp).map(dateFormat::format).orElse(null));
+		row.createCell(6, HSSFCell.CELL_TYPE_NUMERIC).setCellValue(Optional.ofNullable(ticket)
+				.map(Ticket::getLossInHours).orElse(null));
+		row.createCell(7, HSSFCell.CELL_TYPE_STRING).setCellValue(Optional.ofNullable(ticket)
+				.map(Ticket::getReason).map(Reason::getCategory).map(Category::getName).orElse(null));
+		row.createCell(8, HSSFCell.CELL_TYPE_STRING).setCellValue(Optional.ofNullable(ticket)
+				.map(Ticket::getReason).map(Reason::getText).orElse(null));
+		row.createCell(9, HSSFCell.CELL_TYPE_STRING).setCellValue(Optional.ofNullable(ticket)
+				.map(Ticket::getPart).map(Part::getProduct).map(Product::getName).orElse(null));
+		row.createCell(10, HSSFCell.CELL_TYPE_STRING).setCellValue(Optional.ofNullable(ticket)
+				.map(Ticket::getPart).map(Part::getName).orElse(null));
 	}
 	
 	private void createHeaders(HSSFRow row) {
 		row.createCell(0).setCellValue("No.");
-		row.createCell(1).setCellValue("Station");
-		row.createCell(2).setCellValue("Status");
+		row.createCell(1).setCellValue("Status");
+		row.createCell(2).setCellValue("Station");
 		row.createCell(3).setCellValue("Department");
-		row.createCell(4).setCellValue("Reason");
-		row.createCell(5).setCellValue("Product");
-		row.createCell(6).setCellValue("Part");
-		row.createCell(7).setCellValue("Open Timestamp");
-		row.createCell(8).setCellValue("Close Timestamp");
+		row.createCell(4).setCellValue("Open");
+		row.createCell(5).setCellValue("Closed");
+		row.createCell(6).setCellValue("Loss(Hrs)");
+		row.createCell(7).setCellValue("Reason Category");
+		row.createCell(8).setCellValue("Reason");
+		row.createCell(9).setCellValue("Product");
+		row.createCell(10).setCellValue("Part");
 	}
 	
 	private Set<Long> resolve(UserDetails user, String prefix){

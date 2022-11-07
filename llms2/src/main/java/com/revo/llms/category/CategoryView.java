@@ -7,7 +7,7 @@ import com.revo.llms.common.MainLayout;
 import com.revo.llms.common.TitledGridView;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.data.provider.ListDataProvider;
+import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
@@ -22,12 +22,12 @@ public class CategoryView extends TitledGridView<Category> {
 
 	private final CategoryEditor categoryEditor;
 	private final CategoryService categoryService;
-	private final ListDataProvider<Category> dataProvider;
+	private final DataProvider<Category, Void> dataProvider;
 	
 	public CategoryView(CategoryService categoryService) {
 		super(VaadinIcon.SPLIT.create(), "Reason Categories");
 		this.categoryService = categoryService;
-		this.dataProvider = new ListDataProvider<>(categoryService.findAll());
+		this.dataProvider = new CategoryDataProvider<>(categoryService);
 		this.categoryEditor = new CategoryEditor(categoryService, dataProvider);
 		final Grid<Category> grid = new Grid<>();
 		grid.setItems(dataProvider);

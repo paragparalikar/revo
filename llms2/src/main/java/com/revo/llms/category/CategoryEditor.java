@@ -9,15 +9,15 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
-import com.vaadin.flow.data.provider.ListDataProvider;
+import com.vaadin.flow.data.provider.DataProvider;
 
 public class CategoryEditor extends TitledFormEditor<Category> {
 	private static final long serialVersionUID = 1L;
 	
 	private final CategoryService categoryService;
-	private final ListDataProvider<Category> dataProvider;
+	private final DataProvider<Category, Void> dataProvider;
 
-	public CategoryEditor(CategoryService categoryService, ListDataProvider<Category> dataProvider) {
+	public CategoryEditor(CategoryService categoryService, DataProvider<Category, Void> dataProvider) {
 		super(VaadinIcon.SPLIT.create(), "Reason Category", Category::new);
 		this.categoryService = categoryService;
 		this.dataProvider = dataProvider;
@@ -43,7 +43,7 @@ public class CategoryEditor extends TitledFormEditor<Category> {
 	private boolean isTextValid(String name) {
 		if(null == name) return false;
 		if(0 == name.trim().length()) return false;
-		final Long id = Optional.ofNullable(getValue()).map(Category::getId).orElse(null);
+		final Long id = Optional.ofNullable(getValue()).map(Category::getId).orElse(0L);
 		return !categoryService.existsByNameIgnoreCaseAndIdNot(name, id);
 	}
 	
@@ -52,8 +52,5 @@ public class CategoryEditor extends TitledFormEditor<Category> {
 		categoryService.save(value);
 		dataProvider.refreshAll();
 	}
-
-
-
 
 }
