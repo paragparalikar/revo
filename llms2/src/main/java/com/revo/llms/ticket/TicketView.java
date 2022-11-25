@@ -3,6 +3,7 @@ package com.revo.llms.ticket;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.Optional;
 
 import javax.annotation.security.PermitAll;
 
@@ -131,7 +132,8 @@ public class TicketView extends TitledView {
 		grid.addColumn(ticket -> dateFormat.format(ticket.getOpenTimestamp()), "openTimestamp").setHeader("Open").setAutoWidth(true);
 		grid.addColumn(ticket -> null == ticket.getClosedTimestamp() ? null : 
 			dateFormat.format(ticket.getClosedTimestamp()), "closedTimestamp").setHeader("Closed").setAutoWidth(true);
-		grid.addColumn(Ticket::getLossInHours, "lossInHours").setHeader("Loss(Hrs)");
+		grid.addColumn(ticket -> Optional.ofNullable(ticket.getLossInMinutes())
+				.map(Double::intValue).orElse(null), "lossInMinutes").setHeader("Loss(Mins)");
 		grid.addColumn(ticket -> null == ticket.getReason() ? null : ticket.getReason().getCategory().getName(), "reason.category.name").setHeader("Reason Category");
 		grid.addColumn(ticket -> null == ticket.getReason() ? null : ticket.getReason().getText(), "reason.text").setHeader("Reason");
 		grid.addColumn(ticket -> null == ticket.getPart() ? null : ticket.getPart().getProduct().getName(), "part.product.name").setHeader("Product");

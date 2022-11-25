@@ -64,8 +64,8 @@ public class Ticket {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date closedTimestamp;
 	
-	@Formula("TIMESTAMPDIFF('HOUR', open_timestamp, closed_timestamp)")
-	private Double lossInHours;
+	@Formula("TIMESTAMPDIFF('MINUTE', open_timestamp, closed_timestamp)")
+	private Double lossInMinutes;
 	
 	public boolean isOpen() {
 		return TicketStatus.OPEN.equals(status);
