@@ -81,7 +81,7 @@ public class TicketExcelInpustStreamFactory implements InputStreamFactory {
 		row.createCell(5, HSSFCell.CELL_TYPE_STRING).setCellValue(Optional.ofNullable(ticket)
 				.map(Ticket::getClosedTimestamp).map(dateFormat::format).orElse(null));
 		row.createCell(6, HSSFCell.CELL_TYPE_NUMERIC).setCellValue(Optional.ofNullable(ticket)
-				.map(Ticket::getLossInMinutes).orElse(null));
+				.map(Ticket::getLossInMinutes).orElse(0d));
 		row.createCell(7, HSSFCell.CELL_TYPE_STRING).setCellValue(Optional.ofNullable(ticket)
 				.map(Ticket::getReason).map(Reason::getCategory).map(Category::getName).orElse(null));
 		row.createCell(8, HSSFCell.CELL_TYPE_STRING).setCellValue(Optional.ofNullable(ticket)
