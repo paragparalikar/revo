@@ -44,6 +44,7 @@ public class TicketExcelInpustStreamFactory implements InputStreamFactory {
 	private final SecurityService securityService;
 	private final Supplier<LocalDate> toDateProvider;
 	private final Supplier<LocalDate> fromDateProvider;
+	private final Supplier<TicketStatus> statusProvider;
 	private final DateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss a");
 	
 	@Override
@@ -55,8 +56,11 @@ public class TicketExcelInpustStreamFactory implements InputStreamFactory {
 		final Set<Long> departmentIds = resolve(user, LlmsConstants.PREFIX_DEPARTMENT);
 		final Date to = Date.from(toDateProvider.get().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
 		final Date from = Date.from(fromDateProvider.get().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
-		final List<Ticket> tickets = ticketService.findByDepartmentIdInAndOpenTimestampBetween(
-				departmentIds, from, to);
+		final TicketStatus status = statusProvider.get();
+		final List<Ticket> tickets = null == status ? 
+				ticketService.findByDepartmentIdInAndOpenTimestampBetween(departmentIds, from, to) :
+				ticketService.findByDepartmentIdInAndOpenTimestampBetweenAndStatus(departmentIds, from, to, status);
+		
 		createHeaders(sheet.createRow(0));
 		for(int index = 0; index < tickets.size(); index++) {
 			createRow(tickets.get(index), sheet.createRow(index + 1));

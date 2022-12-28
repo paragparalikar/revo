@@ -117,6 +117,18 @@ public class TicketService {
 		return ticketRepository.findByDepartmentIdInAndOpenTimestampBetween(departmentIds, from, to, pageable);
 	}
 	
+	public Page<Ticket> findByDepartmentIdInAndOpenTimestampBetweenAndStatus(Set<Long> departmentIds, Date from, Date to, 
+			TicketStatus status, Pageable pageable){
+		return ticketRepository.findByDepartmentIdInAndOpenTimestampBetweenAndStatus(departmentIds, from, to, 
+				status, pageable);
+	}
+	
+	public List<Ticket> findByDepartmentIdInAndOpenTimestampBetweenAndStatus(Set<Long> departmentIds, Date from, Date to, 
+			TicketStatus status){
+		return ticketRepository.findByDepartmentIdInAndOpenTimestampBetweenAndStatus(departmentIds, from, to, 
+				status);
+	}
+	
 	public List<Ticket> findByDepartmentIdInAndOpenTimestampBetween(Set<Long> departmentIds, Date from, Date to) {
 		return ticketRepository.findByDepartmentIdInAndOpenTimestampBetween(departmentIds, from, to);
 	}

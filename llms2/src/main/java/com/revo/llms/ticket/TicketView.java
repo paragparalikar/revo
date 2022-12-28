@@ -3,6 +3,7 @@ package com.revo.llms.ticket;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Optional;
 
 import javax.annotation.security.PermitAll;
@@ -27,6 +28,7 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Anchor;
@@ -59,7 +61,8 @@ public class TicketView extends TitledView {
 	private final Button downloadButton = new Button("Download", VaadinIcon.DOWNLOAD.create(), event -> download());
 	private final DatePicker toPicker = new DatePicker("To", LocalDate.now());
 	private final DatePicker fromPicker = new DatePicker("From", LocalDate.now().minusMonths(1));
-	private final HorizontalLayout dateTimePickerRow = new HorizontalLayout(fromPicker, toPicker, downloadAnchor);
+	private final ComboBox<TicketStatus> statusComboBox = new ComboBox<>("Status", Arrays.asList(TicketStatus.values()));
+	private final HorizontalLayout dateTimePickerRow = new HorizontalLayout(fromPicker, toPicker, statusComboBox, downloadAnchor);
 			
 	public TicketView(
 			PartService partService,
@@ -73,7 +76,7 @@ public class TicketView extends TitledView {
 		dateTimePickerRow.setJustifyContentMode(JustifyContentMode.END);
 		dateTimePickerRow.setVerticalComponentAlignment(Alignment.END, downloadAnchor);
 		this.ticketDataProvider = new TicketDataProvider(ticketService, securityService, 
-				fromPicker::getValue, toPicker::getValue);
+				fromPicker::getValue, toPicker::getValue, statusComboBox::getValue);
 		this.ticketStatusEditor = TicketStatusEditor.builder()
 				.partService(partService)
 				.ticketService(ticketService)
@@ -90,13 +93,24 @@ public class TicketView extends TitledView {
 		createColumns(grid);
 		add(grid, ticketStatusEditor);
 		addRight(dateTimePickerRow);
+		statusComboBox.setClearButtonVisible(true);
+		statusComboBox.setItemLabelGenerator(this::getTicketStatusLabel);
 		toPicker.addValueChangeListener(event -> ticketDataProvider.refreshAll());
 		fromPicker.addValueChangeListener(event -> ticketDataProvider.refreshAll());
+		statusComboBox.addValueChangeListener(event -> ticketDataProvider.refreshAll());
 		createDownloadAnchor(ticketService, securityService);
+	}
+	
+	private String getTicketStatusLabel(TicketStatus ticketStatus) {
+		if(null == ticketStatus) return "All";
+		else if(TicketStatus.OPEN.equals(ticketStatus)) return "Open";
+		else if(TicketStatus.CLOSED.equals(ticketStatus)) return "Closed";
+		else return "";
 	}
 	
 	private void createDownloadAnchor(TicketService ticketService, SecurityService securityService) {
 		final StreamResource streamResource = new StreamResource("tickets.xlsx", TicketExcelInpustStreamFactory.builder()
+				.statusProvider(statusComboBox::getValue)
 				.fromDateProvider(fromPicker::getValue)
 				.toDateProvider(toPicker::getValue)
 				.securityService(securityService)

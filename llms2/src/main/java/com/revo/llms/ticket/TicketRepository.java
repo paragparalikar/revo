@@ -27,7 +27,11 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
 	
 	Page<Ticket> findByDepartmentIdInAndOpenTimestampBetween(Set<Long> departmentIds, Date from, Date to, Pageable pageable);
 	
+	Page<Ticket> findByDepartmentIdInAndOpenTimestampBetweenAndStatus(Set<Long> departmentIds, Date from, Date to, TicketStatus status, Pageable pageable);
+	
 	List<Ticket> findByDepartmentIdInAndOpenTimestampBetween(Set<Long> departmentIds, Date from, Date to);
+	
+	List<Ticket> findByDepartmentIdInAndOpenTimestampBetweenAndStatus(Set<Long> departmentIds, Date from, Date to, TicketStatus status);
 	
 	Optional<Ticket> findTopByStationIdAndDepartmentOrderByOpenTimestampDesc(Integer stationId, Department department);
 	

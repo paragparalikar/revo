@@ -30,6 +30,7 @@ public class TicketDataProvider extends AbstractBackEndDataProvider<Ticket, Void
 	@NonNull private final SecurityService securityService;
 	@NonNull private final Supplier<LocalDate> fromDateProvider;
 	@NonNull private final Supplier<LocalDate> toDateProvider;
+	@NonNull private final Supplier<TicketStatus> statusProvider;
 	
 	@Override
 	protected Stream<Ticket> fetchFromBackEnd(Query<Ticket, Void> query) {
@@ -47,7 +48,10 @@ public class TicketDataProvider extends AbstractBackEndDataProvider<Ticket, Void
 		final Set<Long> departmentIds = resolve(user, LlmsConstants.PREFIX_DEPARTMENT);
 		final Date to = Date.from(toDateProvider.get().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
 		final Date from = Date.from(fromDateProvider.get().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
-		return ticketService.findByDepartmentIdInAndOpenTimestampBetween(departmentIds, from, to, pageable);
+		final TicketStatus status = statusProvider.get();
+		return null == status ? 
+				ticketService.findByDepartmentIdInAndOpenTimestampBetween(departmentIds, from, to, pageable) :
+				ticketService.findByDepartmentIdInAndOpenTimestampBetweenAndStatus(departmentIds, from, to, status, pageable);
 	}
 	
 	private Set<Long> resolve(UserDetails user, String prefix){
